@@ -1,0 +1,5 @@
+classes= 9
+train  = /media/francisco/SiliconPowerArmor/SDM/herramientas_entrenamiento/Conversion_de_Anotaciones/training_list.txt
+valid  = /media/francisco/SiliconPowerArmor/SDM/herramientas_entrenamiento/Conversion_de_Anotaciones/valid.txt
+names = data/obj.names
+backup = backup/ 

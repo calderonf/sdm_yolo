@@ -1,0 +1,6 @@
+classes= 36
+train  = /home/francisco/train.txt
+valid  = /home/francisco/test.txt
+names = data/voc.names
+backup = backupocr
+

@@ -1,0 +1,6 @@
+classes= 36
+train  = data/trainocr.txt
+valid  = data/testocr.txt
+names = data/ocr.names
+backup = backupocr/
+

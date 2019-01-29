@@ -1,0 +1,5 @@
+classes= 1
+train  = /data/faculty/calderonf/Conversion_anotaciones_placas/training_list.txt
+valid  = /data/faculty/calderonf/Conversion_anotaciones_placas/valid.txt
+names = data/PLACAS.names
+backup = backup_PLACAS/ 

@@ -1,0 +1,4 @@
+list=[0, 1, 2, 3, 4, 5]
+string=filename
+double=3.1415926535
+int=850508
