@@ -66,7 +66,7 @@ def graficarPlacas(img,resplaca,resOCR):
         cv2.putText(imgFile2,str(resOCR[j][0]), (xc,vc+10), cv2.FONT_HERSHEY_SIMPLEX,0.6, colour2)
     
     cv2.putText(imgFile2,str(cstr), (x,y-4), cv2.FONT_HERSHEY_SIMPLEX,1, colour)
-    cv2.imshow('Video', imgFile2)
+    cv2.imshow('VideoPLACA', imgFile2)
     k = cv2.waitKey(0)& 0xFF
     cv2.destroyAllWindows()
     #if k==ord('q'):    # Esc key=537919515 en linux WTF??? para parar y en mi otro PC 1048689
@@ -100,3 +100,27 @@ for i in range(len(r)):
         
 print ('Saliendo...')
 #exit()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
