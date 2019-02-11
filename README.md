@@ -1,3 +1,19 @@
+
+
+
+
+
+
+
+
+This is a forked version of the  darknet repo, 
+
+To use it:
+
+
+
+
+
 ![Darknet Logo](http://pjreddie.com/media/files/darknet-black-small.png)
 
 #Darknet#
