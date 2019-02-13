@@ -224,12 +224,12 @@ else:
             
             #Inician preguntas:
             # Es un acceso o una salida
-            msg2 = "Los ciclistas pasan la linea#"+ str(numlin)+" de izquiera a derecha o de arriba hacia abajo?"   
+            msg2 = "Los ciclistas pasan la linea#"+ str(numlin)+" de izquiera a derecha o de arriba hacia abajo? \nEquivalente a la linea es vertical u horizontal"   
             choices2 = ["Izquierda a Derecha","Arriba a Abajo"]
             accOsal = easygui.buttonbox(msg2,image=image, choices=choices2)
             
             if accOsal=="Izquierda a Derecha":
-                msg = "Loz ciclistas que vienen de la izquierda de la imagen vienen de que direccion?"   
+                msg = "Los ciclistas que vienen de la izquierda de la imagen vienen de que direccion?"   
                 choices = ["Norte","Sur","Oriente","Occidente"]
                 Acceso = easygui.buttonbox(msg,image=image, choices=choices)
                 if Acceso=="Norte":
@@ -262,8 +262,8 @@ else:
             msg = "Ingrese la informacion de ubicacion para la linea de conteo #"+ str(numlin)+ ".\n Use siempre minusculas."
             title = "informacion linea "+ str(numlin)
             fieldNames = ["Calle","Carrera"]
-            fieldValues = []  
-            fieldValues = easygui.multenterbox(msg,title, fieldNames)       
+            fieldValues = []
+            fieldValues = easygui.multenterbox(msg,title, fieldNames)
             
             # make sure that none of the fields was left blank
             while 1:
@@ -295,7 +295,7 @@ else:
                     Data1,Data2,Data3=getDataFromFile(linname)# Data1 ambos sentidos Data2 positivo, Data3, Negativo
                     
                     rp.generar_reporte_linea(str(fieldValues[0]),str(fieldValues[1]),descripcion_via,Acceso,Salida,lindata[3],lindata[2],lindata[1],lindata[4])
-                    rp.agregarData(Data3)
+                    rp.agregarData(Data2)
                 else:
                     print "depurado File_Name"
             FILE_report1.close()        
@@ -309,7 +309,7 @@ else:
                     Data1,Data2,Data3=getDataFromFile(linname)# Data1 ambos sentidos Data2 positivo, Data3, Negativo
                     
                     rp.generar_reporte_linea(str(fieldValues[0]),str(fieldValues[1]),descripcion_via,Salida,Acceso,lindata[3],lindata[2],lindata[1],lindata[4])
-                    rp.agregarData(Data2)
+                    rp.agregarData(Data3)
                 else:
                     print "depurado File_Name"
             FILE_report2.close()
@@ -403,7 +403,7 @@ else:
                     Data1,Data2,Data3=getDataFromFile(linname)# Data1 ambos sentidos Data2 positivo, Data3, Negativo
                     
                     rp.generar_reporte_linea(str(fieldValues[0]),str(fieldValues[1]),descripcion_via,Acceso,Salida,lindata[3],lindata[2],lindata[1],lindata[4])
-                    rp.agregarData(Data3)
+                    rp.agregarData(Data2)
                 else:
                     print "depurado File_Name"
             FILE_report1.close()        
@@ -417,7 +417,7 @@ else:
                     Data1,Data2,Data3=getDataFromFile(linname)# Data1 ambos sentidos Data2 positivo, Data3, Negativo
                     
                     rp.generar_reporte_linea(str(fieldValues[0]),str(fieldValues[1]),descripcion_via,Salida,Acceso,lindata[3],lindata[2],lindata[1],lindata[4])
-                    rp.agregarData(Data2)
+                    rp.agregarData(Data3)
                 else:
                     print "depurado File_Name"
             FILE_report2.close()
@@ -514,7 +514,7 @@ else:
                     Data1,Data2,Data3=getDataFromFile(linname)# Data1 ambos sentidos Data2 positivo, Data3, Negativo
                     
                     rp.generar_reporte_linea(str(fieldValues[0]),str(fieldValues[1]),descripcion_via,Acceso,Salida,lindata[3],lindata[2],lindata[1],lindata[4])
-                    rp.agregarData(Data3)
+                    rp.agregarData(Data2)
                 else:
                     print "depurado File_Name"
             FILE_report1.close()        
@@ -528,7 +528,7 @@ else:
                     Data1,Data2,Data3=getDataFromFile(linname)# Data1 ambos sentidos Data2 positivo, Data3, Negativo
                     
                     rp.generar_reporte_linea(str(fieldValues[0]),str(fieldValues[1]),descripcion_via,Salida,Acceso,lindata[3],lindata[2],lindata[1],lindata[4])
-                    rp.agregarData(Data2)
+                    rp.agregarData(Data3)
                 else:
                     print "depurado File_Name"
             FILE_report2.close()
@@ -582,7 +582,7 @@ else:
                     Data1,Data2,Data3=getDataFromFile(linname)# Data1 ambos sentidos Data2 positivo, Data3, Negativo
                     
                     rp.generar_reporte_linea(str(fieldValues[0]),str(fieldValues[1]),descripcion_via,Acceso,Salida,lindata[3],lindata[2],lindata[1],lindata[4])
-                    rp.agregarData(Data3)
+                    rp.agregarData(Data2)
                 else:
                     print "depurado File_Name"
             FILE_report1.close()        
@@ -596,7 +596,7 @@ else:
                     Data1,Data2,Data3=getDataFromFile(linname)# Data1 ambos sentidos Data2 positivo, Data3, Negativo
                     
                     rp.generar_reporte_linea(str(fieldValues[0]),str(fieldValues[1]),descripcion_via,Salida,Acceso,lindata[3],lindata[2],lindata[1],lindata[4])
-                    rp.agregarData(Data2)
+                    rp.agregarData(Data3)
                 else:
                     print "depurado File_Name"
             FILE_report2.close()
