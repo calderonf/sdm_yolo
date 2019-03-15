@@ -10,8 +10,8 @@ This is a forked version of the  darknet repo,
 
 To use it:
 
-
-
+Video tutorial:
+https://www.youtube.com/watch?v=E05a3SzVjho
 
 
 ![Darknet Logo](http://pjreddie.com/media/files/darknet-black-small.png)
