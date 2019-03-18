@@ -224,7 +224,7 @@ else:
             
             #Inician preguntas:
             # Es un acceso o una salida
-            msg2 = "Los ciclistas pasan la linea#"+ str(numlin)+" de izquiera a derecha o de arriba hacia abajo? \nEquivalente a la linea es vertical u horizontal"   
+            msg2 = "Los ciclistas pasan la linea#"+ str(numlin)+" de izquierda a derecha o de arriba hacia abajo? \nEquivalente a la linea es vertical u horizontal"   
             choices2 = ["Izquierda a Derecha","Arriba a Abajo"]
             accOsal = easygui.buttonbox(msg2,image=image, choices=choices2)
             
@@ -242,7 +242,7 @@ else:
                     Salida="Oriente"
                     
             elif accOsal=="Arriba a Abajo":
-                msg = "Los ciclistas que vienen de arriba de la imagen vienen de que direccion?"   
+                msg = "Los ciclistas que vienen de abajo de la imagen vienen de que direccion?"   
                 choices = ["Norte","Sur","Oriente","Occidente"]
                 Acceso = easygui.buttonbox(msg,image=image, choices=choices)
                 if Acceso=="Norte":

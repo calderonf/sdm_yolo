@@ -31,7 +31,7 @@ meta = load_meta("coco_es.data")
 charlador=False
 pintarTrayectos=True
 
-SALVARCONTADO=True
+SALVARCONTADO=False
 contimagen=1
 
 
