@@ -9,9 +9,10 @@
 This is a forked version of the  darknet repo, 
 
 To use it:
-
-
-
+The datasets to train this are available in 
+www.urban-dataset.com
+Video tutorial:
+https://www.youtube.com/watch?v=E05a3SzVjho
 
 
 ![Darknet Logo](http://pjreddie.com/media/files/darknet-black-small.png)
