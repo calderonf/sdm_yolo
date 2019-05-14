@@ -21,13 +21,9 @@ meta = load_meta("../cfg/voc_py.data")
 net = load_net("../yolo-obj.cfg", "../../weights/yolo-obj_final.weights", 0)
 meta = load_meta("../data/obj.data")
 
-#NUESTRO YOLO ENTRENADO 90000 iteraciones PLACAS
-netplacas = load_net("../yolo-PLACAS.cfg", "../../weights/yolo-PLACAS_final.weights", 0)
-metaplacas = load_meta("../data/PLACAS.data")
-
-#NUESTRO YOLO ENTRENADO 80000 iteraciones  OCR
-netocr = load_net("../yolo-OCR.cfg", "../../weights/yolo-OCR_final.weights", 0)
-metaocr = load_meta("../data/OCR.data")
+#NUESTRO YOLO ENTRENADO 80000 iteraciones Elem Seguridad ciclistas
+netciclistas = load_net("../yolo-OCR.cfg", "../../weights/yolo-ciclistas_final.weights", 0)
+metaciclistas = load_meta("../data/OCR.data")
 
 """
 #YOLO COCO
@@ -93,8 +89,8 @@ folder=easygui.diropenbox(title="Seleccione la carpeta con los videos a aforar",
 
 filelist=glob.glob(folder+"/*.avi")
 if len(filelist) == 0:
-    print("ERROR LA CARPETA NO CONTIENE ARCHIVOS .AVI buscando .MP4")
-    filelist=glob.glob(folder+"/*.MP4")
+    print("WARNING: LA CARPETA NO CONTIENE ARCHIVOS .avi buscando .mp4 OJO: sensible a mayusculas")
+    filelist=glob.glob(folder+"/*.mp4")
     
 filelist.sort()
 if len(filelist) == 0:
@@ -134,8 +130,6 @@ else:
     
     for fn in filelist:
         
-        
-        #fn = easygui.fileopenbox(default="/media/francisco/SiliconPowerArmor/SDM/",filetypes = ['*.avi','*.mp4'])
         cam = cv2.VideoCapture(fn)
         ruta,ext=os.path.splitext(fn)
         archsal=ruta+'.csv'     
@@ -143,11 +137,11 @@ else:
         ret_val, imgFile2 = cam.read()
         frames+=1
         if not ret_val:
-            print ('ERROR: no se pudo abrir la camara, saliendo')
+            print ('ERROR: no se pudo abrir el video, saliendo')
             exit()
         
         imgFile3 = cv2.cvtColor(imgFile2, cv2.COLOR_BGR2RGB)
-        #imgFile2 = cv2.imread("../data/eagle.jpg")
+        
         tama=imgFile2.shape
         imgImported=make_image(tama[1],tama[0],tama[2])
         
@@ -156,7 +150,6 @@ else:
         rgbgr_image(imgImported)
         
         track=tr.tracking(verbose=charlador,mindist=mindist,framesttl=framesttl)#verbose=False,mindist=100
-        
         
         contadores=[]
         cc=1
@@ -178,7 +171,7 @@ else:
             frames+=1
             if not ret_val:
                 print ("Fin del video o salida en camara, saliendo")
-                cv2.imwrite('ultimofotogramaprocesado.jpg',imgFile3)
+                #cv2.imwrite('ultimofotogramaprocesado.jpg',imgFile3)
                 break
             
             if SALVARCONTADO:
@@ -263,7 +256,7 @@ else:
                             track.p.p[idx].contado=True
                             track.p.p[idx].contadores[contar.linecount]=1
                             contar.addToLineCounter(str(track.p.p[idx].str),frames,tiempoactual,direct)
-                            if ((str(track.p.p[idx].str) == 'particular') or (str(track.p.p[idx].str) == 'taxi')):
+                            if ((str(track.p.p[idx].str) == 'ciclista'):
                                 rp = detect_img(netplacas, metaplacas, imgImported) 
 
                                 print ('Detecciones: de placa:'+str(len(rp)))
