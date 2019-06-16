@@ -147,7 +147,7 @@ class objects:
         
 class singlepath:
     """
-    Clase con un trayecto, que contiene un a estructura de seguimiento completa. \n
+    Clase con un trayecto, que contiene una estructura de seguimiento completa. \n
     """
     def __init__(self, idx,x,y,w,h,framesttl,featurestring,lineasconteo=10):
         

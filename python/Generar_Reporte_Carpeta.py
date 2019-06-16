@@ -242,7 +242,7 @@ else:
                     Salida="Oriente"
                     
             elif accOsal=="Arriba a Abajo":
-                msg = "Los ciclistas que vienen de abajo de la imagen vienen de que direccion?"   
+                msg = "Los ciclistas c"   
                 choices = ["Norte","Sur","Oriente","Occidente"]
                 Acceso = easygui.buttonbox(msg,image=image, choices=choices)
                 if Acceso=="Norte":
@@ -460,7 +460,7 @@ else:
                     Salida="Oriente"
                     
             elif accOsal=="Arriba a Abajo":
-                msg = "Los vehiculos que vienen de arriba de la imagen, vienen de que direccion?"   
+                msg = "Los vehiculos que vienen de abajo de la imagen, vienen de que direccion?"   
                 choices = ["Norte","Sur","Oriente","Occidente"]
                 Acceso = easygui.buttonbox(msg,image=image, choices=choices)
                 if Acceso=="Norte":

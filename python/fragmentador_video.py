@@ -529,7 +529,7 @@ def read_sources(selected_folder):
 if __name__ == '__main__':
 
     MaxDuration=900
-    Tolerance=100
+    Tolerance=300
     # Set a timer to count the total process time
     process_time_start = time.time() 
 
