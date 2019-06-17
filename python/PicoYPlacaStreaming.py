@@ -98,13 +98,15 @@ cam = cv2.VideoCapture(fn)
 MAXW=700
 mindist=200
 
-for nn in range(20):# se itera un segundo para estabilizar la conexion
+for nn in range(100):# se itera un segundo para estabilizar la conexion
     ret_val, imgFile2 = cam.read()
     if not ret_val:
         print ('ERROR:  no se pudo abrir la camara, saliendo')
         exit()
-    cv2.imshow('streaming',imgFile2)
+    cv2.imshow('Streaming',imgFile2)
     cv2.waitKey(30)
+cv2.destroyAllWindows()
+cv2.waitKey(2)
 
 imgFile3 = cv2.cvtColor(imgFile2, cv2.COLOR_BGR2RGB)
 #imgFile2 = cv2.imread("../data/eagle.jpg")
@@ -149,23 +151,15 @@ while (True):
     for linlin in lineaDeConteo:
         contadores.append(lc.counter(linlin.pt1,linlin.pt2,filename=archsal,linecount=cc,fps=20))
         cc+=cc
-    
-    
-    #lineaDeConteo=lc.selectLine(imgFile2,ownString='Selecciona la linea de conteo',filename=archsal,linecount=1)
-    #lineaDeConteo2=lc.selectLine(imgFile2,ownString='Selecciona la linea de conteo',filename=archsal,linecount=2)
-    #contar=lc.counter(lineaDeConteo.pt1,lineaDeConteo.pt2,filename=archsal,linecount=1,fps=20) 
-    #contar2=lc.counter(lineaDeConteo2.pt1,lineaDeConteo2.pt2,filename=archsal,linecount=2,fps=20)    
-    
-    
-    
-    
+    ErrorStreaming=False
     while True:
         ret_val, imgFile2 = cam.read()
         frames+=1
         if not ret_val:
-            print ("Fin del video o salida en camara, saliendo")
+            print ("Error en el streaming, saliendo...")
             cv2.imwrite('ultimofotogramaprocesado.jpg',imgFile3)
-            break
+            ErrorStreaming=True
+            break# TODO PONER REINTENTO
         
         if SALVARCONTADO:
             copiaimagen=imgFile2.copy()
