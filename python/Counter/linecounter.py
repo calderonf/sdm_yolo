@@ -263,7 +263,7 @@ class counter:
         self.writeToLineCounter(label,self.counterclases[self.clases[label]],frame,tiempo)
         
     def writeToLineCounter(self,label,count, frame,tiempo):# the input is the class type, the total accumulated count of that class and the frame in wich the object cross the line
-        self.FILE.write(str(label)+';'+str(count)+';'+str(float(tiempo))+';'+str(float(frame)/float(self.FPS))+'\n')
+        self.FILE.write(str(label)+';'+str(count)+';'+str(tiempo)+';'+str(frame)+'\n')
 
     def saveFinalCounts(self,frame):
         self.FILE.write("\n")

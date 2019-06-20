@@ -17,6 +17,11 @@ for nn in range(900):# se itera 5 segundo para estabilizar la conexion
         print ('ERROR:  no se pudo abrir la camara, saliendo')
         exit()
     cv2.imshow('streaming',imgFile2)
-    cv2.waitKey(30)
+    k = cv2.waitKey(1)& 0xFF
+    if k==ord('q') or k==ord('Q'):
+        break
+cv2.destroyWindow('streaming')
 cv2.destroyAllWindows()
-cv2.waitKey(2)
+cv2.waitKey(3)
+cv2.waitKey(30)
+cv2.waitKey(300)

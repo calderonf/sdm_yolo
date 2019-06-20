@@ -25,7 +25,11 @@ class PicoYPlaca:
     """
     def __init__(self,*args, **kwargs):
         """
-        Funcion de inicialización
+        Funcion de inicialización       !PROBADA!
+        Si no le entrarn argumentos los toma la hora del sistema y la fecha como la hora a ser procesada
+        Si le entra un argumento toma este como la fecha
+        Si le entran dos argumentos toma estos como la fecha y la hora        
+        
         """
         if len(args)==0:
             self.realtime=True
@@ -58,20 +62,27 @@ class PicoYPlaca:
     def tienePicoYPlaca(self, placa,tipo="particular"):
         """
         Funcion que determina si una placa tiene pico y placa en el momento actual
-        dependiendo del tipo del vehículo
+        dependiendo del tipo del vehículos                                                    !PROBADA!
         """
         placa=placa.upper()
         tipo=tipo.lower()
+        if not self.esPlaca(placa):
+            return False
+        
         if self.realtime:
             self.refrescarFecha()
+            
         if self.enRestriccion(tipo): # Si no esta el tipo en restriccion retornar Falso
             if tipo == self.particular:
-                if self.placaPar() and self.diaPar():
-                        return True
-                if self.placaimPar() and self.diaimPar():
-                        return True
-            if tipo == self.taxi:
+                if self.placaPar(placa) and self.diaPar():
+                    return True
+                if self.placaImpar(placa) and self.diaImpar():
+                    return True
+                return False
+                    
+            elif tipo == self.taxi:
                 print ("por implementar")
+                return False
             else:
                 print ("*"*30)
                 print ("*"*30)
@@ -81,8 +92,7 @@ class PicoYPlaca:
                 print ("*"*30)
                 print ("*"*30)
                 return False
-        else:
-            return False
+        return False
         
     def refrescarFecha(self):
         """
@@ -141,15 +151,14 @@ class PicoYPlaca:
             self.taxi NO IMPLEMENTADO
             self.moto NO IMPLEMENTADO
         """
-        tipo=tipo.lower()
         
         if self.realtime:
             self.refrescarFecha()
         
-        maini=datetime.datetime(self.fecha_actual.year,self.fecha_actual.month,self.fecha_actual.day,6,0,0)
+        maini=datetime.datetime(self.fecha_actual.year,self.fecha_actual.month,self.fecha_actual.day,6,0,0)#6:00am a 8:30am
         mafin=datetime.datetime(self.fecha_actual.year,self.fecha_actual.month,self.fecha_actual.day,8,30,0)
         
-        evini=datetime.datetime(self.fecha_actual.year,self.fecha_actual.month,self.fecha_actual.day,15,0,0)
+        evini=datetime.datetime(self.fecha_actual.year,self.fecha_actual.month,self.fecha_actual.day,15,0,0)#3:00pm a 7:30pm
         evfin=datetime.datetime(self.fecha_actual.year,self.fecha_actual.month,self.fecha_actual.day,19,30,0)
         
         if tipo==self.particular:
@@ -185,13 +194,30 @@ class PicoYPlaca:
             return False,"invalida_formato" 
         else:
             return False,"invalida_longitud"   
+            
+    def tipoPlaca(self,placa):
+        """
+        Funcion que retorna si es una placa valida !PROBADA!
+        """
+        placa=placa.upper()
+        if (len(placa)==6):
+            match=re.search(r'[A-Z][A-Z][A-Z][0-9][0-9][0-9]', placa)
+            if match:
+                return self.particular
+            match=re.search(r'[A-Z][A-Z][A-Z][0-9][0-9][A-Z]', placa)
+            if match:
+                return self.moto
+            return "invalida_formato" 
+        else:
+            return "invalida_longitud"   
         
         
     def placaPar(self,placa):
         """
         Funcion que retorna si es una placa par !PROBADA!
         """
-        esplaca,tipo=self.esPlaca(placa)
+        esplaca=self.esPlaca(placa)
+        tipo=self.tipoPlaca(placa)
         if esplaca and tipo== self.particular:
             if int(placa[-1])%2==0:
                     return True
@@ -202,7 +228,8 @@ class PicoYPlaca:
         """
         Funcion que retorna si es una placa impar !PROBADA!
         """
-        esplaca,tipo=self.esPlaca(placa)
+        esplaca=self.esPlaca(placa)
+        tipo=self.tipoPlaca(placa)
         if esplaca and tipo== self.particular:
             if int(placa[-1])%2==1:
                     return True
@@ -224,6 +251,12 @@ if __name__ == "__main__":
     for placa in placas:
         print ("probando placa " ,placa," Retorna ",pp.esPlaca(placa))
     guiasfin("esPlaca")
+    
+    guiasini("tipoPlaca")
+    print ("probando funcion tipoPlaca:")
+    for placa in placas:
+        print ("probando placa " ,placa," Retorna ",pp.tipoPlaca(placa))
+    guiasfin("tipoPlaca")
     
     guiasini("placaPar")
     for placa in placas:
@@ -268,7 +301,8 @@ if __name__ == "__main__":
     
     fechas=[datetime.date(2019,6,17),datetime.date(2019,6,18),datetime.date(2019,6,19),datetime.date(2019,6,20),datetime.date(2019,6,21),datetime.date(2019,6,22),datetime.date(2019,6,23)]
     fechasytiempo=[datetime.datetime(2019,6,17,7,15,00),datetime.datetime(2019,6,18,8,15,00),datetime.datetime(2019,6,19,6,30,30),datetime.datetime(2019,6,20,14,15,45),datetime.datetime(2019,6,21,16,15,00),datetime.datetime(2019,6,22,16,15,00),datetime.datetime(2019,6,23,16,15,00)]
-
+    placas=["ABC123","ABC123","ABC124","ABC124","ABC125", "abc444", "jns239"]
+    
     guiasini("enRestriccion")
     pp=PicoYPlaca()
     print ("probando enRestriccion HOY=" ,pp.ahora," Retorna ",pp.enRestriccion(pp.particular))
@@ -279,6 +313,29 @@ if __name__ == "__main__":
         pp=PicoYPlaca(fecha,ftemp)
         print ("probando enRestriccion " ,pp.ahora," Retorna ",pp.enRestriccion(pp.particular))
     guiasfin("enRestriccion")
+    
+    
+    fechas=[datetime.date(2019,6,17),datetime.date(2019,6,18),datetime.date(2019,6,19),datetime.date(2019,6,20),datetime.date(2019,6,21),datetime.date(2019,6,22),datetime.date(2019,6,23)]
+    fechasytiempo=[datetime.datetime(2019,6,17,7,15,00),datetime.datetime(2019,6,18,8,15,00),datetime.datetime(2019,6,19,6,30,30),datetime.datetime(2019,6,20,14,15,45),datetime.datetime(2019,6,21,16,15,00),datetime.datetime(2019,6,22,16,15,00),datetime.datetime(2019,6,23,16,15,00)]
+
+    guiasini("tienePicoYPlaca")
+    pp=PicoYPlaca()
+    print ("probando tienePicoYPlaca, Placa ","BFA850" ," Fecha: ", pp.fecha_actual," ",pp.ahora," Retorna ",pp.tienePicoYPlaca("BFA850",pp.particular))
+    
+    pp=PicoYPlaca()
+    for itera in range(len(fechasytiempo)):
+        fecha=fechas[itera]
+        ftemp=fechasytiempo[itera]
+        placa=placas[itera]
+        pp=PicoYPlaca(fecha,ftemp)
+        pp.tienePicoYPlaca(placa,tipo="particular")
+        print ("probando tienePicoYPlaca, Placa ",placa ," Fecha: ", pp.fecha_actual," ",pp.ahora," Retorna ",pp.tienePicoYPlaca(placa,pp.particular))
+    
+    
+    guiasfin("tienePicoYPlaca")
+    
+    
+    
     
     
     

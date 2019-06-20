@@ -9,6 +9,10 @@ import os
 import easygui
 import glob
 import random
+import datetime
+
+
+from  timePicoYPlaca import PicoYPlaca as picoypla
 
 
 
@@ -119,14 +123,17 @@ rgbgr_image(imgImported)
 
 lineaDeConteo=[]
 for cc in range(lineasDeConteo):
-    lineaDeConteo.append(lc.selectLine(imgFile2,ownString='Selecciona la linea de deteccion #' +str(cc+1),filename=fn,linecount=cc+1))
+    lineaDeConteo.append(lc.selectLine(imgFile2,ownString='Selecciona la linea de deteccion #' +str(cc+1),filename=folder+"/deteccion.jpg",linecount=cc+1))
     sleep(1)
+
+pp=picoypla()
+
 
 while (True):
     
     cam = cv2.VideoCapture(fn)
     ruta,ext=os.path.splitext(fn)
-    archsal=ruta+'.csv'     
+    archsal=folder+'/reporte_streaming.csv'     
     frames=0
     ret_val, imgFile2 = cam.read()
     frames+=1
@@ -157,14 +164,21 @@ while (True):
         frames+=1
         if not ret_val:
             print ("Error en el streaming, saliendo...")
-            cv2.imwrite('ultimofotogramaprocesado.jpg',imgFile3)
+            cv2.imwrite('ultimofotogramaprocesadostreaming.jpg',imgFile3)
             ErrorStreaming=True
             break# TODO PONER REINTENTO
         
         if SALVARCONTADO:
             copiaimagen=imgFile2.copy()
-        segframes=cam.get(cv2.cv.CV_CAP_PROP_POS_FRAMES)
-        tiempoactual=cam.get(cv2.cv.CV_CAP_PROP_POS_MSEC)*20.0/30.0#el 20.0/30.0 es por defecto en videos de secretaria. 
+            
+        ahora=datetime.datetime.now()
+        
+        tiempoactual=ahora.strftime("%y-%m-%d-%H%M%S")
+
+        #segframes=cam.get(cv2.cv.CV_CAP_PROP_POS_FRAMES)
+        
+        #tiempoactual=cam.get(cv2.cv.CV_CAP_PROP_POS_MSEC)
+        
         imgFile3 = cv2.cvtColor(imgFile2,cv2.COLOR_BGR2RGB)
         #imgFile3 = cv2.imread("../data/eagle2.jpg")
         tama=imgFile3.shape
@@ -238,14 +252,12 @@ while (True):
     
                 for contar in contadores:
                     if (contar.testLine(p2,p1) and not track.p.p[idx].contadores[contar.linecount]):
-                        direct=contar.crossSign(p2,p1)
-                        cv2.circle(imgFile2,contar.intersectPoint(p2,p1),4,(100,255,255), -1) #intersecting point
-                        track.p.p[idx].contado=True
-                        track.p.p[idx].contadores[contar.linecount]=1
-                        contar.addToLineCounter(str(track.p.p[idx].str),frames,tiempoactual,direct)
-                        if ((str(track.p.p[idx].str) == 'particular') or (str(track.p.p[idx].str) == 'taxi')):
+                        
+                        if ((str(track.p.p[idx].str) == 'particular')): #or (str(track.p.p[idx].str) == 'taxi')):
+                            direct=contar.crossSign(p2,p1)
+                            cv2.circle(imgFile2,contar.intersectPoint(p2,p1),4,(100,255,255), -1) #intersecting point
+                        
                             rp = detect_img(netplacas, metaplacas, imgImported) 
-
                             print ('Detecciones: de placa:'+str(len(rp)))
                             print (rp)
 
@@ -265,10 +277,15 @@ while (True):
                                 s = detect_img(netocr, metaocr, imgImported2)
                                 print ('Detecciones: '+str(len(s)))
                                 print (s)
-                                graficarPlacas(imgFile2,placa,s)
+                                strypos=graficarPlacas(imgFile2,placa,s)
+                                placa_actual=strypos[0]
                                 
-                                if SALVARCONTADO:
-                                    imfilesave=folder+"/"+track.p.p[idx].str+'_'+str(contimagen)+'_'+str(random.randint(1000,10000))+'.JPG'
+                                
+                                if pp.tienePicoYPlaca(placa_actual,tipo="particular"):
+                                    track.p.p[idx].contado=True
+                                    track.p.p[idx].contadores[contar.linecount]=1
+                                    contar.addToLineCounter(str(track.p.p[idx].str),frames,tiempoactual,direct)
+                                    imfilesave=folder+"/"+placa_actual+'_'+str(contimagen)+'_'+str(random.randint(1000,10000))+'.JPG'
                                     cx=int(track.p.p[idx].rect.x)
                                     cy=int(track.p.p[idx].rect.y)
                                     cu=int(track.p.p[idx].rect.u)
@@ -277,25 +294,15 @@ while (True):
                                     ch=int(track.p.p[idx].tam.h)
                                     cv2.imwrite(imfilesave,copiaimagen[cy:cv,cx:cu])
                                     contimagen=contimagen+1
-                        if SALVARCONTADO:
-                            imfilesave=folder+"/"+track.p.p[idx].str+'_'+str(contimagen)+'_'+str(random.randint(1000,10000))+'.JPG'
-                            cx=int(track.p.p[idx].rect.x)
-                            cy=int(track.p.p[idx].rect.y)
-                            cu=int(track.p.p[idx].rect.u)
-                            cv=int(track.p.p[idx].rect.v)
-                            cw=int(track.p.p[idx].tam.w)
-                            ch=int(track.p.p[idx].tam.h)
-                            cv2.imwrite(imfilesave,copiaimagen[cy:cv,cx:cu])
-                            contimagen=contimagen+1
                     
         if pintarTrayectos:
             track.drawPaths(imgFile2)
         
         
         cv2.imshow('Video', imgFile2)
-        k = cv2.waitKey(2)& 0xFF
-        if k==ord('q'):    # Esc key=537919515 en linux WTF??? para parar y en mi otro PC 1048689
-            print ('interrupcion de usuario...')
+        k = cv2.waitKey(1)& 0xFF
+        if k==ord('q') or k==ord('Q'):    # Esc key=537919515 en linux WTF??? para parar y en mi otro PC 1048689
+            print ('WARNING:::interrupcion de usuario...')
             break
     
     for contar in contadores:
@@ -303,6 +310,9 @@ while (True):
     cv2.imwrite('ultimofotogramaprocesado.jpg',imgFile3)
     print ('Saliendo...')
     cv2.destroyAllWindows()
+    cv2.waitKey(1)
+    cv2.waitKey(10)
+    cv2.waitKey(100)
     cam.release()
 #exit()
 
