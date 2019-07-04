@@ -37,7 +37,7 @@ SALVARCONTADO=True
 contimagen=1
 
 
-framesttl=5
+framesttl=10
 deCamara=False
 MAXW=550 ## 200 pixeles maximo de ancho permitido
 mindist=10
@@ -315,4 +315,3 @@ while (True):
     cv2.waitKey(100)
     cam.release()
 #exit()
-
