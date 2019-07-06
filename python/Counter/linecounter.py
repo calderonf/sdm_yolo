@@ -339,7 +339,7 @@ class zone_detector:
             return self.Params(a,b,c) 
     
     def pointInside(self,point):
-        dist=cv2.pointPolygonTest(self.pts,pointº,True)
+        dist=cv2.pointPolygonTest(self.pts,point,True)
         
         if dist>=0:
             return True
@@ -558,7 +558,7 @@ if __name__ == "__main__":
         
         zd=zone_detector(rectangulopres.pt1,rectangulopres.pt2,rectangulopres.pt3,rectangulopres.pt4,frame)
         
-        zd.mask
+        
         cv2.namedWindow('mask')
         cv2.namedWindow('mask rgb')
         
