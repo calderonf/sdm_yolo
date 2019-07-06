@@ -39,8 +39,8 @@ contimagen=1
 
 framesttl=5
 deCamara=False
-MAXW=550 ## 200 pixeles maximo de ancho permitido
-mindist=10
+MAXW=1920 ## 200 pixeles maximo de ancho permitido
+mindist=150
 
 
 
@@ -262,38 +262,41 @@ while (True):
                             print (rp)
 
                             for i in range(len(rp)):
-                                w=int(rp[i][2][2])
-                                h=int(rp[i][2][3])
-                                x=int(rp[i][2][0])-(w/2)
-                                y=int(rp[i][2][1])-(h/2)
-                                placa=[x,y,w,h,rp[i][0]]
-                                imgtoOCR=imgFile2[y:y+h,x:x+w]
-                                imgtoOCR1 = cv2.cvtColor(imgtoOCR, cv2.COLOR_BGR2RGB)
-                                tama2=imgtoOCR.shape
-                                imgImported2=make_image(tama2[1],tama2[0],tama2[2])
-                                imgFileptr2,cv_img2=get_iplimage_ptr(imgtoOCR1)      
-                                ipl_in2_image(imgFileptr2,imgImported2)
-                                #rgbgr_image(imgImported2)
-                                s = detect_img(netocr, metaocr, imgImported2)
-                                print ('Detecciones: '+str(len(s)))
-                                print (s)
-                                strypos=graficarPlacas(imgFile2,placa,s)
-                                placa_actual=strypos[0]
-                                
-                                
-                                if pp.tienePicoYPlaca(placa_actual,tipo="particular"):
-                                    track.p.p[idx].contado=True
-                                    track.p.p[idx].contadores[contar.linecount]=1
-                                    contar.addToLineCounter(str(track.p.p[idx].str),frames,tiempoactual,direct)
-                                    imfilesave=folder+"/"+placa_actual+'_'+str(contimagen)+'_'+str(random.randint(1000,10000))+'.JPG'
-                                    cx=int(track.p.p[idx].rect.x)
-                                    cy=int(track.p.p[idx].rect.y)
-                                    cu=int(track.p.p[idx].rect.u)
-                                    cv=int(track.p.p[idx].rect.v)
-                                    cw=int(track.p.p[idx].tam.w)
-                                    ch=int(track.p.p[idx].tam.h)
-                                    cv2.imwrite(imfilesave,copiaimagen[cy:cv,cx:cu])
-                                    contimagen=contimagen+1
+                                try:
+                                    w=int(rp[i][2][2])
+                                    h=int(rp[i][2][3])
+                                    x=int(rp[i][2][0])-(w/2)
+                                    y=int(rp[i][2][1])-(h/2)
+                                    placa=[x,y,w,h,rp[i][0]]
+                                    imgtoOCR=imgFile2[y:y+h,x:x+w]
+                                    imgtoOCR1 = cv2.cvtColor(imgtoOCR, cv2.COLOR_BGR2RGB)
+                                    tama2=imgtoOCR.shape
+                                    imgImported2=make_image(tama2[1],tama2[0],tama2[2])
+                                    imgFileptr2,cv_img2=get_iplimage_ptr(imgtoOCR1)      
+                                    ipl_in2_image(imgFileptr2,imgImported2)
+                                    #rgbgr_image(imgImported2)
+                                    s = detect_img(netocr, metaocr, imgImported2)
+                                    print ('Detecciones: '+str(len(s)))
+                                    print (s)
+                                    strypos=graficarPlacas(imgFile2,placa,s)
+                                    placa_actual=strypos[0]
+                                    
+                                    
+                                    if pp.tienePicoYPlaca(placa_actual,tipo="particular"):
+                                        track.p.p[idx].contado=True
+                                        track.p.p[idx].contadores[contar.linecount]=1
+                                        contar.addToLineCounter(str(track.p.p[idx].str),frames,tiempoactual,direct)
+                                        imfilesave=folder+"/"+placa_actual+'_'+str(contimagen)+'_'+str(random.randint(1000,10000))+'.JPG'
+                                        cx=int(track.p.p[idx].rect.x)
+                                        cy=int(track.p.p[idx].rect.y)
+                                        cu=int(track.p.p[idx].rect.u)
+                                        cv=int(track.p.p[idx].rect.v)
+                                        cw=int(track.p.p[idx].tam.w)
+                                        ch=int(track.p.p[idx].tam.h)
+                                        cv2.imwrite(imfilesave,copiaimagen)
+                                        contimagen=contimagen+1
+                                except TypeError:
+                                    print('Se ha detectado un error, toca mirar que es')
                     
         if pintarTrayectos:
             track.drawPaths(imgFile2)
