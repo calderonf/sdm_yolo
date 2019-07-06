@@ -7,7 +7,6 @@ from time import sleep
 import cv2
 import os
 import easygui
-import glob
 import random
 import datetime
 
@@ -37,14 +36,14 @@ SALVARCONTADO=True
 contimagen=1
 
 
-framesttl=5
+framesttl=10
 deCamara=False
 MAXW=1920 ## 200 pixeles maximo de ancho permitido
 mindist=150
 
 
 
-def graficarPlacas(img,resplaca,resOCR):
+def graficarPlacas(img,placa,resOCR):
     #tomar las 6 mejores detecciones:
     #resOCR=resOCR[0:6]
     colour=(int(random.uniform(100,150)),int(random.uniform(180,255)),int(0))
@@ -255,9 +254,23 @@ while (True):
                         
                         if ((str(track.p.p[idx].str) == 'particular')): #or (str(track.p.p[idx].str) == 'taxi')):
                             direct=contar.crossSign(p2,p1)
-                            cv2.circle(imgFile2,contar.intersectPoint(p2,p1),4,(100,255,255), -1) #intersecting point
-                        
-                            rp = detect_img(netplacas, metaplacas, imgImported) 
+                            cv2.circle(imgFile2,contar.intersectPoint(p2,p1),4,(100,100,255), -1) #intersecting point
+                            cx=int(track.p.p[idx].rect.x)
+                            cy=int(track.p.p[idx].rect.y)
+                            cu=int(track.p.p[idx].rect.u)
+                            cv=int(track.p.p[idx].rect.v)
+                            cw=int(track.p.p[idx].tam.w)
+                            ch=int(track.p.p[idx].tam.h)
+                            
+                            imgtoPLACAS=imgFile2[cy:cv,cx:cu]
+                            imgtoPLACAS1 = cv2.cvtColor(imgtoPLACAS, cv2.COLOR_BGR2RGB)
+                            tamaPL=imgtoPLACAS1.shape
+                            imgImportedPL=make_image(tamaPL[1],tamaPL[0],tamaPL[2])
+                            
+                            imgFileptrPL,cv_img2=get_iplimage_ptr(imgtoPLACAS1)      
+                            ipl_in2_image(imgFileptrPL,imgImportedPL)
+                            
+                            rp = detect_img(netplacas, metaplacas, imgImportedPL) 
                             print ('Detecciones: de placa:'+str(len(rp)))
                             print (rp)
 
@@ -318,4 +331,3 @@ while (True):
     cv2.waitKey(100)
     cam.release()
 #exit()
-

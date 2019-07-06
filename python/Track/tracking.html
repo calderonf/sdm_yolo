@@ -1,0 +1,337 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module tracking</title>
+<meta charset="utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>tracking</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/francisco/sdm_yolo/python/Track/tracking.py">/home/francisco/sdm_yolo/python/Track/tracking.py</a></font></td></tr></table>
+    <p><tt>@author:&nbsp;Francisco&nbsp;Carlos&nbsp;Calderon<br>
+Created&nbsp;on&nbsp;4/01/18&nbsp;&nbsp;&nbsp;4:33PM&nbsp;2018<br>
+&nbsp;<br>
+&nbsp;<br>
+Este&nbsp;modulo&nbsp;implementa&nbsp;llamados&nbsp;de&nbsp;estructuras&nbsp;de&nbsp;seguimiento<br>
+&nbsp;<br>
+puede&nbsp;ser&nbsp;llamado&nbsp;desde&nbsp;esta&nbsp;misma&nbsp;carpeta&nbsp;o&nbsp;invocado&nbsp;como&nbsp;un&nbsp;modulo&nbsp;aparte<br>
+&nbsp;<br>
+&nbsp;<br>
+&nbsp;<br>
+Para&nbsp;generar&nbsp;la&nbsp;documentacion&nbsp;del&nbsp;modulo&nbsp;ejecute&nbsp;desde&nbsp;una&nbsp;terminal&nbsp;en&nbsp;el&nbsp;directorio&nbsp;raiz&nbsp;del&nbsp;modulo:<br>
+&nbsp;<br>
+&nbsp;<br>
+&nbsp;&nbsp;python&nbsp;-m&nbsp;pydoc&nbsp;-w&nbsp;<a href="#tracking">tracking</a><br>
+&nbsp;<br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;A&nbsp;continuacion&nbsp;se&nbsp;listan&nbsp;prerequisitos&nbsp;o&nbsp;'modulos',&nbsp;&nbsp;clases&nbsp;y&nbsp;funciones&nbsp;implementadas.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="cv2.html">cv2</a><br>
+<a href="math.html">math</a><br>
+</td><td width="25%" valign=top><a href="numpy.html">numpy</a><br>
+<a href="os.html">os</a><br>
+</td><td width="25%" valign=top><a href="random.html">random</a><br>
+<a href="sys.html">sys</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="tracking.html#cont">cont</a>
+</font></dt><dt><font face="helvetica, arial"><a href="tracking.html#objects">objects</a>
+</font></dt><dt><font face="helvetica, arial"><a href="tracking.html#paths">paths</a>
+</font></dt><dt><font face="helvetica, arial"><a href="tracking.html#point">point</a>
+</font></dt><dt><font face="helvetica, arial"><a href="tracking.html#rect">rect</a>
+</font></dt><dt><font face="helvetica, arial"><a href="tracking.html#singleobject">singleobject</a>
+</font></dt><dt><font face="helvetica, arial"><a href="tracking.html#singlepath">singlepath</a>
+</font></dt><dt><font face="helvetica, arial"><a href="tracking.html#tracking">tracking</a>
+</font></dt></dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="cont">class <strong>cont</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Clase&nbsp;<a href="#cont">cont</a>&nbsp;de&nbsp;contenedor&nbsp;o&nbsp;tamanio&nbsp;de&nbsp;rectangulo&nbsp;contenedor<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="cont-__init__"><strong>__init__</strong></a>(self, w, h)</dt><dd><tt>Inicializacion</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="objects">class <strong>objects</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Clase&nbsp;de&nbsp;multiples&nbsp;objetos&nbsp;simples,&nbsp;cada&nbsp;uno&nbsp;con:&nbsp;un&nbsp;punto,&nbsp;<br>
+&nbsp;<br>
+un&nbsp;tamanio&nbsp;de&nbsp;rectangulo&nbsp;contenedor&nbsp;y&nbsp;sus&nbsp;aristas<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="objects-__init__"><strong>__init__</strong></a>(self)</dt><dd><tt>inicializacion&nbsp;de&nbsp;lista&nbsp;con&nbsp;objetos</tt></dd></dl>
+
+<dl><dt><a name="objects-clearObjets"><strong>clearObjets</strong></a>(self)</dt><dd><tt>Funcion&nbsp;para&nbsp;eliminar&nbsp;el&nbsp;contenido&nbsp;total&nbsp;de&nbsp;la&nbsp;lista&nbsp;de&nbsp;objetos</tt></dd></dl>
+
+<dl><dt><a name="objects-insertObjet"><strong>insertObjet</strong></a>(self, x, y, w, h, strFeature)</dt><dd><tt>Funcion&nbsp;para&nbsp;insertar&nbsp;un&nbsp;objeto&nbsp;nuevo&nbsp;a&nbsp;la&nbsp;lista,&nbsp;se&nbsp;usa&nbsp;append&nbsp;<br>
+&nbsp;<br>
+por&nbsp;lo&nbsp;que&nbsp;los&nbsp;objetos&nbsp;se&nbsp;listan&nbsp;de&nbsp;cola&nbsp;a&nbsp;cabeza,&nbsp;el&nbsp;mas&nbsp;reciente&nbsp;queda&nbsp;al&nbsp;final</tt></dd></dl>
+
+<dl><dt><a name="objects-printObjets"><strong>printObjets</strong></a>(self)</dt><dd><tt>Funcion&nbsp;para&nbsp;imprimir&nbsp;la&nbsp;lista&nbsp;de&nbsp;objetos&nbsp;en&nbsp;pantalla&nbsp;<br>
+&nbsp;<br>
+util&nbsp;para&nbsp;debug</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="paths">class <strong>paths</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Clase&nbsp;de&nbsp;multiples&nbsp;<a href="#paths">paths</a>&nbsp;o&nbsp;trajectos&nbsp;simples,&nbsp;cada&nbsp;uno&nbsp;con:&nbsp;un&nbsp;punto,&nbsp;<br>
+&nbsp;<br>
+un&nbsp;tamanio&nbsp;de&nbsp;rectangulo&nbsp;contenedor&nbsp;y&nbsp;sus&nbsp;aristas<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="paths-__init__"><strong>__init__</strong></a>(self)</dt><dd><tt>Inicializacion&nbsp;de&nbsp;una&nbsp;lista&nbsp;de&nbsp;<a href="#paths">paths</a>&nbsp;simples</tt></dd></dl>
+
+<dl><dt><a name="paths-clearPaths"><strong>clearPaths</strong></a>(self)</dt><dd><tt>Funcion&nbsp;que&nbsp;borra&nbsp;la&nbsp;lista&nbsp;de&nbsp;trayectos</tt></dd></dl>
+
+<dl><dt><a name="paths-createNewPath"><strong>createNewPath</strong></a>(self, idx, x, y, w, h, framesttl, featurestring)</dt><dd><tt>Funcion&nbsp;para&nbsp;insertar&nbsp;un&nbsp;path&nbsp;o&nbsp;trayecto&nbsp;nuevo&nbsp;a&nbsp;la&nbsp;lista,&nbsp;se&nbsp;usa&nbsp;append&nbsp;<br>
+&nbsp;<br>
+por&nbsp;lo&nbsp;que&nbsp;los&nbsp;trayectos&nbsp;se&nbsp;listan&nbsp;de&nbsp;cola&nbsp;a&nbsp;cabeza,&nbsp;el&nbsp;mas&nbsp;reciente&nbsp;queda&nbsp;al&nbsp;final</tt></dd></dl>
+
+<dl><dt><a name="paths-insertToPath"><strong>insertToPath</strong></a>(self, idx, x, y, w, h, st, framesttl)</dt><dd><tt>Funcion&nbsp;para&nbsp;insertar&nbsp;a&nbsp;un&nbsp;trayecto&nbsp;o&nbsp;path&nbsp;existente&nbsp;un&nbsp;nuevo&nbsp;punto<br>
+&nbsp;<br>
+si&nbsp;el&nbsp;id&nbsp;del&nbsp;trayecto&nbsp;o&nbsp;path&nbsp;no&nbsp;existe&nbsp;retorna&nbsp;1,&nbsp;si&nbsp;existe&nbsp;retorna&nbsp;0<br>
+&nbsp;<br>
+por&nbsp;lo&nbsp;que&nbsp;su&nbsp;uso&nbsp;recomendado&nbsp;es:<br>
+&nbsp;<br>
+if&nbsp;self.<a href="#paths-insertToPath">insertToPath</a>(idx,x,y,w,h):#si&nbsp;no&nbsp;existe<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print('ERROR:&nbsp;el&nbsp;id&nbsp;'+str(idx)+'&nbsp;no&nbsp;existe&nbsp;en&nbsp;la&nbsp;lista&nbsp;de&nbsp;trayectos')</tt></dd></dl>
+
+<dl><dt><a name="paths-printPath"><strong>printPath</strong></a>(self, path)</dt><dd><tt>Funcion&nbsp;que&nbsp;Imprime&nbsp;todos&nbsp;los&nbsp;puntos&nbsp;que&nbsp;hacen&nbsp;parte&nbsp;de&nbsp;un&nbsp;trayecto&nbsp;<br>
+&nbsp;<br>
+en&nbsp;una&nbsp;sola&nbsp;linea</tt></dd></dl>
+
+<dl><dt><a name="paths-printPaths"><strong>printPaths</strong></a>(self)</dt><dd><tt>Funcion&nbsp;que&nbsp;Imprime&nbsp;todos&nbsp;los&nbsp;trayectos&nbsp;junto&nbsp;con&nbsp;su&nbsp;secuencia&nbsp;de&nbsp;puntos,&nbsp;y&nbsp;sus&nbsp;propiedades</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="point">class <strong>point</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Clase&nbsp;<a href="#point">point</a>&nbsp;para&nbsp;guardar&nbsp;la&nbsp;estructura&nbsp;de&nbsp;un&nbsp;punto.&nbsp;posiblemente&nbsp;<br>
+&nbsp;<br>
+se&nbsp;le&nbsp;pueda&nbsp;generar&nbsp;una&nbsp;funcion&nbsp;de&nbsp;distancia&nbsp;entre&nbsp;puntos<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="point-__init__"><strong>__init__</strong></a>(self, x, y)</dt><dd><tt>Inicializacion</tt></dd></dl>
+
+<dl><dt><a name="point-retPoint"><strong>retPoint</strong></a>(self)</dt><dd><tt>Funcion&nbsp;que&nbsp;retorna&nbsp;la&nbsp;pareja&nbsp;ordenada,&nbsp;util&nbsp;para&nbsp;usar&nbsp;en&nbsp;conjunto&nbsp;con&nbsp;cv2</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="rect">class <strong>rect</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Clase&nbsp;de&nbsp;rectangulo,&nbsp;que&nbsp;contiene&nbsp;dos&nbsp;puntos,&nbsp;[x,y]&nbsp;y&nbsp;[u,v]&nbsp;con&nbsp;<br>
+&nbsp;<br>
+las&nbsp;esquinas&nbsp;del&nbsp;rectangulo&nbsp;contenedor<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="rect-__init__"><strong>__init__</strong></a>(self, x, y, u, v)</dt><dd><tt>Inicializacion</tt></dd></dl>
+
+<dl><dt><a name="rect-retPoints"><strong>retPoints</strong></a>(self)</dt><dd><tt>Funcion&nbsp;que&nbsp;retorna&nbsp;dos&nbsp;parejas&nbsp;ordenadas,&nbsp;util&nbsp;para&nbsp;usar&nbsp;en&nbsp;conjunto&nbsp;con&nbsp;cv2</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="singleobject">class <strong>singleobject</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Clase&nbsp;de&nbsp;objeto&nbsp;simple&nbsp;con&nbsp;un&nbsp;punto,&nbsp;un&nbsp;tamanio&nbsp;de&nbsp;rectangulo&nbsp;contenedor&nbsp;y&nbsp;sus&nbsp;aristas<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="singleobject-__init__"><strong>__init__</strong></a>(self, x, y, w, h, strFeature)</dt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="singlepath">class <strong>singlepath</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Clase&nbsp;con&nbsp;un&nbsp;trayecto,&nbsp;que&nbsp;contiene&nbsp;una&nbsp;estructura&nbsp;de&nbsp;seguimiento&nbsp;completa.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="singlepath-__init__"><strong>__init__</strong></a>(self, idx, x, y, w, h, framesttl, featurestring, lineasconteo<font color="#909090">=10</font>)</dt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="tracking">class <strong>tracking</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Clase&nbsp;<a href="#tracking">tracking</a>&nbsp;<br>
+&nbsp;<br>
+Esta&nbsp;clase&nbsp;lista&nbsp;todos&nbsp;los&nbsp;Metodos&nbsp;para&nbsp;generar&nbsp;la&nbsp;clase&nbsp;de&nbsp;seguimiento&nbsp;<br>
+&nbsp;<br>
+Ella&nbsp;genera&nbsp;al&nbsp;inicio&nbsp;los&nbsp;llamados&nbsp;a&nbsp;las&nbsp;clases&nbsp;internas&nbsp;<a href="#objects">objects</a>&nbsp;y&nbsp;<a href="#paths">paths</a>,<br>
+&nbsp;<br>
+&nbsp;<br>
+&nbsp;<br>
+La&nbsp;clase&nbsp;<a href="#objects">objects</a>&nbsp;sirve&nbsp;para&nbsp;llevar&nbsp;registro&nbsp;de&nbsp;los&nbsp;objetos&nbsp;detectados&nbsp;en&nbsp;el&nbsp;cuadro&nbsp;actual<br>
+&nbsp;<br>
+La&nbsp;clase&nbsp;<a href="#paths">paths</a>&nbsp;sirve&nbsp;para&nbsp;llevar&nbsp;registro&nbsp;del&nbsp;trajecto&nbsp;asociado&nbsp;a&nbsp;cada&nbsp;objeto&nbsp;detectado<br>
+&nbsp;<br>
+&nbsp;<br>
+los&nbsp;metodos&nbsp;son:&nbsp;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;__init__&nbsp;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;insertNewObject&nbsp;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;insertNewPath&nbsp;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;insertToPath&nbsp;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;printObjets&nbsp;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;printPaths&nbsp;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;clearObjets&nbsp;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;clearPaths&nbsp;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;processObjectstoPaths&nbsp;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;__euclidean<br>
+&nbsp;&nbsp;&nbsp;&nbsp;__safe_div<br>
+&nbsp;&nbsp;&nbsp;&nbsp;__avgsize<br>
+&nbsp;&nbsp;&nbsp;&nbsp;__calcPeso<br>
+&nbsp;&nbsp;&nbsp;&nbsp;__calcPesos<br>
+&nbsp;<br>
+&nbsp;<br>
+USO:<br>
+&nbsp;<br>
+&nbsp;<br>
+&nbsp;<br>
+llenar&nbsp;objetos<br>
+&nbsp;<br>
+procesar&nbsp;objetos<br>
+&nbsp;<br>
+profit<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;<br>
+&nbsp;<br>
+&nbsp;<br>
+LLAMADO:<br>
+&nbsp;<br>
+&nbsp;<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;<br>
+EJEMPLOS:<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="tracking-__init__"><strong>__init__</strong></a>(self, verbose<font color="#909090">=False</font>, mindist<font color="#909090">=100</font>, framesttl<font color="#909090">=30</font>)</dt><dd><tt>Funcion&nbsp;de&nbsp;inicializacion&nbsp;simplementa&nbsp;llamma&nbsp;a&nbsp;las&nbsp;clases&nbsp;<a href="#objects">objects</a>&nbsp;y&nbsp;<a href="#paths">paths</a></tt></dd></dl>
+
+<dl><dt><a name="tracking-clearObjets"><strong>clearObjets</strong></a>(self)</dt><dd><tt>Funcion&nbsp;que&nbsp;borra&nbsp;la&nbsp;lista&nbsp;de&nbsp;objetos,<br>
+&nbsp;<br>
+esta&nbsp;toca&nbsp;borrarla&nbsp;antes&nbsp;de&nbsp;analizar&nbsp;cada&nbsp;cuadro</tt></dd></dl>
+
+<dl><dt><a name="tracking-clearPaths"><strong>clearPaths</strong></a>(self)</dt><dd><tt>Funcion&nbsp;que&nbsp;borra&nbsp;la&nbsp;lista&nbsp;de&nbsp;trayectos&nbsp;<br>
+&nbsp;<br>
+OJO&nbsp;esta&nbsp;no&nbsp;es&nbsp;tan&nbsp;bueno&nbsp;irla&nbsp;borrando&nbsp;por&nbsp;lo&nbsp;que&nbsp;no&nbsp;se&nbsp;recomienda&nbsp;su&nbsp;uso</tt></dd></dl>
+
+<dl><dt><a name="tracking-drawPaths"><strong>drawPaths</strong></a>(self, image)</dt><dd><tt>Funcion&nbsp;que&nbsp;dibuja&nbsp;en&nbsp;la&nbsp;imagen&nbsp;los&nbsp;trayectos&nbsp;creados&nbsp;por&nbsp;un&nbsp;objeto&nbsp;siendo&nbsp;seguido,</tt></dd></dl>
+
+<dl><dt><a name="tracking-insertNewObject"><strong>insertNewObject</strong></a>(self, x, y, w, h, strFeature<font color="#909090">='Objeto'</font>)</dt><dd><tt>Funcion&nbsp;que&nbsp;inserta&nbsp;un&nbsp;nuevo&nbsp;objeto&nbsp;a&nbsp;la&nbsp;lista&nbsp;de&nbsp;objetos&nbsp;actuales&nbsp;a&nbsp;seguir</tt></dd></dl>
+
+<dl><dt><a name="tracking-insertNewPath"><strong>insertNewPath</strong></a>(self, idx, x, y, w, h, featurestring<font color="#909090">='Objeto'</font>)</dt><dd><tt>Funcion&nbsp;que&nbsp;inserta&nbsp;un&nbsp;nuevo&nbsp;trayecto&nbsp;a&nbsp;la&nbsp;lista</tt></dd></dl>
+
+<dl><dt><a name="tracking-insertToPath"><strong>insertToPath</strong></a>(self, idx, x, y, w, h, st)</dt><dd><tt>Funcion&nbsp;que&nbsp;inserta&nbsp;un&nbsp;nuevo&nbsp;punto&nbsp;a&nbsp;la&nbsp;trayectoria&nbsp;ya&nbsp;existente<br>
+&nbsp;<br>
+si&nbsp;el&nbsp;id&nbsp;del&nbsp;trayecto&nbsp;o&nbsp;path&nbsp;no&nbsp;existe&nbsp;retorna&nbsp;1,&nbsp;si&nbsp;existe&nbsp;retorna&nbsp;0<br>
+&nbsp;<br>
+por&nbsp;lo&nbsp;que&nbsp;su&nbsp;uso&nbsp;recomendado&nbsp;es:<br>
+&nbsp;<br>
+if&nbsp;self.<strong>p</strong>.<a href="#tracking-insertToPath">insertToPath</a>(idx,x,y,w,h):#si&nbsp;no&nbsp;existe<br>
+&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print('ERROR:&nbsp;el&nbsp;id&nbsp;'+str(idx)+'&nbsp;no&nbsp;existe&nbsp;en&nbsp;la&nbsp;lista&nbsp;de&nbsp;trayectos')</tt></dd></dl>
+
+<dl><dt><a name="tracking-objets2NewPaths"><strong>objets2NewPaths</strong></a>(self)</dt><dd><tt>Funcion&nbsp;que&nbsp;hace&nbsp;que&nbsp;todos&nbsp;los&nbsp;objetos&nbsp;actuales&nbsp;sean&nbsp;<br>
+&nbsp;<br>
+trayector&nbsp;nuevos,&nbsp;solo&nbsp;se&nbsp;cuemple&nbsp;en&nbsp;el&nbsp;caso&nbsp;en&nbsp;que&nbsp;<br>
+&nbsp;<br>
+no&nbsp;existan&nbsp;trayectos&nbsp;anteriores</tt></dd></dl>
+
+<dl><dt><a name="tracking-printObjets"><strong>printObjets</strong></a>(self)</dt><dd><tt>Funcion&nbsp;que&nbsp;imprime&nbsp;la&nbsp;lista&nbsp;de&nbsp;objetos&nbsp;y&nbsp;sus&nbsp;propiedades</tt></dd></dl>
+
+<dl><dt><a name="tracking-printPaths"><strong>printPaths</strong></a>(self)</dt><dd><tt>Funcion&nbsp;que&nbsp;imprime&nbsp;la&nbsp;lista&nbsp;de&nbsp;<a href="#paths">paths</a>&nbsp;y&nbsp;sus&nbsp;propiedades</tt></dd></dl>
+
+<dl><dt><a name="tracking-processObjectstoPaths"><strong>processObjectstoPaths</strong></a>(self)</dt><dd><tt>Funcion&nbsp;que&nbsp;procesa&nbsp;la&nbsp;lista&nbsp;de&nbsp;objetos&nbsp;insertados<br>
+&nbsp;<br>
+y&nbsp;dependiendo&nbsp;de&nbsp;sus&nbsp;caracteristicas,&nbsp;los&nbsp;asigna&nbsp;a&nbsp;trayectos&nbsp;nuevos&nbsp;o&nbsp;a&nbsp;existentes<br>
+&nbsp;<br>
+al&nbsp;final&nbsp;le&nbsp;quita&nbsp;uno&nbsp;a&nbsp;el&nbsp;TTL&nbsp;y&nbsp;elimina&nbsp;los&nbsp;trayectos&nbsp;viejos</tt></dd></dl>
+
+<dl><dt><a name="tracking-processTTL"><strong>processTTL</strong></a>(self)</dt><dd><tt>Funcion&nbsp;que&nbsp;resta&nbsp;uno&nbsp;a&nbsp;cada&nbsp;elemento&nbsp;de&nbsp;los&nbsp;trayectos,<br>
+&nbsp;<br>
+y&nbsp;cuando&nbsp;se&nbsp;cumple&nbsp;el&nbsp;tiempo&nbsp;de&nbsp;vida&nbsp;o&nbsp;ttl=0&nbsp;se&nbsp;elimina</tt></dd></dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-getMinItem"><strong>getMinItem</strong></a>(a)</dt><dd><tt>Funcion&nbsp;de&nbsp;uso&nbsp;general&nbsp;que&nbsp;busca&nbsp;el&nbsp;menor&nbsp;de&nbsp;una&nbsp;lista&nbsp;y&nbsp;retorna&nbsp;su&nbsp;id&nbsp;y&nbsp;valor</tt></dd></dl>
+ <dl><dt><a name="-gmtime"><strong>gmtime</strong></a>(...)</dt><dd><tt><a href="#-gmtime">gmtime</a>([seconds])&nbsp;-&gt;&nbsp;(tm_year,&nbsp;tm_mon,&nbsp;tm_mday,&nbsp;tm_hour,&nbsp;tm_min,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tm_sec,&nbsp;tm_wday,&nbsp;tm_yday,&nbsp;tm_isdst)<br>
+&nbsp;<br>
+Convert&nbsp;seconds&nbsp;since&nbsp;the&nbsp;Epoch&nbsp;to&nbsp;a&nbsp;time&nbsp;tuple&nbsp;expressing&nbsp;UTC&nbsp;(a.k.a.<br>
+GMT).&nbsp;&nbsp;When&nbsp;'seconds'&nbsp;is&nbsp;not&nbsp;passed&nbsp;in,&nbsp;convert&nbsp;the&nbsp;current&nbsp;time&nbsp;instead.</tt></dd></dl>
+ <dl><dt><a name="-sleep"><strong>sleep</strong></a>(...)</dt><dd><tt><a href="#-sleep">sleep</a>(seconds)<br>
+&nbsp;<br>
+Delay&nbsp;execution&nbsp;for&nbsp;a&nbsp;given&nbsp;number&nbsp;of&nbsp;seconds.&nbsp;&nbsp;The&nbsp;argument&nbsp;may&nbsp;be<br>
+a&nbsp;floating&nbsp;<a href="#point">point</a>&nbsp;number&nbsp;for&nbsp;subsecond&nbsp;precision.</tt></dd></dl>
+ <dl><dt><a name="-strftime"><strong>strftime</strong></a>(...)</dt><dd><tt><a href="#-strftime">strftime</a>(format[,&nbsp;tuple])&nbsp;-&gt;&nbsp;string<br>
+&nbsp;<br>
+Convert&nbsp;a&nbsp;time&nbsp;tuple&nbsp;to&nbsp;a&nbsp;string&nbsp;according&nbsp;to&nbsp;a&nbsp;format&nbsp;specification.<br>
+See&nbsp;the&nbsp;library&nbsp;reference&nbsp;manual&nbsp;for&nbsp;formatting&nbsp;codes.&nbsp;When&nbsp;the&nbsp;time&nbsp;tuple<br>
+is&nbsp;not&nbsp;present,&nbsp;current&nbsp;time&nbsp;as&nbsp;returned&nbsp;by&nbsp;localtime()&nbsp;is&nbsp;used.</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>OPENCVSUPPORT</strong> = True<br>
+<strong>clases</strong> = {'bus': 4, 'camion': 5, 'ciclista': 7, 'minivan': 6, 'motociclista': 3, 'particular': 1, 'peaton': 0, 'taxi': 2, 'tractomula': 8}<br>
+<strong>num2clases</strong> = ['peaton', 'particular', 'taxi', 'motociclista', 'bus', 'camion', 'minivan', 'ciclista', 'tractomula']</td></tr></table>
+</body></html>

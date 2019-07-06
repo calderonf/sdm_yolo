@@ -87,6 +87,101 @@ class selectLine:
         print ("puntos listos, gracias",self.pt1,self.pt2)
         cv2.destroyWindow('Seleccione Puntos')
 
+class selectRect:
+    
+    def __init__(self,imag,ownString='Seleccione Dos lineas que limitan la region a supervisar ',filename='Region.jpg',linecount=1):
+        global ix,iy,uux,iiy,ox,oy,drawing,both
+        
+        self.pt1=(-1,-1)
+        self.pt2=(-1,-1)
+        self.pt3=(-1,-1)
+        self.pt4=(-1,-1)
+        
+        
+        self.error=True
+        print ("Por favor sobre la ventana llamada:")
+        print ("Seleccione Rectangulo")
+        print(ownString)
+        print (20*"_")
+        print ("Instrucciones:")
+        print ("1. seleccione un punto de inicio con el click derecho")
+        print ("2. mantenga sostenido el click y suelte donde quiera el otro punto")
+        print ("3. oprima q, Q, s, S o Esc para salir en cualquier momento y retornar la no seleccion de puntos")
+        
+        cv2.namedWindow('Seleccione Rectangulo 1')
+        cv2.setMouseCallback('Seleccione Rectangulo 1',callbackMouse)
+        
+        while(1):
+            img=imag.copy()
+            if drawing:
+                cv2.circle(img,(ix,iy),3,(0,0,255),-1)
+                cv2.line(img,(ix,iy),(ox,oy),(255,122,110),2)
+                cv2.circle(img,(ox,oy),3,(255,0,255),-1)
+            cv2.imshow('Seleccione Rectangulo 1',img)
+            k = cv2.waitKey(1) & 0xFF
+            if both:
+                self.pt1=(ix,iy)
+                self.pt2=(iix,iiy)
+                self.error=False
+                break
+                
+            if k == 27 or k==ord('q') or k==ord('Q') or k==ord('s') or k==ord('S'):
+                self.pt1=(-1,-1)
+                self.pt2=(-1,-1)
+                self.error=True
+                break
+        filenameraw, file_extension = os.path.splitext(filename)
+        self.archivosalidajpg=filenameraw+'_linea_'+str(linecount)+'.jpg'
+        cv2.imwrite(self.archivosalidajpg,img)
+        ix,iy=-1,-1
+        uux,iiy=-1,-1
+        ox,oy=-1,-1
+        drawing,both=False,False
+        print ("Primeros 2 puntos listos, gracias continuando con 3 y 4",self.pt1,self.pt2)
+        cv2.destroyWindow('Seleccione Rectangulo 1')
+        
+        cv2.namedWindow('Seleccione Rectangulo 2')
+        cv2.setMouseCallback('Seleccione Rectangulo 2',callbackMouse)
+        
+        while(1):
+            img=imag.copy()
+            cv2.circle(img,self.pt1,3,(0,0,255),-1)
+            cv2.line(img,self.pt1,self.pt2,(110,122,255),2)
+            cv2.circle(img,self.pt2,3,(255,0,255),-1)
+            if drawing:
+                cv2.circle(img,(ix,iy),3,(0,0,255),-1)
+                cv2.line(img,(ix,iy),(ox,oy),(255,122,110),2)
+                cv2.circle(img,(ox,oy),3,(255,0,255),-1)
+            cv2.imshow('Seleccione Rectangulo 2',img)
+            k = cv2.waitKey(1) & 0xFF
+            if both:
+                self.pt3=(ix,iy)
+                self.pt4=(iix,iiy)
+                self.error=False
+                break
+            if k == 27 or k==ord('q') or k==ord('Q') or k==ord('s') or k==ord('S'):
+                self.pt3=(-1,-1)
+                self.pt4=(-1,-1)
+                self.error=True
+                break
+        filenameraw, file_extension = os.path.splitext(filename)
+        self.archivosalidajpg=filenameraw+'_linea_'+str(linecount)+'.jpg'
+        cv2.imwrite(self.archivosalidajpg,img)
+        ix,iy=-1,-1
+        uux,iiy=-1,-1
+        ox,oy=-1,-1
+        drawing,both=False,False
+        print ("Ultimos 2 puntos listos, gracias",self.pt3,self.pt4)
+        cv2.destroyWindow('Seleccione Rectangulo 2')
+        print("Organizando puntos a ser pintados.") 
+        
+        
+        
+        
+    def printRect(self):
+        print ("Los 4 Puntos del rectangulo son:",self.pt1,self.pt2,self.pt3,self.pt4)
+        
+        
 
 class saveAndLoadParser:
     def __init__(self, filename="salida.txt"):
@@ -153,6 +248,106 @@ class saveAndLoadParser:
         return tipo,nombre,datos
 
 
+class zone_detector:
+    
+    def __init__(self, pt1,pt2,pt3,pt4,imagebase,filename="salidaZoneDetector.csv",fps=20,linecount=1):
+        """
+        Inicializacion\n
+        Clase counter \n
+        Esta clase lista todos los Metodos para generar la clase de deteccion de objeto por zona \n
+        Ella genera al inicio los llamados a las clases internas objects y paths,\n
+        \n
+        La clase objects sirve para llevar registro de los objetos detectados en el cuadro actual\n
+        La clase paths sirve para llevar registro del trajecto asociado a cada objeto detectado\n
+    
+        los metodos son: \n
+            __init__ \n
+            calcOwnParams \n
+            calcParams \n
+            testLine \n
+            intersectPoint \n
+            addToLineCounter \n
+            writeToLineCounter \n
+            
+            SaveLine \n
+            LoadLine \n
+            
+            printPaths \n
+            clearObjets \n
+            clearPaths \n
+            processObjectstoPaths \n
+            
+            __areLinesIntersecting
+            __returnIntersectPoint
+            
+        \n
+        USO:\n
+        \n
+        pedir puntos de conteo\n
+        procesar si trajecto pasa linea de conteo\n
+        profit\n
+        LLAMADO:\n
+            \n
+        EJEMPLOS:\n
+         
+        """
+        self.Params = collections.namedtuple('Params', ['a','b','c']) #para guardar la ecuacion de una linea
+        
+        self.point1 = pt1
+        self.point2 = pt2
+        self.point3 = pt3
+        self.point4 = pt4
+        self.polygon=[pt1,pt2,pt4,pt3]
+        
+        
+        
+        self.tambase=imagebase.shape
+        self.mask = np.zeros((self.tambase[0],self.tambase[1],1), np.uint8)
+        self.maskrgb = np.zeros(self.tambase, np.uint8)
+        
+        
+        self.pts = np.array(self.polygon, np.int32)
+        self.pts = self.pts.reshape((-1,1,2))
+        cv2.fillConvexPoly(self.mask,self.pts,(255))
+        cv2.fillConvexPoly(self.maskrgb,self.pts,(255,255,255))
+        
+        self.p1=self.calcOwnParams1()
+        self.p2=self.calcOwnParams2()
+        
+        self.FPS=fps
+        self.clases={'peaton': 0, 'particular': 1, 'taxi': 2, 'motociclista': 3, 'bus': 4, 'camion': 5, 'minivan': 6, 'ciclista': 7, 'tractomula': 8}
+        
+    def calcOwnParams1(self): #line's equation Params computation
+        return self.calcParams(self.point1,self.point2)
+
+    def calcOwnParams2(self): #line's equation Params computation
+        return self.calcParams(self.point3,self.point4)
+    
+    def calcParams(self,point1, point2): #line's equation Params computation
+            if point2[1] - point1[1] == 0:
+                 a = 0
+                 b = -1.0
+            elif point2[0] - point1[0] == 0:
+                a = -1.0
+                b = 0
+            else:
+                a = float(point2[1] - point1[1]) / float(point2[0] - point1[0])
+                b = -1.0
+            
+            c = (-a * point1[0]) - b * point1[1]
+            #print ('parametros trayecto',a,b,c)
+            return self.Params(a,b,c) 
+    
+    def pointInside(self,point):
+        dist=cv2.pointPolygonTest(self.pts,point,True)
+        
+        if dist>=0:
+            return True
+        else:
+            return False
+
+    def __del__(self):
+        self.FILE.close()
 
 
 class counter:
@@ -207,7 +402,9 @@ class counter:
         self.Params = collections.namedtuple('Params', ['a','b','c']) #para guardar la ecuacion de una linea
         self.point1 = pt1
         self.point2 = pt2
+        
         self.p1=self.calcOwnParams()
+        
         self.conteo=0
 
         filenameraw, file_extension = os.path.splitext(filename)
@@ -351,85 +548,109 @@ class counter:
 
 
 if __name__ == "__main__":
-    cv2.namedWindow('frame')
-    frame = np.zeros((240,320,3), np.uint8)
     
+    testrectangle=True
     
-    lineaconteo=selectLine(frame,ownString='Seleccione linea de conteo')    
-    
-    cv2.circle(frame,lineaconteo.pt1,3,(0,0,255),-1)
-    cv2.line(frame,lineaconteo.pt1,lineaconteo.pt2,(0,0,255),1)
-    cv2.circle(frame,lineaconteo.pt2,3,(255,0,255),-1)
-    
-    linept1=lineaconteo.pt1
-    linept2=lineaconteo.pt2
-    
-    
-    
-    
-    lineacarrito=selectLine(frame)    
-    
-    last_centroid = lineacarrito.pt1
-    centroid = lineacarrito.pt2
-    
-    
-    ### EJEMPLO DE USO: 1 SE INICIALIZA LA LINEA A CONTAR
-    contar=counter(linept1,linept2)    
-
-
-
-
-    while(1):
-        cv2.circle(frame,last_centroid,4,(0,255,0), -1) #last_centroid
-        cv2.circle(frame,centroid,4,(0,255,0), -1) #current centroid
-        cv2.line(frame,last_centroid,centroid,(0,0,255),1) #segment line between car centroid at t-1 and t
+    if(testrectangle):
         
-        cv2.line(frame,linept1,linept2,(200,200,0),2) #intercepting line
+        frame = np.zeros((1080,1920,3), np.uint8)
+        rectangulopres=selectRect(frame)
         
-        ### EJEMPLO DE USO: 2 se usa testline para dar dos puntos a probar si hacen parte o no de la linea
-        print("Are Lines Intersecting  1: ",contar.testLine(last_centroid,centroid)," sign ", contar.crossSign(last_centroid,centroid))
-        cv2.circle(frame,contar.intersectPoint(last_centroid,centroid),4,(255,255,255), -1) #intersecting point
-        
-        #print("Are Lines Intersecting  2: ",contar.testLine(centroid,last_centroid))
-        #cv2.circle(frame,contar.intersectPoint(centroid,last_centroid),4,(0,0,255), -1) #intersecting point
+        zd=zone_detector(rectangulopres.pt1,rectangulopres.pt2,rectangulopres.pt3,rectangulopres.pt4,frame)
         
         
-        cv2.imshow('frame',frame)
-        if cv2.waitKey(2000) & 0xFF == ord('q'):
-            break
-        
-    
-    contar.saveLine
-
-
-
-
-    while(1):
-        cv2.circle(frame,last_centroid,4,(0,255,0), -1) #last_centroid
-        cv2.circle(frame,centroid,4,(0,255,0), -1) #current centroid
-        cv2.line(frame,last_centroid,centroid,(0,0,255),1) #segment line between car centroid at t-1 and t
-        
-        cv2.line(frame,linept1,linept2,(200,200,0),2) #intercepting line
-        
-        ### EJEMPLO DE USO: 2 se usa testline para dar dos puntos a probar si hacen parte o no de la linea
-        print("Are Lines Intersecting  1: ",contar.testLine(last_centroid,centroid)," sign ", contar.crossSign(last_centroid,centroid))
-        cv2.circle(frame,contar.intersectPoint(last_centroid,centroid),4,(255,255,255), -1) #intersecting point
-        
-        #print("Are Lines Intersecting  2: ",contar.testLine(centroid,last_centroid))
-        #cv2.circle(frame,contar.intersectPoint(centroid,last_centroid),4,(0,0,255), -1) #intersecting point
+        cv2.namedWindow('mask')
+        cv2.namedWindow('mask rgb')
         
         
-        cv2.imshow('frame',frame)
-        if cv2.waitKey(2000) & 0xFF == ord('q'):
-            break
-
-
-    cv2.destroyAllWindows()
+        cv2.imshow('mask',zd.mask)
+        cv2.imshow('mask rgb',zd.maskrgb)
+        
+        cv2.waitKey(0)
+        
+        cv2.destroyAllWindows()
+        cv2.waitKey(30)
+            
+    else:
+        cv2.namedWindow('frame')
+        frame = np.zeros((240,320,3), np.uint8)
+        
+        
+        lineaconteo=selectLine(frame,ownString='Seleccione linea de conteo')    
+        
+        cv2.circle(frame,lineaconteo.pt1,3,(0,0,255),-1)
+        cv2.line(frame,lineaconteo.pt1,lineaconteo.pt2,(0,0,255),1)
+        cv2.circle(frame,lineaconteo.pt2,3,(255,0,255),-1)
+        
+        linept1=lineaconteo.pt1
+        linept2=lineaconteo.pt2
+        
+        
+        
+        
+        lineacarrito=selectLine(frame)    
+        
+        last_centroid = lineacarrito.pt1
+        centroid = lineacarrito.pt2
+        
+        
+        ### EJEMPLO DE USO: 1 SE INICIALIZA LA LINEA A CONTAR
+        contar=counter(linept1,linept2)    
     
     
     
     
+        while(1):
+            cv2.circle(frame,last_centroid,4,(0,255,0), -1) #last_centroid
+            cv2.circle(frame,centroid,4,(0,255,0), -1) #current centroid
+            cv2.line(frame,last_centroid,centroid,(0,0,255),1) #segment line between car centroid at t-1 and t
+            
+            cv2.line(frame,linept1,linept2,(200,200,0),2) #intercepting line
+            
+            ### EJEMPLO DE USO: 2 se usa testline para dar dos puntos a probar si hacen parte o no de la linea
+            print("Are Lines Intersecting  1: ",contar.testLine(last_centroid,centroid)," sign ", contar.crossSign(last_centroid,centroid))
+            cv2.circle(frame,contar.intersectPoint(last_centroid,centroid),4,(255,255,255), -1) #intersecting point
+            
+            #print("Are Lines Intersecting  2: ",contar.testLine(centroid,last_centroid))
+            #cv2.circle(frame,contar.intersectPoint(centroid,last_centroid),4,(0,0,255), -1) #intersecting point
+            
+            
+            cv2.imshow('frame',frame)
+            if cv2.waitKey(2000) & 0xFF == ord('q'):
+                break
+            
+        
+        contar.saveLine
     
+    
+    
+    
+        while(1):
+            cv2.circle(frame,last_centroid,4,(0,255,0), -1) #last_centroid
+            cv2.circle(frame,centroid,4,(0,255,0), -1) #current centroid
+            cv2.line(frame,last_centroid,centroid,(0,0,255),1) #segment line between car centroid at t-1 and t
+            
+            cv2.line(frame,linept1,linept2,(200,200,0),2) #intercepting line
+            
+            ### EJEMPLO DE USO: 2 se usa testline para dar dos puntos a probar si hacen parte o no de la linea
+            print("Are Lines Intersecting  1: ",contar.testLine(last_centroid,centroid)," sign ", contar.crossSign(last_centroid,centroid))
+            cv2.circle(frame,contar.intersectPoint(last_centroid,centroid),4,(255,255,255), -1) #intersecting point
+            
+            #print("Are Lines Intersecting  2: ",contar.testLine(centroid,last_centroid))
+            #cv2.circle(frame,contar.intersectPoint(centroid,last_centroid),4,(0,0,255), -1) #intersecting point
+            
+            
+            cv2.imshow('frame',frame)
+            if cv2.waitKey(2000) & 0xFF == ord('q'):
+                break
+    
+    
+        cv2.destroyAllWindows()
+        
+        
+        
+        
+        
     
     
     

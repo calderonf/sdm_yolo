@@ -7,9 +7,11 @@ Created on Sun Jun 16 18:13:28 2019
 """
 import cv2
 fn='rtsp://movil:egccol@186.29.90.163:8891/EGC'
-cam = cv2.VideoCapture(fn)
-MAXW=700
-mindist=200
+fn2='rtsp://multiview:egccol@186.29.90.163:8891/Multiview'
+fn3='rtsp://movil:egccol@186.29.90.163:8891/CamFull2'
+cam = cv2.VideoCapture(fn3)
+
+
 
 for nn in range(900):# se itera 5 segundo para estabilizar la conexion
     ret_val, imgFile2 = cam.read()
