@@ -9,7 +9,6 @@ import os
 import easygui
 import random
 import datetime
-import itertools
 
 from  timePicoYPlaca import PicoYPlaca as picoypla
 
@@ -36,10 +35,13 @@ SALVARCONTADO=True
 contimagen=1
 
 
-framesttl=10
-deCamara=False
-MAXW=1920 ## 200 pixeles maximo de ancho permitido
+framesttl=20*2
+MAXW=1920/2 ## 200 pixeles maximo de ancho permitido
 mindist=150
+
+FPS=20
+SegundosCebra=10
+MAXCONTEOCEBRA=FPS*SegundosCebra
 
 def compareCharacters(cra,crb,delta=2.0):
     cxa=cra[2][0]
@@ -78,7 +80,7 @@ def eliminarRepetidos(OCR,pceliminacion=0.2):
         del OCR[i]
     return OCR
 
-def graficarPlacas(img,placa,resOCR,offset=(0,0),imwrite=True):
+def graficarPlacas(img,placa,resOCR,offset=(0,0),imwrite=False):
     #tomar las 6 mejores detecciones:
     #resOCR=resOCR[0:6]
     colour=(int(random.uniform(100,150)),int(random.uniform(180,255)),int(0))
@@ -114,7 +116,7 @@ def graficarPlacas(img,placa,resOCR,offset=(0,0),imwrite=True):
     cv2.imshow('VideoPLACA', img)
     cv2.waitKey(1)
     if imwrite:
-        cv2.imwrite("/home/francisco/test_placas/imagen_capturada_"+cstr+"_"+str(random.randint(10,99))+'.JPG',img)
+        cv2.imwrite("../../imagen_capturada_PLACA_"+cstr+"_"+str(random.randint(10,99))+'.JPG',img)
     
     #cv2.destroyAllWindows()
     #cv2.waitKey(1)
@@ -132,16 +134,34 @@ title  ="Cuantas lineas de deteccion?"
 msg = "Seleccione el numero de lineas de deteccion que quiere poner, se recomiendan maximo 2 lineas"
 choices = ["1", "2"]
 choice = easygui.choicebox(msg, title, choices)
-type(choice)
 lineasDeConteo=int(choice)
 print "Usted ha seleccionado ",lineasDeConteo," lineas de conteo"
 
-print "Se va a tomar el primercuadro del primer video encontrado para seleccionar las lineas de conteo puede que se demore un poco estabilizando el streaming"
+regionesZebra=1
+
+title  ="Cuantas regiones de deteccion?"
+msg = "Seleccione el numero de regiones de deteccion que quiere poner, se recomiendan maximo 2 regiones"
+choices = ["1", "2"]
+choice = easygui.choicebox(msg, title, choices)
+regionesZebra=int(choice)
+print "Usted ha seleccionado ",regionesZebra," regiones de ceteccion de Cebra"
+
+
+title  ="Que Streaming o video quiere?"
+msg = "Seleccione el streaming"
 fn='rtsp://movil:egccol@186.29.90.163:8891/EGC'
-fn="/home/francisco/videos/Video24Horas_4.mp4"
-cam = cv2.VideoCapture(fn)
-MAXW=700
-mindist=200
+fn1='rtsp://movil:egccol@186.29.90.163:8891/CamFull2'
+fn2='rtsp://multiview:egccol@186.29.90.163:8891/Multiview'
+fn3='/home/francisco/videos/Video24Horas_4.mp4'
+choices = [fn,fn1,fn2,fn3]
+choice = easygui.choicebox(msg, title, choices)
+filen=choice
+print "Usted ha seleccionado ",filen," como Video de entrada"
+
+
+print "Se va a tomar el primercuadro del primer video encontrado para seleccionar las lineas de conteo puede que se demore un poco estabilizando el streaming"
+
+cam = cv2.VideoCapture(filen)
 
 for nn in range(100):# se itera un segundo para estabilizar la conexion
     ret_val, imgFile2 = cam.read()
@@ -167,20 +187,29 @@ for cc in range(lineasDeConteo):
     lineaDeConteo.append(lc.selectLine(imgFile2,ownString='Selecciona la linea de deteccion #' +str(cc+1),filename=folder+"/deteccion.jpg",linecount=cc+1))
     sleep(1)
 
+
+regionCebra=[]
+for rc in range(regionesZebra):
+    regionCebra.append(lc.selectRect(imgFile2,ownString='Selecciona la region de deteccion #' +str(cc+1),filename=folder+"/deteccion.jpg",linecount=cc+1))
+    sleep(1)
+
 pp=picoypla()
 
+print ("Listos todos los valores de inicializacion cargando programa...")
 
 while (True):
     
-    cam = cv2.VideoCapture(fn)
-    ruta,ext=os.path.splitext(fn)
+    cam = cv2.VideoCapture(filen)
+    
     archsal=folder+'/reporte_streaming.csv'     
     frames=0
     ret_val, imgFile2 = cam.read()
     frames+=1
     if not ret_val:
-        print ('ERROR: no se pudo abrir la camara, saliendo')
-        exit()
+        print ('ERROR: no se pudo abrir la camara, reintentando')
+        sleep(5)
+        continue
+        #exit()
     
     imgFile3 = cv2.cvtColor(imgFile2, cv2.COLOR_BGR2RGB)
     #imgFile2 = cv2.imread("../data/eagle.jpg")
@@ -199,7 +228,16 @@ while (True):
     for linlin in lineaDeConteo:
         contadores.append(lc.counter(linlin.pt1,linlin.pt2,filename=archsal,linecount=cc,fps=20))
         cc+=cc
+
+    regiones=[]
+    cc=1
+    for linlin in regionCebra:
+        regiones.append(lc.zone_detector(linlin.pt1,linlin.pt2,linlin.pt3,linlin.pt4,imgFile2))
+        cc+=cc    
+    
     ErrorStreaming=False
+    
+    
     while True:
         ret_val, imgFile2 = cam.read()
         frames+=1
@@ -268,6 +306,8 @@ while (True):
                 cv2.putText(imgFile2,str(track.p.p[j].str), (int(track.p.p[j].cp.x),int(track.p.p[j].cp.y)), cv2.FONT_HERSHEY_SIMPLEX,1, (0,0,255))
             else:
                 cv2.putText(imgFile2,str(track.p.p[j].str), (int(track.p.p[j].cp.x),int(track.p.p[j].cp.y)), cv2.FONT_HERSHEY_SIMPLEX,1, (255,255,255))
+            if track.p.p[j].detectadoCebra:
+                cv2.putText(imgFile2,str(track.p.p[j].contadorCebra), (int(x),int(y+20)), cv2.FONT_HERSHEY_SIMPLEX,1, (255,120,140))
         if charlador:
             print('Despues de procesar')
             track.printPaths()
@@ -285,14 +325,74 @@ while (True):
         # contar los que trayectos que pasen las lineas de conteo
         
         for idx in range(len( track.p.p)):
-            if len(track.p.p[idx].path)>2: # si la longitud del path es mayor a dos
-                # toma los dos registros mas recientes y los prueba si pasaron la linea de conteo
+            if len(track.p.p[idx].path)>=2: # si la longitud del path es mayor o igual a dos
+                #buscar si el path esta dentro de la region de cebra
+                for cebra in regiones:
+                    if cebra.listPointsInside(track.p.p[idx].puntosFrontera) and cebra.esComparendiable(track.p.p[idx].str):
+                        track.p.p[idx].contadorCebra+=1#acumular uno al conteo del path
+            
+                #si lleva mas de MAXCONTEOCEBRA cuadros acmulados
+            
+                if track.p.p[idx].contadorCebra>=MAXCONTEOCEBRA and (not track.p.p[idx].detectadoCebra):
+                    track.p.p[idx].detectadoCebra=True
+                    print ("*"*30)
+                    print (" "*10+"Infraccion detectada"+" "*10)
+                    print ("*"*30)
+                    
+                    cx=int(track.p.p[idx].rect.x)
+                    cy=int(track.p.p[idx].rect.y)
+                    cu=int(track.p.p[idx].rect.u)
+                    cv=int(track.p.p[idx].rect.v)
+                    cw=int(track.p.p[idx].tam.w)
+                    ch=int(track.p.p[idx].tam.h)
+                    
+                    imgtoPLACAS=imgFile2[cy:cv,cx:cu]
+                    imgtoPLACAS1 = cv2.cvtColor(imgtoPLACAS, cv2.COLOR_BGR2RGB)
+                    tamaPL=imgtoPLACAS1.shape
+                    imgImportedPL=make_image(tamaPL[1],tamaPL[0],tamaPL[2])
+                    imgFileptrPL,cv_img2=get_iplimage_ptr(imgtoPLACAS1)      
+                    ipl_in2_image(imgFileptrPL,imgImportedPL)
+                    rp = detect_img(netplacas, metaplacas, imgImportedPL) 
+                    
+                    for i in range(len(rp)):
+                        placa_actual="PLACA"+str(track.p.p[idx].idx)
+                        
+                        try:
+                            w=int(rp[i][2][2])
+                            h=int(rp[i][2][3])
+                            x=int(rp[i][2][0])-(w/2)
+                            y=int(rp[i][2][1])-(h/2)
+                            placa=[x,y,w,h,rp[i][0]]
+                            imgtoOCR=imgtoPLACAS[y:y+h,x:x+w]
+                            imgtoOCR1 = cv2.cvtColor(imgtoOCR, cv2.COLOR_BGR2RGB)
+                            tama2=imgtoOCR.shape
+                            imgImported2=make_image(tama2[1],tama2[0],tama2[2])
+                            imgFileptr2,cv_img2=get_iplimage_ptr(imgtoOCR1)      
+                            ipl_in2_image(imgFileptr2,imgImported2)
+                            #rgbgr_image(imgImported2)
+                            s = detect_img(netocr, metaocr, imgImported2)
+                            print ('Detecciones: '+str(len(s)))
+                            print (s)
+                            strypos=graficarPlacas(imgFile2,placa,s,offset=(cx,cy))
+                            placa_actual=strypos[0]
+                        except:
+                                print("Error en placa") 
+                    print ("*"*30)
+                    print (" "*13+"PLACA"+" "*13)
+                    print (" "*10+placa_actual+" "*10)
+                    print ("*"*30)       
+                    imfilesave=folder+"/"+placa_actual+'_'+str(contimagen)+'_'+str(random.randint(1000,10000))+'.JPG'
+                    cv2.imwrite(imfilesave,copiaimagen)
+                    
+                    
+                
+                
+                # toma los dos registros mas recientes y los prueba si pasaron la linea de conteo para encontrar pico y placa
                 p1=(int(track.p.p[idx].path[-1].x),int(track.p.p[idx].path[-1].y))#mas reciente (cuadro actual)
                 p2=(int(track.p.p[idx].path[-2].x),int(track.p.p[idx].path[-2].y))#anterior     (cuadro anterior)
                 cv2.line(imgFile2,p1,p2,track.p.p[idx].colour,1)
-    
                 for contar in contadores:
-                    if (contar.testLine(p2,p1) and not track.p.p[idx].contadores[contar.linecount]):
+                    if (contar.testLine(p2,p1) and not track.p.p[idx].contadores[contar.linecount]):# si pasa la linea de conteo.
                         
                         if ((str(track.p.p[idx].str) == 'particular')): #or (str(track.p.p[idx].str) == 'taxi')):
                             try:

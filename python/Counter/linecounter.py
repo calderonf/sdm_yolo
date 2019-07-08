@@ -130,9 +130,9 @@ class selectRect:
                 self.pt2=(-1,-1)
                 self.error=True
                 break
-        filenameraw, file_extension = os.path.splitext(filename)
-        self.archivosalidajpg=filenameraw+'_linea_'+str(linecount)+'.jpg'
-        cv2.imwrite(self.archivosalidajpg,img)
+        #filenameraw, file_extension = os.path.splitext(filename)
+        #self.archivosalidajpg=filenameraw+'_Region_'+str(linecount)+'.jpg'
+        #cv2.imwrite(self.archivosalidajpg,img)
         ix,iy=-1,-1
         uux,iiy=-1,-1
         ox,oy=-1,-1
@@ -165,7 +165,23 @@ class selectRect:
                 self.error=True
                 break
         filenameraw, file_extension = os.path.splitext(filename)
-        self.archivosalidajpg=filenameraw+'_linea_'+str(linecount)+'.jpg'
+        self.archivosalidajpg=filenameraw+'Rect'+str(linecount)+'.jpg'
+        
+
+        polygon=[self.pt1,self.pt2,self.pt4,self.pt3]
+        
+        tambase=img.shape
+        mask = np.zeros((tambase[0],tambase[1],1), np.uint8)
+        maskrgb = np.zeros(tambase, np.uint8)
+        
+        pts = np.array(polygon, np.int32)
+        pts = pts.reshape((-1,1,2))
+        cv2.fillConvexPoly(mask,pts,(255))
+        cv2.fillConvexPoly(maskrgb,pts,(255,255,255))
+        
+        alpha =0.5
+        cv2.addWeighted(maskrgb, alpha, img, 1,0, img)        
+        
         cv2.imwrite(self.archivosalidajpg,img)
         ix,iy=-1,-1
         uux,iiy=-1,-1
@@ -345,10 +361,21 @@ class zone_detector:
             return True
         else:
             return False
-
-    def __del__(self):
-        self.FILE.close()
-
+            
+    def listPointsInside(self,listpoints):
+        try:
+            for point in listpoints:#recorra la lista de puntos
+                dist=cv2.pointPolygonTest(self.pts,point,True)
+                if dist>=0:
+                    return True
+        except:
+            return False
+        return False
+        
+    def esComparendiable(self,clase):
+        if clase=="particular" or clase=="taxi" or clase =="minivan":
+            return True
+        return False
 
 class counter:
     
@@ -568,7 +595,8 @@ if __name__ == "__main__":
         
         cv2.waitKey(0)
         
-        cv2.destroyAllWindows()
+        cv2.destroyWindow('mask')
+        cv2.destroyWindow('mask rgb')
         cv2.waitKey(30)
             
     else:

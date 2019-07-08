@@ -151,9 +151,8 @@ class singlepath:
     """
     def __init__(self, idx,x,y,w,h,framesttl,featurestring,lineasconteo=10):
         
-        
+        #adicion seleccion de clase por estimacion modal
         self.counterclases=np.zeros(len(clases))
-        
         self.counterclases[clases[featurestring]]+=1
         self.str=featurestring# La primera vez se le agrega 1 y se deja por defecto en esa clase. 
         
@@ -167,6 +166,12 @@ class singlepath:
         self.colour=(int(random.uniform(0,255)),int(random.uniform(0,255)),int(random.uniform(0,255)))
         self.contado=False
         self.contadores=np.zeros(lineasconteo)
+        
+        #adicion cebra
+        self.puntosFrontera=[(x,y),(x-w/2,y-h/2),(x-w/2+w,y-h/2+h),(x-w/2,y-h/2+h),(x-w/2+w,y-h/2)]
+        self.contadorCebra=0
+        self.detectadoCebra=False
+        
         
 class paths:
     """
@@ -213,6 +218,9 @@ class paths:
                 
                 find.counterclases[clases[st]]+=1
                 find.str=num2clases[find.counterclases.argmax()]# se busca la clase que tenga mayor numero de conteos MEJORA SI TIENE LOS MISMOS PONER LOS DOS
+        
+                #adicion cebra
+                find.puntosFrontera=[(x,y),(x-w/2,y-h/2),(x-w/2+w,y-h/2+h),(x-w/2,y-h/2+h),(x-w/2+w,y-h/2)]
                 
                 
                 return 0

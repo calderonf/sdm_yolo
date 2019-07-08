@@ -305,8 +305,12 @@ class PicoYPlaca:
                         return True
                 else:
                     print ("%"*30)
-                    print ("WARNING NO DEBE ENTRAR ACA --"+tipo+"-- WARNING NO DEBE ENTRAR ACA")
+                    print ("%"*30)
+                    print ("%"*30)
+                    print ("WARNING NO DEBERIA ENTRAR ACA --"+tipo+"-- WARNING NO DEBE ENTRAR ACA YA SE REVISO RESTRICCION")
                     print ("%"*30) 
+                    print ("%"*30)
+                    print ("%"*30)
                     return False
                 
                 
