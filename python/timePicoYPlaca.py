@@ -182,8 +182,8 @@ class pypHoyGetTaxi:
         try:
             file2=open(self.archivodata,"r")
             fecha=file2.readline()
-            p1=int(file2.readline())
-            p2=int(file2.readline())
+            self.p1=int(file2.readline())
+            self.p2=int(file2.readline())
             ahoracargado=datetime.date(int(fecha[0:4]),int(fecha[5:7]),int(fecha[8:10]))
             file2.close()
             if (self.Ahora==ahoracargado):

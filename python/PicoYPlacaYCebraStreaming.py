@@ -43,6 +43,13 @@ FPS=20
 SegundosCebra=10
 MAXCONTEOCEBRA=FPS*SegundosCebra
 
+
+TEXTOPICOYPLACA="C14"
+TEXTOCEBRA="C31"
+AMPLIADA="A"
+PANORAMICA="P"
+
+
 def compareCharacters(cra,crb,delta=2.0):
     cxa=cra[2][0]
     cxb=crb[2][0]
@@ -126,7 +133,7 @@ def graficarPlacas(img,placa,resOCR,offset=(0,0),imwrite=False):
 
 
 
-folder=easygui.diropenbox(title="Seleccione la carpeta para guardar evidencias",default="/Videos/Streaming")
+folder=easygui.diropenbox(title="Seleccione la carpeta para guardar evidencias",default="/VideosSDM")
 
 # TODO revisar existencia de folder en caso de que se seleccione cancelar. 
 
@@ -140,8 +147,8 @@ print "Usted ha seleccionado ",lineasDeConteo," lineas de conteo"
 regionesZebra=1
 
 title  ="Cuantas regiones de deteccion?"
-msg = "Seleccione el numero de regiones de deteccion que quiere poner, se recomiendan maximo 2 regiones"
-choices = ["1", "2"]
+msg = "Seleccione el numero de regiones de deteccion que quiere poner, se recomiendan maximo 1 regiones"
+choices = ["1"]
 choice = easygui.choicebox(msg, title, choices)
 regionesZebra=int(choice)
 print "Usted ha seleccionado ",regionesZebra," regiones de ceteccion de Cebra"
@@ -158,6 +165,26 @@ choice = easygui.choicebox(msg, title, choices)
 filen=choice
 print "Usted ha seleccionado ",filen," como Video de entrada"
 
+title  ="Que Direccion de Camara esta usando?"
+msg = "Seleccione el direccion"
+fn='CR7-CL45'
+fn1='CR19-CL100'
+fn2='PONGAQUIDIRECCION'
+choices = [fn,fn1,fn2,fn3]
+choice = easygui.choicebox(msg, title, choices)
+TEXTODIRECCION=choice
+print "Usted ha seleccionado ",TEXTODIRECCION," como Video de entrada"
+
+
+title  ="Que Dlocalidad tiene la camara que esta usando?"
+msg = "Seleccione localidad"
+fn='CHAPINERO'
+fn1='USAQUEN'
+fn2='PONGAQUILOCALIDAD'
+choices = [fn,fn1,fn2,fn3]
+choice = easygui.choicebox(msg, title, choices)
+TEXTOLOCALIDAD=choice
+print "Usted ha seleccionado ",TEXTOLOCALIDAD," como Video de entrada"
 
 print "Se va a tomar el primercuadro del primer video encontrado para seleccionar las lineas de conteo puede que se demore un poco estabilizando el streaming"
 
@@ -380,8 +407,12 @@ while (True):
                     print ("*"*30)
                     print (" "*13+"PLACA"+" "*13)
                     print (" "*10+placa_actual+" "*10)
-                    print ("*"*30)       
-                    imfilesave=folder+"/"+placa_actual+'_'+str(contimagen)+'_'+str(random.randint(1000,10000))+'.JPG'
+                    print ("*"*30)
+                    ahora=datetime.datetime.now()
+                    fechaformatotexto=ahora.strftime("%d-%m-20%y %H_%M_%S")
+                    imfilesave=folder+"/"+placa_actual+'-'+TEXTOCEBRA+'-'+AMPLIADA+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+'.JPG'
+                    cv2.imwrite(imfilesave,copiaimagen)
+                    imfilesave=folder+"/"+placa_actual+'-'+TEXTOCEBRA+'-'+PANORAMICA+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+'.JPG'
                     cv2.imwrite(imfilesave,copiaimagen)
                     
                     
@@ -445,14 +476,20 @@ while (True):
                                         track.p.p[idx].contado=True
                                         track.p.p[idx].contadores[contar.linecount]=1
                                         contar.addToLineCounter(str(track.p.p[idx].str),frames,tiempoactual,direct)
-                                        imfilesave=folder+"/"+placa_actual+'_'+str(contimagen)+'_'+str(random.randint(1000,10000))+'.JPG'
                                         cx=int(track.p.p[idx].rect.x)
                                         cy=int(track.p.p[idx].rect.y)
                                         cu=int(track.p.p[idx].rect.u)
                                         cv=int(track.p.p[idx].rect.v)
                                         cw=int(track.p.p[idx].tam.w)
                                         ch=int(track.p.p[idx].tam.h)
+                                        
+                                        ahora=datetime.datetime.now()
+                                        fechaformatotexto=ahora.strftime("%d-%m-20%y %H_%M_%S")
+                                        imfilesave=folder+"/"+placa_actual+'-'+TEXTOPICOYPLACA+'-'+AMPLIADA+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+' revParticular.JPG'
                                         cv2.imwrite(imfilesave,copiaimagen)
+                                        imfilesave=folder+"/"+placa_actual+'-'+TEXTOPICOYPLACA+'-'+PANORAMICA+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+' revParticular.JPG'
+                                        cv2.imwrite(imfilesave,copiaimagen)
+                                        
                                         contimagen=contimagen+1
 
                                 except TypeError:
@@ -509,14 +546,19 @@ while (True):
                                         track.p.p[idx].contado=True
                                         track.p.p[idx].contadores[contar.linecount]=1
                                         contar.addToLineCounter(str(track.p.p[idx].str),frames,tiempoactual,direct)
-                                        imfilesave=folder+"/"+placa_actual+'_'+str(contimagen)+'_'+str(random.randint(1000,10000))+'taxi.JPG'
                                         cx=int(track.p.p[idx].rect.x)
                                         cy=int(track.p.p[idx].rect.y)
                                         cu=int(track.p.p[idx].rect.u)
                                         cv=int(track.p.p[idx].rect.v)
                                         cw=int(track.p.p[idx].tam.w)
                                         ch=int(track.p.p[idx].tam.h)
+                                        ahora=datetime.datetime.now()
+                                        fechaformatotexto=ahora.strftime("%d-%m-20%y %H_%M_%S")
+                                        imfilesave=folder+"/"+placa_actual+'-'+TEXTOPICOYPLACA+'-'+AMPLIADA+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+' revPublico.JPG'
                                         cv2.imwrite(imfilesave,copiaimagen)
+                                        imfilesave=folder+"/"+placa_actual+'-'+TEXTOPICOYPLACA+'-'+PANORAMICA+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+' revPublico.JPG'
+                                        cv2.imwrite(imfilesave,copiaimagen)
+                                        
                                         contimagen=contimagen+1
 
                                 except TypeError:
