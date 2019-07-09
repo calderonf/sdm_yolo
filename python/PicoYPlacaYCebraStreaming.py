@@ -414,12 +414,13 @@ while (True):
                     print ("*"*30)
                     ahora=datetime.datetime.now()
                     fechaformatotexto=ahora.strftime("%d-%m-20%y %H_%M_%S")
-                    imfilesave=folder+"/"+placa_actual+'-'+TEXTOCEBRA+'-'+AMPLIADA+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+'.JPG'
-                    cv2.imwrite(imfilesave,copiaimagen)
+                    #imfilesave=folder+"/"+placa_actual+'-'+TEXTOCEBRA+'-'+AMPLIADA+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+'.JPG'
+                    #cv2.imwrite(imfilesave,copiaimagen)
                     imfilesave=folder+"/"+placa_actual+'-'+TEXTOCEBRA+'-'+PANORAMICA+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+'.JPG'
                     cv2.imwrite(imfilesave,copiaimagen)
-                    imfilesave=folder+"/"+placa_actual+'-'+TEXTOCEBRA+'-'+"V"+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+'.avi'
-                    grabar.nuevoVideo(imfilesave)
+                    imfilesavev=folder+"/"+placa_actual+'-'+TEXTOCEBRA+'-'+"V"+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+'.avi'
+                    imfilesavef2=folder+"/"+placa_actual+'-'+TEXTOCEBRA+'-'+AMPLIADA+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+'.JPG'
+                    grabar.nuevoVideo(imfilesavev,imfilesavef2)
                     
                     
                 
@@ -495,8 +496,8 @@ while (True):
                                         cv2.imwrite(imfilesave,copiaimagen)
                                         imfilesave=folder+"/"+placa_actual+'-'+TEXTOPICOYPLACA+'-'+PANORAMICA+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+' revParticular.JPG'
                                         cv2.imwrite(imfilesave,copiaimagen)
-                                        imfilesave=folder+"/"+placa_actual+'-'+TEXTOPICOYPLACA+'-'+"V"+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+' revParticular.avi'
-                                        grabar.nuevoVideo(imfilesave)
+                                        #imfilesave=folder+"/"+placa_actual+'-'+TEXTOPICOYPLACA+'-'+"V"+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+' revParticular.avi'
+                                        #grabar.nuevoVideo(imfilesave)
                                         
                                         contimagen=contimagen+1
 
@@ -566,8 +567,8 @@ while (True):
                                         cv2.imwrite(imfilesave,copiaimagen)
                                         imfilesave=folder+"/"+placa_actual+'-'+TEXTOPICOYPLACA+'-'+PANORAMICA+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+' revPublico.JPG'
                                         cv2.imwrite(imfilesave,copiaimagen)
-                                        imfilesave=folder+"/"+placa_actual+'-'+TEXTOPICOYPLACA+'-'+"V"+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+' revPublico.avi'
-                                        grabar.nuevoVideo(imfilesave)
+                                        #imfilesave=folder+"/"+placa_actual+'-'+TEXTOPICOYPLACA+'-'+"V"+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+' revPublico.avi'
+                                        #grabar.nuevoVideo(imfilesave)
                                         
                                         contimagen=contimagen+1
 

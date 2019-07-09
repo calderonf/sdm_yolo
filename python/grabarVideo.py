@@ -9,7 +9,7 @@ import numpy as np
 import cv2
 
 class recordVideo:
-    def __init__(self, filename,TTL=60,FPS=20,res=(1920,1080),dec=10):
+    def __init__(self, filename,Segundafoto,TTL=60,FPS=20,res=(1920,1080),dec=10,segev=4):
         """
         Funcion para inicializar estructura de grabador de video, 
         filename es el nombre del video a guardar
@@ -18,9 +18,13 @@ class recordVideo:
         res es la resolución del video
         """
         self.filename=filename
+        self.segundafoto=Segundafoto
         self.cuadrosAGuardar=(TTL*FPS)+1
         self.CuadrosGuardados=self.cuadrosAGuardar
         self.dec=dec
+        
+        
+        self.contadorsegundafoto=segev*FPS
         
         self.fourcc = cv2.cv.CV_FOURCC('M','P','4','V')#('M','P','4','V') o ('M','J','P','G')
         self.out = cv2.VideoWriter(filename, self.fourcc, FPS/dec, res)
@@ -30,8 +34,13 @@ class recordVideo:
     def SalvarCuadroVideo(self,cuadro):
         try:
             self.CuadrosGuardados-=1
+            self.contadorsegundafoto-=1
+            
             if (self.CuadrosGuardados%self.dec)==0:
                 self.out.write(cuadro)
+            
+            if self.contadorsegundafoto<=0:
+                cv2.imwrite(self.segundafoto,cuadro)
             
             if self.CuadrosGuardados<=0:
                 print("Video: ",self.filename," Salvado")
@@ -48,8 +57,8 @@ class grabadorVideos:
         """
         self.videos=[]
         
-    def nuevoVideo(self,filename,TTL=60,FPS=20,res=(1920,1080),dec=10):
-        self.videos.append(recordVideo(filename,TTL=TTL,FPS=FPS,res=res,dec=dec))
+    def nuevoVideo(self,filename,Segundafoto,TTL=60,FPS=20,res=(1920,1080),dec=10):
+        self.videos.append(recordVideo(filename,Segundafoto,TTL=TTL,FPS=FPS,res=res,dec=dec))
     
     def procesarCuadro(self,cuadro):
         if len(self.videos)>=0:
