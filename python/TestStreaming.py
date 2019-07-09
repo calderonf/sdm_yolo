@@ -13,7 +13,7 @@ cam = cv2.VideoCapture(fn3)
 
 
 
-for nn in range(900):# se itera 5 segundo para estabilizar la conexion
+for True:# se itera 5 segundo para estabilizar la conexion
     ret_val, imgFile2 = cam.read()
     if not ret_val:
         print ('ERROR:  no se pudo abrir la camara, saliendo')
