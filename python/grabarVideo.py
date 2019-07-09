@@ -9,7 +9,7 @@ import numpy as np
 import cv2
 
 class recordVideo:
-    def __init__(self, filename,TTL=60,FPS=20,res=(1920,1080)):
+    def __init__(self, filename,TTL=60,FPS=20,res=(1920,1080),dec=10):
         """
         Funcion para inicializar estructura de grabador de video, 
         filename es el nombre del video a guardar
@@ -18,18 +18,20 @@ class recordVideo:
         res es la resolución del video
         """
         self.filename=filename
-        self.cuadrosAGuardar=TTL*FPS
+        self.cuadrosAGuardar=(TTL*FPS)+1
         self.CuadrosGuardados=self.cuadrosAGuardar
+        self.dec=dec
         
-        self.fourcc = cv2.VideoWriter_fourcc(*'MJPG')
-        self.out = cv2.VideoWriter(filename, self.fourcc, FPS, res)
+        self.fourcc = cv2.cv.CV_FOURCC('M','P','4','V')#('M','P','4','V') o ('M','J','P','G')
+        self.out = cv2.VideoWriter(filename, self.fourcc, FPS/dec, res)
         
         self.finalizado=False
         
     def SalvarCuadroVideo(self,cuadro):
         try:
-            self.out.write(cuadro)
             self.CuadrosGuardados-=1
+            if (self.CuadrosGuardados%self.dec)==0:
+                self.out.write(cuadro)
             
             if self.CuadrosGuardados<=0:
                 print("Video: ",self.filename," Salvado")
@@ -46,11 +48,11 @@ class grabadorVideos:
         """
         self.videos=[]
         
-    def nuevoVideo(self,filename,TTL=60,FPS=20,res=(1920,1080)):
-        self.videos.append(recordVideo(filename,TTL=TTL,FPS=FPS,res=res))
+    def nuevoVideo(self,filename,TTL=60,FPS=20,res=(1920,1080),dec=10):
+        self.videos.append(recordVideo(filename,TTL=TTL,FPS=FPS,res=res,dec=dec))
     
     def procesarCuadro(self,cuadro):
-        if len(self.videos>=0)
+        if len(self.videos)>=0:
             for video in self.videos:
                 video.SalvarCuadroVideo(cuadro)
             for i in range(len(self.videos)-1,-1,-1):
@@ -65,7 +67,7 @@ if __name__ == "__main__":
     fn3='rtsp://movil:egccol@186.29.90.163:8891/CamFull2'
     cam = cv2.VideoCapture(fn)
     
-    grabar=grabadorVideos
+    grabar=grabadorVideos()
     cont=1
     while True:# se itera 5 segundo para estabilizar la conexion
         ret_val, imgFile2 = cam.read()
@@ -74,7 +76,7 @@ if __name__ == "__main__":
             break
         cv2.imshow('streaming',imgFile2)
         grabar.procesarCuadro(imgFile2)
-        k = cv2.waitKey(1)& 0xFF
+        k = cv2.waitKey(10)& 0xFF
         if k==ord('s') or k==ord('S'):
             print("Salvando Video",cont)
             grabar.nuevoVideo("videoEjemplo"+str(cont)+".avi")

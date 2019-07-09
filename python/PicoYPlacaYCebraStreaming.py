@@ -12,6 +12,8 @@ import datetime
 
 from  timePicoYPlaca import PicoYPlaca as picoypla
 
+from grabarVideo import grabadorVideos
+
 
 
 #NUESTRO YOLO ENTRENADO 90000 iteraciones
@@ -221,6 +223,7 @@ for rc in range(regionesZebra):
     sleep(1)
 
 pp=picoypla()
+grabar=grabadorVideos()
 
 print ("Listos todos los valores de inicializacion cargando programa...")
 
@@ -276,9 +279,10 @@ while (True):
         
         if SALVARCONTADO:
             copiaimagen=imgFile2.copy()
-            
-        ahora=datetime.datetime.now()
         
+        grabar.procesarCuadro(copiaimagen)
+        
+        ahora=datetime.datetime.now()
         tiempoactual=ahora.strftime("%y-%m-%d-%H%M%S")
 
         #segframes=cam.get(cv2.cv.CV_CAP_PROP_POS_FRAMES)
@@ -414,6 +418,8 @@ while (True):
                     cv2.imwrite(imfilesave,copiaimagen)
                     imfilesave=folder+"/"+placa_actual+'-'+TEXTOCEBRA+'-'+PANORAMICA+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+'.JPG'
                     cv2.imwrite(imfilesave,copiaimagen)
+                    imfilesave=folder+"/"+placa_actual+'-'+TEXTOCEBRA+'-'+"V"+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+'.avi'
+                    grabar.nuevoVideo(imfilesave)
                     
                     
                 
@@ -489,6 +495,8 @@ while (True):
                                         cv2.imwrite(imfilesave,copiaimagen)
                                         imfilesave=folder+"/"+placa_actual+'-'+TEXTOPICOYPLACA+'-'+PANORAMICA+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+' revParticular.JPG'
                                         cv2.imwrite(imfilesave,copiaimagen)
+                                        imfilesave=folder+"/"+placa_actual+'-'+TEXTOPICOYPLACA+'-'+"V"+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+' revParticular.avi'
+                                        grabar.nuevoVideo(imfilesave)
                                         
                                         contimagen=contimagen+1
 
@@ -558,6 +566,8 @@ while (True):
                                         cv2.imwrite(imfilesave,copiaimagen)
                                         imfilesave=folder+"/"+placa_actual+'-'+TEXTOPICOYPLACA+'-'+PANORAMICA+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+' revPublico.JPG'
                                         cv2.imwrite(imfilesave,copiaimagen)
+                                        imfilesave=folder+"/"+placa_actual+'-'+TEXTOPICOYPLACA+'-'+"V"+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+' revPublico.avi'
+                                        grabar.nuevoVideo(imfilesave)
                                         
                                         contimagen=contimagen+1
 

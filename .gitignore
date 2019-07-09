@@ -4,6 +4,9 @@
 *.out
 *.png
 *.jpg
+*.avi
+*.mp4
+
 *.pyc
 old/
 mnist/
