@@ -7,6 +7,7 @@ Created on Mon Jul  8 20:02:46 2019
 """
 import numpy as np
 import cv2
+import time
 
 class recordVideo:
     def __init__(self, filename,Segundafoto,TTL=60,FPS=20,res=(1920,1080),dec=10,segev=4):
@@ -22,14 +23,15 @@ class recordVideo:
         self.cuadrosAGuardar=(TTL*FPS)+1
         self.CuadrosGuardados=self.cuadrosAGuardar
         self.dec=dec
+        self.timea=time.time()
         
-        
-        self.contadorsegundafoto=segev*FPS
+        self.contadorsegundafoto=segev
         
         self.fourcc = cv2.cv.CV_FOURCC('M','P','4','V')#('M','P','4','V') o ('M','J','P','G')
         self.out = cv2.VideoWriter(filename, self.fourcc, FPS/dec, res)
         
         self.finalizado=False
+        self.guardadaSegFoto=False
         
     def SalvarCuadroVideo(self,cuadro):
         try:
@@ -39,10 +41,11 @@ class recordVideo:
             if (self.CuadrosGuardados%self.dec)==0:
                 self.out.write(cuadro)
             
-            if self.contadorsegundafoto<=0:
+            if (time.time()-self.timea>self.contadorsegundafoto) and (not self.guardadaSegFoto):
                 cv2.imwrite(self.segundafoto,cuadro)
+                self.guardadaSegFoto=True
             
-            if self.CuadrosGuardados<=0:
+            if self.CuadrosGuardados<=0 and (not self.finalizado):
                 print("Video: ",self.filename," Salvado")
                 self.out.release()
                 self.finalizado=True
