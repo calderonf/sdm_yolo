@@ -36,14 +36,16 @@ class recordVideo:
     def SalvarCuadroVideo(self,cuadro):
         try:
             self.CuadrosGuardados-=1
-            self.contadorsegundafoto-=1
+            lapso=abs(time.time()-self.timea)
             
             if (self.CuadrosGuardados%self.dec)==0:
                 self.out.write(cuadro)
             
-            if (time.time()-self.timea>self.contadorsegundafoto) and (not self.guardadaSegFoto):
+            if (lapso>self.contadorsegundafoto) and (not self.guardadaSegFoto):
+                #print ("Lapso = ",lapso,"contador= ",self.contadorsegundafoto)
                 cv2.imwrite(self.segundafoto,cuadro)
                 self.guardadaSegFoto=True
+                #print("guardando foto a los ",abs(time.time()-self.timea)," segundos.")
             
             if self.CuadrosGuardados<=0 and (not self.finalizado):
                 print("Video: ",self.filename," Salvado")
@@ -91,7 +93,7 @@ if __name__ == "__main__":
         k = cv2.waitKey(10)& 0xFF
         if k==ord('s') or k==ord('S'):
             print("Salvando Video",cont)
-            grabar.nuevoVideo("videoEjemplo"+str(cont)+".avi")
+            grabar.nuevoVideo("videoEjemplo"+str(cont)+".avi","fotoEjemplo"+str(cont)+"_t_"+str(round(time.time()))+".jpg")
             cont+=1
             
         if k==ord('q') or k==ord('Q'):
