@@ -8,6 +8,7 @@ Created on Mon Jul  8 20:02:46 2019
 import numpy as np
 import cv2
 import time
+import copy
 
 class recordVideo:
     def __init__(self, filename,Segundafoto,TTL=60,FPS=20,res=(1920,1080),dec=10,segev=4):
@@ -32,6 +33,8 @@ class recordVideo:
         
         self.finalizado=False
         self.guardadaSegFoto=False
+        
+        
         
     def SalvarCuadroVideo(self,cuadro):
         try:
@@ -59,11 +62,28 @@ class grabadorVideos:
         Clase para grabar multiples videos  independientes al tiempo
         """
         self.videos=[]
+        self.arreglocuadros=[]
+        self.TAMMAX=20
+        self.fpsingnore=10
+        self.count=0
         
     def nuevoVideo(self,filename,Segundafoto,TTL=60,FPS=20,res=(1920,1080),dec=10):
         self.videos.append(recordVideo(filename,Segundafoto,TTL=TTL,FPS=FPS,res=res,dec=dec))
+        
+        for cant in self.arreglocuadros:
+            self.videos
+        
     
     def procesarCuadro(self,cuadro):
+        
+        if ((self.count % self.fpsingnore)==0):
+            self.arreglocuadros.append(cuadro.copy())
+        
+        if len (self.arreglocuadros)>self.TAMMAX:
+            self.arreglocuadros.pop(0)
+            
+        self.count+=1
+        
         if len(self.videos)>=0:
             for video in self.videos:
                 video.SalvarCuadroVideo(cuadro)
