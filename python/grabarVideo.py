@@ -5,13 +5,13 @@ Created on Mon Jul  8 20:02:46 2019
 
 @author: administrador
 """
-import numpy as np
 import cv2
 import time
-import copy
+from time import strftime
+#import copy creo que no es necesario usar copy, ya cv2.copy hace un deep copy no una simple referencia. 
 
 class recordVideo:
-    def __init__(self, filename,Segundafoto,TTL=60,FPS=20,res=(1920,1080),dec=10,segev=4):
+    def __init__(self, filename,Segundafoto,TTL=50,FPS=20,res=(1920,1080),dec=10,segev=4):
         """
         Funcion para inicializar estructura de grabador de video, 
         filename es el nombre del video a guardar
@@ -59,21 +59,20 @@ class recordVideo:
             print("Error detectado en grabacion")
     
 class grabadorVideos:
-    def __init__(self):
+    def __init__(self,cuadrosnocausales=20):
         """
         Clase para grabar multiples videos  independientes al tiempo
         """
         self.videos=[]
         self.arreglocuadros=[]
-        self.TAMMAX=20
+        self.TAMMAX=cuadrosnocausales
         self.fpsingnore=10
         self.count=0
         
-    def nuevoVideo(self,filename,Segundafoto,TTL=60,FPS=20,res=(1920,1080),dec=10):
+    def nuevoVideo(self,filename,Segundafoto,TTL=50,FPS=20,res=(1920,1080),dec=10):
         self.videos.append(recordVideo(filename,Segundafoto,TTL=TTL,FPS=FPS,res=res,dec=dec))
-        
         for cant in self.arreglocuadros:
-            self.videos
+            self.videos[-1].out.write(cant)
         
     
     def procesarCuadro(self,cuadro):
@@ -113,7 +112,7 @@ if __name__ == "__main__":
         k = cv2.waitKey(10)& 0xFF
         if k==ord('s') or k==ord('S'):
             print("Salvando Video",cont)
-            grabar.nuevoVideo("videoEjemplo"+str(cont)+".avi","fotoEjemplo"+str(cont)+"_t_"+str(round(time.time()))+".jpg")
+            grabar.nuevoVideo("videoEjemplo_"+"_t_"+str(strftime("%d%m%y_%H-%M-%S"))+"_"+str(cont)+".avi","fotoEjemplo"+str(cont)+"_t_"+str(strftime("%d%m%y_%H-%M-%S"))+".jpg")
             cont+=1
             
         if k==ord('q') or k==ord('Q'):
