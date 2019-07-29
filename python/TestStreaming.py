@@ -9,7 +9,7 @@ import cv2
 fn='rtsp://movil:egccol@186.29.90.163:8891/EGC'
 fn2='rtsp://multiview:egccol@186.29.90.163:8891/Multiview'
 fn3='rtsp://movil:egccol@186.29.90.163:8891/CamFull2'
-cam = cv2.VideoCapture(fn3)
+cam = cv2.VideoCapture(fn)
 
 
 
