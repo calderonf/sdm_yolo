@@ -42,7 +42,7 @@ MAXW=1920/2 ## 200 pixeles maximo de ancho permitido
 mindist=150
 
 FPS=20
-SegundosCebra=10
+SegundosCebra=6
 MAXCONTEOCEBRA=FPS*SegundosCebra
 
 
@@ -440,7 +440,7 @@ while (True):
                 for contar in contadores:
                     if (contar.testLine(p2,p1) and not track.p.p[idx].contadores[contar.linecount]):# si pasa la linea de conteo.
                         
-                        if ((str(track.p.p[idx].str) == 'particular')): #or (str(track.p.p[idx].str) == 'taxi')):
+                        if (str(track.p.p[idx].str) == 'particular'): #or (str(track.p.p[idx].str) == 'taxi')):
                             try:
                                 direct=contar.crossSign(p2,p1)
                                 cv2.circle(imgFile2,contar.intersectPoint(p2,p1),4,(100,100,255), -1) #intersecting point
@@ -505,14 +505,14 @@ while (True):
                                         imfilesave=folder+"/"+TEXTOPICOYPLACA+"/"+placa_actual+'-'+TEXTOPICOYPLACA+'-'+PANORAMICA+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+' revParticular.JPG'
                                         cv2.imwrite(imfilesave,copiaimagen)
                                         #imfilesave=folder+"/"+TEXTOPICOYPLACA+"/"+placa_actual+'-'+TEXTOPICOYPLACA+'-'+"V"+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+' revParticular.avi'
-                                        #grabar.nuevoVideo(imfilesave)
+                                        #grabar.nuevoVideo(imfilesave,TTL=20)
                                         
                                         contimagen=contimagen+1
 
                                 except TypeError:
                                     print('Se ha detectado un error en OCR particular, toca mirar que es')
                             
-                        if ((str(track.p.p[idx].str) == 'taxi')):
+                        if (str(track.p.p[idx].str) == 'taxi'):
                             try:
                                 direct=contar.crossSign(p2,p1)
                                 cv2.circle(imgFile2,contar.intersectPoint(p2,p1),4,(255,255,255), -1) #intersecting point
@@ -576,7 +576,7 @@ while (True):
                                         imfilesave=folder+"/"+TEXTOPICOYPLACA+"/"+placa_actual+'-'+TEXTOPICOYPLACA+'-'+PANORAMICA+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+' revPublico.JPG'
                                         cv2.imwrite(imfilesave,copiaimagen)
                                         #imfilesave=folder+"/"+TEXTOPICOYPLACA+"/"+placa_actual+'-'+TEXTOPICOYPLACA+'-'+"V"+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+' revPublico.avi'
-                                        #grabar.nuevoVideo(imfilesave)
+                                        #grabar.nuevoVideo(imfilesave,TTL=20)
                                         
                                         contimagen=contimagen+1
 

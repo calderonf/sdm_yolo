@@ -11,7 +11,7 @@ from time import strftime
 #import copy creo que no es necesario usar copy, ya cv2.copy hace un deep copy no una simple referencia. 
 
 class recordVideo:
-    def __init__(self, filename,Segundafoto,TTL=50,FPS=20,res=(1920,1080),dec=10,segev=4):
+    def __init__(self, filename,Segundafoto,TTL=30,FPS=20,res=(1920,1080),dec=10,segev=5):
         """
         Funcion para inicializar estructura de grabador de video, 
         filename es el nombre del video a guardar
@@ -59,7 +59,7 @@ class recordVideo:
             print("Error detectado en grabacion")
     
 class grabadorVideos:
-    def __init__(self,cuadrosnocausales=20):
+    def __init__(self,cuadrosnocausales=60,TTL=30):
         """
         Clase para grabar multiples videos  independientes al tiempo
         """
@@ -68,9 +68,11 @@ class grabadorVideos:
         self.TAMMAX=cuadrosnocausales
         self.fpsingnore=10
         self.count=0
+        self.TTL=TTL
         
     def nuevoVideo(self,filename,Segundafoto,TTL=50,FPS=20,res=(1920,1080),dec=10):
-        self.videos.append(recordVideo(filename,Segundafoto,TTL=TTL,FPS=FPS,res=res,dec=dec))
+        self.TTL=TTL
+        self.videos.append(recordVideo(filename,Segundafoto,TTL=self.TTL,FPS=FPS,res=res,dec=dec))
         for cant in self.arreglocuadros:
             self.videos[-1].out.write(cant)
         
