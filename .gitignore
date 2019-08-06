@@ -35,8 +35,14 @@ Thumbs.db
 darknet
 *.a
 *.so
+*.1
 python/sompic.jpg
 python/ultimofotogramaprocesado.jpg
 python/ultimofotogramaprocesadoPLACAS.jpg
 backup_OCR/
 backup_PLACAS/
+backup_ciclistas/
+=======
+>>>>>>> 51c455dde53e8a248af9ae58e48b236f9cf4fab7
+
+backup_SCOOTERS/
