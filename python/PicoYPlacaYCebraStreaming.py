@@ -40,6 +40,7 @@ contimagen=1
 framesttl=20*2
 MAXW=1920/2 ## 200 pixeles maximo de ancho permitido
 mindist=150
+placa_actual=""
 
 FPS=20
 SegundosCebra=6
@@ -373,49 +374,55 @@ while (True):
                 #si lleva mas de MAXCONTEOCEBRA cuadros acmulados
             
                 if track.p.p[idx].contadorCebra>=MAXCONTEOCEBRA and (not track.p.p[idx].detectadoCebra):
-                    track.p.p[idx].detectadoCebra=True
-                    print ("*"*30)
-                    print (" "*10+"Infraccion detectada"+" "*10)
-                    print ("*"*30)
-                    
-                    cx=int(track.p.p[idx].rect.x)
-                    cy=int(track.p.p[idx].rect.y)
-                    cu=int(track.p.p[idx].rect.u)
-                    cv=int(track.p.p[idx].rect.v)
-                    cw=int(track.p.p[idx].tam.w)
-                    ch=int(track.p.p[idx].tam.h)
-                    
-                    imgtoPLACAS=imgFile2[cy:cv,cx:cu]
-                    imgtoPLACAS1 = cv2.cvtColor(imgtoPLACAS, cv2.COLOR_BGR2RGB)
-                    tamaPL=imgtoPLACAS1.shape
-                    imgImportedPL=make_image(tamaPL[1],tamaPL[0],tamaPL[2])
-                    imgFileptrPL,cv_img2=get_iplimage_ptr(imgtoPLACAS1)      
-                    ipl_in2_image(imgFileptrPL,imgImportedPL)
-                    rp = detect_img(netplacas, metaplacas, imgImportedPL) 
-                    
-                    for i in range(len(rp)):
-                        placa_actual="PLACA"+str(track.p.p[idx].idx)
+                    try:
+                        placa_actual="PLACA_NO_DETECTADA"
+                        track.p.p[idx].detectadoCebra=True
+                        print ("*"*30)
+                        print (" "*10+"Infraccion detectada"+" "*10)
+                        print ("*"*30)
                         
-                        try:
-                            w=int(rp[i][2][2])
-                            h=int(rp[i][2][3])
-                            x=int(rp[i][2][0])-(w/2)
-                            y=int(rp[i][2][1])-(h/2)
-                            placa=[x,y,w,h,rp[i][0]]
-                            imgtoOCR=imgtoPLACAS[y:y+h,x:x+w]
-                            imgtoOCR1 = cv2.cvtColor(imgtoOCR, cv2.COLOR_BGR2RGB)
-                            tama2=imgtoOCR.shape
-                            imgImported2=make_image(tama2[1],tama2[0],tama2[2])
-                            imgFileptr2,cv_img2=get_iplimage_ptr(imgtoOCR1)      
-                            ipl_in2_image(imgFileptr2,imgImported2)
-                            #rgbgr_image(imgImported2)
-                            s = detect_img(netocr, metaocr, imgImported2)
-                            print ('Detecciones: '+str(len(s)))
-                            print (s)
-                            strypos=graficarPlacas(imgFile2,placa,s,offset=(cx,cy))
-                            placa_actual=strypos[0]
-                        except:
-                                print("Error en placa") 
+                        cx=int(track.p.p[idx].rect.x)
+                        cy=int(track.p.p[idx].rect.y)
+                        cu=int(track.p.p[idx].rect.u)
+                        cv=int(track.p.p[idx].rect.v)
+                        cw=int(track.p.p[idx].tam.w)
+                        ch=int(track.p.p[idx].tam.h)
+                        
+                        imgtoPLACAS=imgFile2[cy:cv,cx:cu]
+                        imgtoPLACAS1 = cv2.cvtColor(imgtoPLACAS, cv2.COLOR_BGR2RGB)
+                        tamaPL=imgtoPLACAS1.shape
+                        imgImportedPL=make_image(tamaPL[1],tamaPL[0],tamaPL[2])
+                        imgFileptrPL,cv_img2=get_iplimage_ptr(imgtoPLACAS1)      
+                        ipl_in2_image(imgFileptrPL,imgImportedPL)
+                        rp = detect_img(netplacas, metaplacas, imgImportedPL) 
+                        
+                        for i in range(len(rp)):
+                            placa_actual="PLACA"+str(track.p.p[idx].idx)
+                            
+                            try:
+                                w=int(rp[i][2][2])
+                                h=int(rp[i][2][3])
+                                x=int(rp[i][2][0])-(w/2)
+                                y=int(rp[i][2][1])-(h/2)
+                                placa=[x,y,w,h,rp[i][0]]
+                                imgtoOCR=imgtoPLACAS[y:y+h,x:x+w]
+                                imgtoOCR1 = cv2.cvtColor(imgtoOCR, cv2.COLOR_BGR2RGB)
+                                tama2=imgtoOCR.shape
+                                imgImported2=make_image(tama2[1],tama2[0],tama2[2])
+                                imgFileptr2,cv_img2=get_iplimage_ptr(imgtoOCR1)      
+                                ipl_in2_image(imgFileptr2,imgImported2)
+                                #rgbgr_image(imgImported2)
+                                s = detect_img(netocr, metaocr, imgImported2)
+                                print ('Detecciones: '+str(len(s)))
+                                print (s)
+                                strypos=graficarPlacas(imgFile2,placa,s,offset=(cx,cy))
+                                placa_actual=strypos[0]
+                            except:
+                                print("Error en placa interno") 
+                        
+                    except:
+                        print("Error en placa busqueda en imagen interna detectado. ")
+                    
                     print ("*"*30)
                     print (" "*13+"PLACA"+" "*13)
                     print (" "*10+placa_actual+" "*10)
