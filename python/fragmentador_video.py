@@ -48,7 +48,7 @@ def FFMPEG_get_Length_Video(input_video_absolute_path):
     """
 
     # cmd FFMPEG command to get video duration
-    cmd = 'ffprobe -i {} -show_entries format=duration -v quiet -of csv="p=0"'.format(input_video_absolute_path)
+    cmd = 'ffprobe -i "{}" -show_entries format=duration -v quiet -of csv="p=0"'.format(input_video_absolute_path)
     
     # Execute command to prompt
     output = subprocess.check_output(
@@ -112,7 +112,7 @@ def FFMPEG_Merge_Video_Files(path, sources_list):
 
     # cmd FFMPEG command to merge videos specified in Merge source list
     # ffmpeg -f concat -safe 0 -i mylist.txt -c copy output
-    cmd = 'ffmpeg -f concat -safe 0 -i {} -c copy {}'.format(os.path.join(results_path,file_name), os.path.join(results_path,result_name))
+    cmd = 'ffmpeg -f concat -safe 0 -i "{}" -c copy "{}"'.format(os.path.join(results_path,file_name), os.path.join(results_path,result_name))
 
     # print some process information
     print("\nMerging video sources, please wait:\n\tFFMPEG Command:"+cmd)
@@ -160,7 +160,7 @@ def FFMPEG_Split_Video_Files_(absolute_path, video_source_name, split_duration, 
 
     # cmd FFMPEG command to split video located at 'absolute_path'
     # ffmpeg -i input.mp4 -c copy -map 0 -segment_time tt -f segment output%03d.avi
-    cmd = 'ffmpeg -i {} -c copy -map 0 -reset_timestamps 1 -segment_time {} -f segment {}%04d.avi'.format(os.path.join(absolute_path,video_source_name), 
+    cmd = 'ffmpeg -i "{}" -c copy -map 0 -reset_timestamps 1 -segment_time "{}" -f segment "{}%04d.avi"'.format(os.path.join(absolute_path,video_source_name), 
                                                                                       str(split_duration), #[seconds]
                                                                                       os.path.join(absolute_path,"Output_"))
 
@@ -203,7 +203,7 @@ def FFMPEG_Get_Video_FPS(input_video_absolute_path):
         return -1         
     
     # cmd FFMPEG command to get videos FPS
-    cmd = 'ffprobe {} -v 0 -select_streams v -print_format flat -show_entries stream=r_frame_rate'.format(input_video_absolute_path)
+    cmd = 'ffprobe "{}" -v 0 -select_streams v -print_format flat -show_entries stream=r_frame_rate'.format(input_video_absolute_path)
 
     # Execute command
     output = subprocess.check_output(

@@ -36,8 +36,10 @@ if __name__ == "__main__":
     while True:# se itera 5 segundo para estabilizar la conexion
         with Capturing() as output:
             ret_val, imgFile2 = cam.read()
+        #if len(output)>0:
         print ("Salida del io: ")
         print (output)
+        print (len(output))
         
         if not ret_val:
             print ('ERROR:  no se pudo abrir la camara, saliendo')
