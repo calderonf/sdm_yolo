@@ -4,6 +4,7 @@
 *.out
 *.png
 *.jpg
+*.JPG
 *.avi
 *.mp4
 *.data
@@ -42,7 +43,4 @@ python/ultimofotogramaprocesadoPLACAS.jpg
 backup_OCR/
 backup_PLACAS/
 backup_ciclistas/
-=======
->>>>>>> 51c455dde53e8a248af9ae58e48b236f9cf4fab7
-
 backup_SCOOTERS/
