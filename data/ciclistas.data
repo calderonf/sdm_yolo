@@ -1,0 +1,5 @@
+classes = 3
+train  = /data/faculty/calderonf/Conversion_anotaciones_ciclistas/training_list.txt
+valid  = /data/faculty/calderonf/Conversion_anotaciones_OCR/valid.txt
+names = data/ciclistas.names
+backup = backup_ciclistas/ 

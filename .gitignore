@@ -7,7 +7,6 @@
 *.JPG
 *.avi
 *.mp4
-*.data
 
 *.pyc
 old/
