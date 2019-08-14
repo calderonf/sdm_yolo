@@ -1,4 +1,4 @@
-classes= 1
+classes= 11
 train  = /data/faculty/calderonf/Conversion_de_anotaciones_SDM_Scooters/training_list.txt
 valid  = /data/faculty/calderonf/Conversion_de_anotaciones_SDM_Scooters/valid.txt
 names = data/SCOOTERS.names
