@@ -32,7 +32,7 @@ net = load_net("yolo.cfg", "../../darknet/yolo.weights", 0)
 meta = load_meta("coco_es.data")
 """
 #primera vez
-charlador=True
+charlador=False
 pintarTrayectos=True
 
 SALVARCONTADO=False
