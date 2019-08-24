@@ -1,0 +1,5 @@
+classes= 1
+train  = /data/faculty/calderonf/Conversion_de_anotaciones_UMV/training_list.txt
+valid  = /data/faculty/calderonf/Conversion_de_anotaciones_UMV/valid.txt
+names = data/UMV.names
+backup = backup_UMV/ 
