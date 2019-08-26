@@ -63,7 +63,7 @@ def recortarDeteccionConTexto(copiaimagen,textofecha,textocamara,textodireccion,
         cu=cu+diffx
     #si se pasa por derecha corra a izquierda toda la imagen
     if cu>maxtamx:
-        diffx=cv-maxtamx
+        diffx=cu-maxtamx
         cx=cx-diffx
         cu=cu-diffx
     # Ultimas 4 verificaciones por si acaso se pasa
@@ -71,7 +71,7 @@ def recortarDeteccionConTexto(copiaimagen,textofecha,textocamara,textodireccion,
         diffx=-cx
         cx=cx+diffx
     if cu>maxtamx:
-        diffx=cv-maxtamx
+        diffx=cu-maxtamx
         cu=cu-diffx
     if cy<minimoy:
         diffy=minimoy-cy
@@ -645,8 +645,8 @@ while (True):
                                 rp=[]
                                 print('Se ha detectado un error en placas taxi, toca mirar que es')
 
-                            for i in range(len(rp)):
-                                try:
+                            try:
+                                for i in range(len(rp)):
                                     w=int(rp[i][2][2])
                                     h=int(rp[i][2][3])
                                     x=int(rp[i][2][0])-(w/2)
@@ -691,8 +691,8 @@ while (True):
                                         
                                         contimagen=contimagen+1
 
-                                except TypeError:
-                                    print('Se ha detectado un error en OCR, toca mirar que es')
+                            except TypeError:
+                                print('Se ha detectado un error en OCR, toca mirar que es')
                     
         if pintarTrayectos:
             track.drawPaths(imgFile2)
