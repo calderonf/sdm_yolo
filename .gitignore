@@ -43,3 +43,4 @@ backup_OCR/
 backup_PLACAS/
 backup_ciclistas/
 backup_SCOOTERS/
+python/secrets.py

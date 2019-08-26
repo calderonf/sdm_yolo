@@ -4,6 +4,7 @@ from darknet import *
 from Counter import linecounter as lc
 from Track import tracking as tr
 from time import sleep
+import numpy as np
 import cv2
 import os
 import easygui
@@ -83,16 +84,17 @@ def recortarDeteccionConTexto(copiaimagen,textofecha,textocamara,textodireccion,
     ch=abs(cv-cy)
     print ("despues", cy,", ",cv,", ",cx,", ",cu,", ",cw,", ",ch)
     img=copiaimagen[cy:cv,cx:cu]
+    imgaa=np.ascontiguousarray(img)
     sizex1=369
     sizey1=30
-    cv2.cv.PutText(cv2.cv.fromarray(img), textofecha, (cw-sizex1,sizey1), font, (255,255,255))
+    cv2.cv.PutText(cv2.cv.fromarray(imgaa), textofecha, (cw-sizex1,sizey1), font, (255,255,255))
     sizex2=461
     sizey2=65
-    cv2.cv.PutText(cv2.cv.fromarray(img), textocamara, (cw-sizex2,sizey2), font, (255,255,255))
+    cv2.cv.PutText(cv2.cv.fromarray(imgaa), textocamara, (cw-sizex2,sizey2), font, (255,255,255))
     sizex3=3
     sizey3=ch-6
-    cv2.cv.PutText(cv2.cv.fromarray(img), textodireccion, (sizex3,sizey3), font, (255,255,255))
-    return img
+    cv2.cv.PutText(cv2.cv.fromarray(imgaa), textodireccion, (sizex3,sizey3), font, (255,255,255))
+    return imgaa
 
 #NUESTRO YOLO ENTRENADO 90000 iteraciones
 net = load_net("../yolo-obj.cfg", "../../weights/yolo-obj_final.weights", 0)
