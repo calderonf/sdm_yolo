@@ -338,7 +338,15 @@ while (True):
     
     ErrorStreaming=False
     
-    
+    if (TEXTODIRECCION=='CR7-CL45'):
+        textofecha=ahora.strftime("20%y-%m-%d %H:%M:%S")
+        textocamara="CGT036 EXT2016 NVR2 CH11"
+        textodireccion="AK 7 X CL 45"
+    else:
+        print ("*"*30)
+        print (" "*13+"ERROR"+" "*13)
+        print (" "*10+"Error en texto a imprimir en placa ampliada" "*10)
+
     while True:
         ret_val, imgFile2 = cam.read()
         frames+=1
@@ -496,18 +504,6 @@ while (True):
                         print ("*"*30)
                         ahora=datetime.datetime.now()
                         fechaformatotexto=ahora.strftime("%d-%m-20%y %H_%M_%S")
-                        
-                        
-                        if (TEXTODIRECCION=='CR7-CL45'):
-                            textofecha=ahora.strftime("20%y-%m-%d %H:%M:%S")
-                            textocamara="CGT036 EXT2016 NVR2 CH11"
-                            textodireccion="AK 7 X CL 45"
-                        else:
-                        print ("*"*30)
-                        print (" "*13+"ERROR"+" "*13)
-                        print (" "*10+"Error en texto a imprimir en placa ampliada" "*10)
-                            
-                        
                         
                         #imfilesave=folder+"/"+TEXTOCEBRA+"/"+placa_actual+'-'+TEXTOCEBRA+'-'+AMPLIADA+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+'.JPG'
                         #cv2.imwrite(imfilesave,copiaimagen)
