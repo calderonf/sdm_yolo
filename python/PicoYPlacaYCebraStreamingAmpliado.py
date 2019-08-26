@@ -13,6 +13,9 @@ import datetime
 from  timePicoYPlaca import PicoYPlaca as picoypla
 
 from grabarVideo import grabadorVideos
+from math import floor
+from math import ceil
+
 
 def recortarDeteccionConTexto(copiaimagen,textofecha,textocamara,textodireccion,cy,cv,cx,cu,cw,ch):
     font=cv2.cv.InitFont(cv2.cv.CV_FONT_HERSHEY_SIMPLEX, 1.0, 1.0 ,0 ,2 ,cv2.cv.CV_AA)
@@ -76,7 +79,20 @@ def recortarDeteccionConTexto(copiaimagen,textofecha,textocamara,textodireccion,
     if cv>maximoy:
         diffy=cv-maximoy
         cv=cv-diffy
-
+    cw=abs(cu-cx)
+    ch=abs(cv-cy)
+    print ("despues", cy,", ",cv,", ",cx,", ",cu,", ",cw,", ",ch)
+    img=copiaimagen[cy:cv,cx:cu]
+    sizex1=369
+    sizey1=30
+    cv2.cv.PutText(cv2.cv.fromarray(img), textofecha, (cw-sizex1,sizey1), font, (255,255,255))
+    sizex2=461
+    sizey2=65
+    cv2.cv.PutText(cv2.cv.fromarray(img), textocamara, (cw-sizex2,sizey2), font, (255,255,255))
+    sizex3=3
+    sizey3=ch-6
+    cv2.cv.PutText(cv2.cv.fromarray(img), textodireccion, (sizex3,sizey3), font, (255,255,255))
+    return img
 
 #NUESTRO YOLO ENTRENADO 90000 iteraciones
 net = load_net("../yolo-obj.cfg", "../../weights/yolo-obj_final.weights", 0)
@@ -337,15 +353,6 @@ while (True):
         cc+=cc    
     
     ErrorStreaming=False
-    
-    if (TEXTODIRECCION=='CR7-CL45'):
-        textofecha=ahora.strftime("20%y-%m-%d %H:%M:%S")
-        textocamara="CGT036 EXT2016 NVR2 CH11"
-        textodireccion="AK 7 X CL 45"
-    else:
-        print ("*"*30)
-        print (" "*13+"ERROR"+" "*13)
-        print (" "*10+"Error en texto a imprimir en placa ampliada" "*10)
 
     while True:
         ret_val, imgFile2 = cam.read()
@@ -364,6 +371,15 @@ while (True):
         ahora=datetime.datetime.now()
         tiempoactual=ahora.strftime("%y-%m-%d-%H%M%S")
 
+        if (TEXTODIRECCION=='CR7-CL45'):
+            textofecha=ahora.strftime("20%y-%m-%d %H:%M:%S")
+            textocamara="CGT036 EXT2016 NVR2 CH11"
+            textodireccion="AK 7 X CL 45"
+        else:
+            print ("*"*30)
+            print (" "*13+"ERROR"+" "*13)
+            print (" "*10+"Error en texto a imprimir en placa ampliada"+" "*10)
+	
         #segframes=cam.get(cv2.cv.CV_CAP_PROP_POS_FRAMES)
         
         #tiempoactual=cam.get(cv2.cv.CV_CAP_PROP_POS_MSEC)
@@ -623,8 +639,7 @@ while (True):
                                 ipl_in2_image(imgFileptrPL,imgImportedPL)
                                 
                                 rp = detect_img(netplacas, metaplacas, imgImportedPL) 
-                                print ('Detecciones: de placa:'+str(len(rmintamx
-    maxtamxp)))
+                                print ('Detecciones: de placa:'+str(len(rp)))
                                 print (rp)
                             except:
                                 rp=[]
