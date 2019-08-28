@@ -7,10 +7,12 @@ Created on Sun Jun 16 18:13:28 2019
 """
 import cv2
 import secrets as sr
+import numpy as np
 from math import floor, ceil
 
+
 def recortarDeteccionConTexto(copiaimagen,textofecha,textocamara,textodireccion,cy,cv,cx,cu,cw,ch):
-    font=cv2.cv.InitFont(cv2.cv.CV_FONT_HERSHEY_SIMPLEX, 1.0, 1.0 ,0 ,2 ,cv2.cv.CV_AA)
+    font=cv2.cv.InitFont(cv2.cv.CV_FONT_HERSHEY_SIMPLEX, 0.6, 0.6 ,0 ,1 ,cv2.cv.CV_AA)
     minimoy=152
     maximoy=1024
     
