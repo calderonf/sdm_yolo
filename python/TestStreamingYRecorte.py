@@ -7,10 +7,12 @@ Created on Sun Jun 16 18:13:28 2019
 """
 import cv2
 import secrets as sr
+import numpy as np
 from math import floor, ceil
 
+
 def recortarDeteccionConTexto(copiaimagen,textofecha,textocamara,textodireccion,cy,cv,cx,cu,cw,ch):
-    font=cv2.cv.InitFont(cv2.cv.CV_FONT_HERSHEY_SIMPLEX, 1.0, 1.0 ,0 ,2 ,cv2.cv.CV_AA)
+    font=cv2.cv.InitFont(cv2.cv.CV_FONT_HERSHEY_SIMPLEX, 0.6, 0.6 ,0 ,1 ,cv2.cv.CV_AA)
     minimoy=152
     maximoy=1024
     
@@ -55,7 +57,7 @@ def recortarDeteccionConTexto(copiaimagen,textofecha,textocamara,textodireccion,
         cu=cu+diffx
     #si se pasa por derecha corra a izquierda toda la imagen
     if cu>maxtamx:
-        diffx=cv-maxtamx
+        diffx=cu-maxtamx
         cx=cx-diffx
         cu=cu-diffx
     # Ultimas 4 verificaciones por si acaso se pasa
@@ -63,7 +65,7 @@ def recortarDeteccionConTexto(copiaimagen,textofecha,textocamara,textodireccion,
         diffx=-cx
         cx=cx+diffx
     if cu>maxtamx:
-        diffx=cv-maxtamx
+        diffx=cu-maxtamx
         cu=cu-diffx
     if cy<minimoy:
         diffy=minimoy-cy
@@ -71,27 +73,21 @@ def recortarDeteccionConTexto(copiaimagen,textofecha,textocamara,textodireccion,
     if cv>maximoy:
         diffy=cv-maximoy
         cv=cv-diffy
-    
-    
-    
-    
     cw=abs(cu-cx)
     ch=abs(cv-cy)
     print ("despues", cy,", ",cv,", ",cx,", ",cu,", ",cw,", ",ch)
-    
     img=copiaimagen[cy:cv,cx:cu]
-    
+    imgaa=np.ascontiguousarray(img)
     sizex1=369
     sizey1=30
-    cv2.cv.PutText(cv2.cv.fromarray(img), textofecha, (cw-sizex1,sizey1), font, (255,255,255))
+    cv2.cv.PutText(cv2.cv.fromarray(imgaa), textofecha, (cw-sizex1,sizey1), font, (255,255,255))
     sizex2=461
     sizey2=65
-    cv2.cv.PutText(cv2.cv.fromarray(img), textocamara, (cw-sizex2,sizey2), font, (255,255,255))
+    cv2.cv.PutText(cv2.cv.fromarray(imgaa), textocamara, (cw-sizex2,sizey2), font, (255,255,255))
     sizex3=3
     sizey3=ch-6
-    cv2.cv.PutText(cv2.cv.fromarray(img), textodireccion, (sizex3,sizey3), font, (255,255,255))
-    
-    return img
+    cv2.cv.PutText(cv2.cv.fromarray(imgaa), textodireccion, (sizex3,sizey3), font, (255,255,255))
+    return imgaa
         
         
         
