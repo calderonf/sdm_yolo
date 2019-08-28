@@ -24,7 +24,6 @@ def recortarDeteccionConTexto(copiaimagen,textofecha,textocamara,textodireccion,
     cw=abs(cu-cx)
     ch=abs(cv-cy)
     print ("antes", cy,", ",cv,", ",cx,", ",cu,", ",cw,", ",ch)
-    cv2.cv.InitFont
     #si es mas pequeño que la minima imagen aumente el tamaño total de la imagen
     if cw<mintamx:
         diffx=mintamx-cw

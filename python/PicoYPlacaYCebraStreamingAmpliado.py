@@ -31,7 +31,6 @@ def recortarDeteccionConTexto(copiaimagen,textofecha,textocamara,textodireccion,
     cw=abs(cu-cx)
     ch=abs(cv-cy)
     print ("antes", cy,", ",cv,", ",cx,", ",cu,", ",cw,", ",ch)
-    cv2.cv.InitFont
     #si es mas pequeño que la minima imagen aumente el tamaño total de la imagen
     if cw<mintamx:
         diffx=mintamx-cw
@@ -120,7 +119,7 @@ pintarTrayectos=True
 
 SALVARCONTADO=True
 contimagen=1
-
+timedelta=2
 
 framesttl=20*2
 MAXW=1920/2 ## 200 pixeles maximo de ancho permitido
@@ -137,6 +136,7 @@ TEXTOCEBRA="C31"
 AMPLIADA="A"
 PANORAMICA="P"
 
+font=cv2.cv.InitFont(cv2.cv.CV_FONT_HERSHEY_SIMPLEX, 0.2, 1.1 ,0 ,1 ,cv2.cv.CV_AA)
 
 def compareCharacters(cra,crb,delta=2.0):
     cxa=cra[2][0]
@@ -221,7 +221,7 @@ def graficarPlacas(img,placa,resOCR,offset=(0,0),imwrite=False):
 
 
 
-folder=easygui.diropenbox(title="Seleccione la carpeta para guardar evidencias",default="/VideosSDM")
+folder=easygui.diropenbox(title="Seleccione la carpeta para guardar evidencias",default="/home/francisco/Dropbox/2019-3/SDM/Evidencias_FDS/20190828")
 
 
 if not os.path.exists(folder+"/"+TEXTOPICOYPLACA):
@@ -320,6 +320,10 @@ pp=picoypla()
 grabar=grabadorVideos()
 
 print ("Listos todos los valores de inicializacion cargando programa...")
+
+
+
+cv2.namedWindow( "Video",cv2.WINDOW_NORMAL)
 
 while (True):
     
@@ -703,13 +707,34 @@ while (True):
                     
         if pintarTrayectos:
             track.drawPaths(imgFile2)
+        ponerHoraEnVisualizacion=True
         
+        if ponerHoraEnVisualizacion:
+            
+            ahora=datetime.datetime.now()
+            fechaformatotexto=ahora.strftime("Server %d-%m-20%y %H_%M_%S")
+            sizex1=580+5
+            sizey1=90
+            cv2.putText(imgFile2, fechaformatotexto, (1920-sizex1,sizey1), cv2.FONT_HERSHEY_SIMPLEX,1, (255,255,255))
+            
+            antecitos=ahora-datetime.timedelta(seconds=timedelta)
+            fechaformatotexto=antecitos.strftime("timedelta"+str(timedelta)+" %d-%m-20%y %H_%M_%S")
+            sizex1=580+5
+            sizey1=90+25
+            cv2.putText(imgFile2, fechaformatotexto, (1920-sizex1,sizey1), cv2.FONT_HERSHEY_SIMPLEX,1, (255,255,255))
         
         cv2.imshow('Video', imgFile2)
         k = cv2.waitKey(1)& 0xFF
         if k==ord('q') or k==ord('Q'):    # Esc key=537919515 en linux WTF??? para parar y en mi otro PC 1048689
             print ('WARNING:::interrupcion de usuario...')
             break
+        
+        if k==ord('t') or k==ord('T'):    # Esc key=537919515 en linux WTF??? para parar y en mi otro PC 1048689
+            timedelta+=1
+            print ('timedelta en ',timedelta)
+        if k==ord('m') or k==ord('M'):    # Esc key=537919515 en linux WTF??? para parar y en mi otro PC 1048689
+            timedelta-=1
+            print ('timedelta en ',timedelta)
     
     for contar in contadores:
         contar.saveFinalCounts(frames)
