@@ -195,7 +195,7 @@ class pypHoyGetTaxi:
             else:
                 if self.verbose:
                     print ("fecha del archivo actual NO corresponde, se debe actuaizar")
-                return False
+                return True
         except:# si ocurre un error cualquiera, cree el archivode nuevo
             print ("error leyendo archivo revisar")
             return True
