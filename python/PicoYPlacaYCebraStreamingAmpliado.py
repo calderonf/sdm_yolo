@@ -19,7 +19,7 @@ from math import ceil
 
 
 def recortarDeteccionConTexto(copiaimagen,textofecha,textocamara,textodireccion,cy,cv,cx,cu,cw,ch):
-    font=cv2.cv.InitFont(cv2.cv.CV_FONT_HERSHEY_SIMPLEX, 1.0, 1.0 ,0 ,2 ,cv2.cv.CV_AA)
+    font=cv2.cv.InitFont(cv2.cv.CV_FONT_HERSHEY_SIMPLEX, 0.2, 1.1 ,0 ,1 ,cv2.cv.CV_AA)
     minimoy=152
     maximoy=1024
     
@@ -31,7 +31,7 @@ def recortarDeteccionConTexto(copiaimagen,textofecha,textocamara,textodireccion,
     cw=abs(cu-cx)
     ch=abs(cv-cy)
     print ("antes", cy,", ",cv,", ",cx,", ",cu,", ",cw,", ",ch)
-    
+    cv2.cv.InitFont
     #si es mas pequeño que la minima imagen aumente el tamaño total de la imagen
     if cw<mintamx:
         diffx=mintamx-cw
@@ -85,16 +85,21 @@ def recortarDeteccionConTexto(copiaimagen,textofecha,textocamara,textodireccion,
     print ("despues", cy,", ",cv,", ",cx,", ",cu,", ",cw,", ",ch)
     img=copiaimagen[cy:cv,cx:cu]
     imgaa=np.ascontiguousarray(img)
-    sizex1=369
+    
+    sizex1=240+5
     sizey1=30
     cv2.cv.PutText(cv2.cv.fromarray(imgaa), textofecha, (cw-sizex1,sizey1), font, (255,255,255))
-    sizex2=461
+    
+    sizex2=300+5
     sizey2=65
     cv2.cv.PutText(cv2.cv.fromarray(imgaa), textocamara, (cw-sizex2,sizey2), font, (255,255,255))
-    sizex3=3
-    sizey3=ch-6
+    
+    sizex3=(3+4)
+    sizey3=ch-(6+4)
     cv2.cv.PutText(cv2.cv.fromarray(imgaa), textodireccion, (sizex3,sizey3), font, (255,255,255))
+    
     return imgaa
+        
 
 #NUESTRO YOLO ENTRENADO 90000 iteraciones
 net = load_net("../yolo-obj.cfg", "../../weights/yolo-obj_final.weights", 0)
