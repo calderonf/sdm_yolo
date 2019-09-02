@@ -336,7 +336,7 @@ if __name__ == "__main__":
     meta = load_meta("../cfg/voc_py.data")
     r = detect(net, meta, "../data/person.jpg")
     
-    print r
+    print (r)
     imgFile = cv2.imread("../data/person.jpg")
     
 
@@ -364,7 +364,7 @@ if __name__ == "__main__":
     rgbgr_image(imgImported)
     #save_image(imgImported,"eagle_detect")
     r = detect_img(net, meta, imgImported) 
-    print r
+    print (r)
     for i in range(0,len(r)):
         w=int(r[i][2][2])
         h=int(r[i][2][3])
@@ -374,7 +374,7 @@ if __name__ == "__main__":
     cv2.imshow('dst_rt2', imgFile2)        
     cv2.waitKey(1) 
 
-    print 'copiar apuntador'
+    print ('copiar apuntador')
     
     for mm in range (0,10):
         imgFile3 = cv2.imread("../data/eagle2.jpg")
@@ -386,7 +386,7 @@ if __name__ == "__main__":
         #save_image(imgImported,"dog_detect")
         r = detect_img(net, meta, imgImported) 
         
-        print r
+        print (r)
         
         for i in range(0,len(r)):
             w=int(r[i][2][2])
@@ -396,11 +396,11 @@ if __name__ == "__main__":
             cv2.rectangle(imgFile3, (x,y), (x+w,y+h), (255,255,0), thickness=1, lineType=8, shift=0)
         
         cv2.imshow('dst_rt3', imgFile3)   
-        print 'voy en ciclo' +str(mm)     
+        print ('voy en ciclo' +str(mm)   )  
         cv2.waitKey(2) 
     
 
-    print 'Saliendo...'
+    print ('Saliendo...')
     cv2.destroyAllWindows()
     
     

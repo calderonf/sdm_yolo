@@ -139,14 +139,14 @@ class objects:
         util para debug\n
         """
         temp=1
-        print '\nImprimiendo '+str(len(self.obs))+' objetos: \n::::::::::::::::::::::'
+        print ('\nImprimiendo '+str(len(self.obs))+' objetos: \n::::::::::::::::::::::')
         for obj in self.obs[:]:
-            print ' Objeto numero '+str(temp)+'  '+' Con etiqueta :'+str(obj.str)
+            print (' Objeto numero '+str(temp)+'  '+' Con etiqueta :'+str(obj.str))
             temp=temp+1
-            print '  Centro en ['+str(obj.cp.x)+','+str(obj.cp.y)+']'
-            print '  Tamanio : w='+str(obj.tam.w)+', h='+str(obj.tam.h)
-            print '  Rectangulo: desde ['+str(obj.rect.x)+','+str(obj.rect.y)+']'+' \n              hasta ['+str(obj.rect.u)+','+str(obj.rect.v)+']'
-            print '  ....................'
+            print ('  Centro en ['+str(obj.cp.x)+','+str(obj.cp.y)+']')
+            print( '  Tamanio : w='+str(obj.tam.w)+', h='+str(obj.tam.h))
+            print( '  Rectangulo: desde ['+str(obj.rect.x)+','+str(obj.rect.y)+']'+' \n              hasta ['+str(obj.rect.u)+','+str(obj.rect.v)+']')
+            print( '  ....................')
 
     def clearObjets(self):
         """
@@ -234,7 +234,7 @@ class paths:
                 
                 
                 return 0
-        print 'WARNING: could not find the idx '+str(idx)+' in the path list please check for possible errors'    
+        print ('WARNING: could not find the idx '+str(idx)+' in the path list please check for possible errors'  )  
         return 1    
             
     def printPath(self,path):
@@ -244,7 +244,7 @@ class paths:
         """
         pathcompleto=False
         if pathcompleto:
-            print '  Trayectoria:'
+            print ('  Trayectoria:')
             sys.stdout.write('  |->')
             for l in path[:]:
                 sys.stdout.write('['+str(l.x)+','+str(l.y)+']->') 
@@ -257,16 +257,16 @@ class paths:
         Funcion que Imprime todos los trayectos junto con su secuencia de puntos, y sus propiedades\n
         """
         temp=1
-        print '\nImprimiendo '+str(len(self.p))+' trajectorias: \n++++++++++++++++++++++'
+        print ('\nImprimiendo '+str(len(self.p))+' trajectorias: \n++++++++++++++++++++++')
         for pat in self.p[:]:
-            print ' Trajectoria numero '+str(temp)+'.  '+' Con id='+str(pat.idx)+'.  '+' Con etiqueta :'+str(pat.str)
+            print (' Trajectoria numero '+str(temp)+'.  '+' Con id='+str(pat.idx)+'.  '+' Con etiqueta :'+str(pat.str))
             temp=temp+1
-            print '  Centro en ['+str(pat.cp.x)+','+str(pat.cp.y)+']'
-            print '  Tamanio : w='+str(pat.tam.w)+', h='+str(pat.tam.h)
-            print '  Rectangulo: desde ['+str(pat.rect.x)+','+str(pat.rect.y)+']'+' \n              hasta ['+str(pat.rect.u)+','+str(pat.rect.v)+']'
-            print '  Tiempo de vida TTL='+str(pat.ttl)  
+            print ('  Centro en ['+str(pat.cp.x)+','+str(pat.cp.y)+']')
+            print ('  Tamanio : w='+str(pat.tam.w)+', h='+str(pat.tam.h))
+            print ('  Rectangulo: desde ['+str(pat.rect.x)+','+str(pat.rect.y)+']'+' \n              hasta ['+str(pat.rect.u)+','+str(pat.rect.v)+']')
+            print ('  Tiempo de vida TTL='+str(pat.ttl)  )
             self.printPath(pat.path)
-            print '  --------------------'
+            print ('  --------------------')
             
     def clearPaths(self):
         """
@@ -391,7 +391,7 @@ class tracking:
         Funcion super simple que evita divisiones por cero
         """
         if y == 0:
-            print 'ERROR division por cero encontrada por favor revise'
+            print ('ERROR division por cero encontrada por favor revise')
             return 0
         return float(x) / float(y)
         
@@ -520,9 +520,9 @@ class tracking:
             ip.ttl-=1
             if ip.ttl<=0:
                 if self.verbose:
-                    print 20*'*#'+'*'
-                    print ('*Eliminando por ttl path con id = '+str(ip.idx))
-                    print 20*'*#'+'*'
+                    print (20*'*#'+'*')
+                    print( ('*Eliminando por ttl path con id = '+str(ip.idx)))
+                    print( 20*'*#'+'*')
                 self.p.p.remove(ip)
         #for ip in self.p.p[:]:
         
@@ -533,7 +533,7 @@ class tracking:
         if len(pesos)==0:#nada por asignar se sale
             return
         if len(pesos[0])==0:#si hay uno o mas objetos, pero no trayectos, salga este caso ya esta cubierto
-            print 'WARNING:: este caso ya estaba cubierto hay un problema extranio revise...'            
+            print ('WARNING:: este caso ya estaba cubierto hay un problema extranio revise...'  )          
             return
         no = len(pesos)#numero de objetos
         np = len(pesos[0])#numero de trayectos
@@ -548,24 +548,24 @@ class tracking:
             for o2t in pesos:
                 mintuple1=getMinItem(o2t)
                 if self.verbose:
-                    print mintuple1
+                    print (mintuple1)
                 minvid.append(mintuple1[0])
                 minval.append(mintuple1[1])
             #luego por columnas
             mintuple2=getMinItem(minval)
             
             if self.verbose:
-                print 'mintuple2'
-                print mintuple2
+                print ('mintuple2')
+                print (mintuple2)
             
             minpath=minvid[mintuple2[0]]
             minobj=mintuple2[0]
             mincost=mintuple2[1]
             if self.verbose:
-                print 'minobj'
-                print minobj
-                print 'minpath'
-                print minpath
+                print ('minobj')
+                print (minobj)
+                print ('minpath')
+                print (minpath)
             # cuando se tiene toca asignar este objeto a ese path en especial, 
             # siempre y cuando la distancia sea menor a un valor establecido
             # si es mayor a ese valor, se crea un nuevo objeto
@@ -676,7 +676,7 @@ if __name__ == "__main__":
     #tr.insertNewPath(6,1,2,87,4)
 
     tr.p.printPaths()
-    print 'procesando objetos'
+    print ('procesando objetos')
     tr.processObjectstoPaths()
     
     tr.p.printPaths()
