@@ -23,10 +23,17 @@ def recortarDeteccionConTexto(copiaimagen,textofecha,textocamara,textodireccion,
     minimoy=152
     maximoy=1024
     
-    mintamx=640
-    mintamy=512
+    mintamx=700
+    mintamy=560
     
     maxtamx=1920
+    incremento=40
+    cx-=incremento
+    cy-=incremento
+    
+    cu+=incremento
+    cv+=incremento
+    
     
     cw=abs(cu-cx)
     ch=abs(cv-cy)
@@ -122,7 +129,7 @@ contimagen=1
 timedelta=2
 
 framesttl=20*2
-MAXW=1920/2 ## 200 pixeles maximo de ancho permitido
+MAXW=1920/2 
 mindist=150
 placa_actual=""
 
@@ -221,7 +228,7 @@ def graficarPlacas(img,placa,resOCR,offset=(0,0),imwrite=False):
 
 
 
-folder=easygui.diropenbox(title="Seleccione la carpeta para guardar evidencias",default="/home/francisco/Dropbox/2019-3/SDM/Evidencias_FDS/20190828")
+folder=easygui.diropenbox(title="Seleccione la carpeta para guardar evidencias",default="/home/francisco/Dropbox/2019-3/SDM/Evidencias_FDS")
 
 
 if not os.path.exists(folder+"/"+TEXTOPICOYPLACA):
@@ -530,7 +537,8 @@ while (True):
                         print (" "*10+placa_actual+" "*10)
                         print ("*"*30)
                         ahora=datetime.datetime.now()
-                        fechaformatotexto=ahora.strftime("%d-%m-20%y %H_%M_%S")
+                        antecitos=ahora-datetime.timedelta(seconds=timedelta)
+                        fechaformatotexto=antecitos.strftime("%d-%m-20%y %H_%M_%S")
                         
                         #imfilesave=folder+"/"+TEXTOCEBRA+"/"+placa_actual+'-'+TEXTOCEBRA+'-'+AMPLIADA+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+'.JPG'
                         #cv2.imwrite(imfilesave,copiaimagen)
@@ -613,7 +621,8 @@ while (True):
                                         ch=int(track.p.p[idx].tam.h)
                                         
                                         ahora=datetime.datetime.now()
-                                        fechaformatotexto=ahora.strftime("%d-%m-20%y %H_%M_%S")
+                                        antecitos=ahora-datetime.timedelta(seconds=timedelta)
+                                        fechaformatotexto=antecitos.strftime("%d-%m-20%y %H_%M_%S")
                                         imfilesave=folder+"/"+TEXTOPICOYPLACA+"/"+placa_actual+'-'+TEXTOPICOYPLACA+'-'+AMPLIADA+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+' revParticular.JPG'
                                         
                                         copiaimagen2=recortarDeteccionConTexto(copiaimagen,textofecha,textocamara,textodireccion,cy,cv,cx,cu,cw,ch)
@@ -688,7 +697,8 @@ while (True):
                                         cw=int(track.p.p[idx].tam.w)
                                         ch=int(track.p.p[idx].tam.h)
                                         ahora=datetime.datetime.now()
-                                        fechaformatotexto=ahora.strftime("%d-%m-20%y %H_%M_%S")
+                                        antecitos=ahora-datetime.timedelta(seconds=timedelta)
+                                        fechaformatotexto=antecitos.strftime("%d-%m-20%y %H_%M_%S")
                                         imfilesave=folder+"/"+TEXTOPICOYPLACA+"/"+placa_actual+'-'+TEXTOPICOYPLACA+'-'+AMPLIADA+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+' revPublico.JPG'
                                         
                                         copiaimagen2=recortarDeteccionConTexto(copiaimagen,textofecha,textocamara,textodireccion,cy,cv,cx,cu,cw,ch)
