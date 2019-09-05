@@ -390,7 +390,6 @@ while (True):
         tiempoactual=ahora.strftime("%y-%m-%d-%H%M%S")
 
         if (TEXTODIRECCION=='CR7-CL45'):
-            textofecha=ahora.strftime("20%y-%m-%d %H:%M:%S")
             textocamara="CGT036 EXT2016 NVR2 CH11"
             textodireccion="AK 7 X CL 45"
         else:
@@ -538,6 +537,7 @@ while (True):
                         print ("*"*30)
                         ahora=datetime.datetime.now()
                         antecitos=ahora-datetime.timedelta(seconds=timedelta)
+                        textofecha=antecitos.strftime("20%y-%m-%d %H:%M:%S")
                         fechaformatotexto=antecitos.strftime("%d-%m-20%y %H_%M_%S")
                         
                         #imfilesave=folder+"/"+TEXTOCEBRA+"/"+placa_actual+'-'+TEXTOCEBRA+'-'+AMPLIADA+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+'.JPG'
@@ -622,6 +622,8 @@ while (True):
                                         
                                         ahora=datetime.datetime.now()
                                         antecitos=ahora-datetime.timedelta(seconds=timedelta)
+                                        textofecha=antecitos.strftime("20%y-%m-%d %H:%M:%S")
+            
                                         fechaformatotexto=antecitos.strftime("%d-%m-20%y %H_%M_%S")
                                         imfilesave=folder+"/"+TEXTOPICOYPLACA+"/"+placa_actual+'-'+TEXTOPICOYPLACA+'-'+AMPLIADA+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+' revParticular.JPG'
                                         
@@ -698,6 +700,7 @@ while (True):
                                         ch=int(track.p.p[idx].tam.h)
                                         ahora=datetime.datetime.now()
                                         antecitos=ahora-datetime.timedelta(seconds=timedelta)
+                                        textofecha=antecitos.strftime("20%y-%m-%d %H:%M:%S")
                                         fechaformatotexto=antecitos.strftime("%d-%m-20%y %H_%M_%S")
                                         imfilesave=folder+"/"+TEXTOPICOYPLACA+"/"+placa_actual+'-'+TEXTOPICOYPLACA+'-'+AMPLIADA+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+' revPublico.JPG'
                                         
