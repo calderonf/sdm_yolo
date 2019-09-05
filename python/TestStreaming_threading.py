@@ -7,8 +7,33 @@ Created on Sun Jun 16 18:13:28 2019
 """
 import cv2
 import datetime
+import numpy as np
+import darknet as dn
+import threading
+import Queue
 
 
+net0 = dn.load_net("../yolo-obj.cfg", "../../weights/yolo-obj_final.weights", 0)
+meta0 = dn.load_meta("../data/obj.data")
+
+net1 = dn.load_net("../yolo-obj.cfg", "../../weights/yolo-obj_final.weights", 0)
+meta1 = dn.load_meta("../data/obj.data")
+
+def PredictThread(net,meta,img,out_queue):
+    #imgcloned = np.array(img)
+    imgFile3 = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
+    tama=imgFile3.shape
+    imgFileptr,cv_img=dn.get_iplimage_ptr(imgFile3)   
+    imgFileptr=dn.copy_iplimage_ptr(imgFile3,imgFileptr,cv_img)
+    imgImported=dn.make_image(tama[1],tama[0],tama[2])
+    dn.ipl_in2_image(imgFileptr,imgImported)
+    erre=dn.detect_img(net, meta, imgImported) 
+    print erre
+    out_queue.put(erre)
+
+
+
+my_queue = Queue.Queue()
 fn='rtsp://movil:egccol@186.29.90.163:8891/EGC'
 fn2='rtsp://multiview:egccol@186.29.90.163:8891/Multiview'
 fn3='rtsp://movil:egccol@186.29.90.163:8891/CamFull2'
@@ -16,7 +41,7 @@ cam = cv2.VideoCapture(fn3)
 
 Tamx=720#1920
 timedelta=0
-
+Estado=1
 while True:# se itera 5 segundo para estabilizar la conexion
     ret_val, imgFile2 = cam.read()
     if not ret_val:
@@ -45,6 +70,25 @@ while True:# se itera 5 segundo para estabilizar la conexion
     if k==ord('m') or k==ord('M'):    # Esc key=537919515 en linux WTF??? para parar y en mi otro PC 1048689
         timedelta-=1
         print ('timedelta en ',timedelta)
+    if k==ord ("p" )or k==ord("P"):
+        bucle=1
+        while(bucle):
+            if Estado==1:
+                Estado=2
+                bucle=0
+                thread1 = threading.Thread(PredictThread(net0,meta0,imgFile2, my_queue)) 
+                thread1.start()
+            elif Estado==2:
+                Estado=3
+                bucle=0
+                thread2 = threading.Thread(PredictThread(net1,meta1,imgFile2, my_queue)) 
+                thread2.start()
+            elif Estado==3:
+                Estado=1
+                bucle=1
+                thread1.join()
+                thread2.join()
+        
 cv2.destroyWindow('streaming')
 cv2.destroyAllWindows()
 cv2.waitKey(3)

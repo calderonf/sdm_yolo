@@ -9,6 +9,7 @@ import cv2
 import secrets as sr
 import numpy as np
 from math import floor, ceil
+import datetime
 
 
 def recortarDeteccionConTexto(copiaimagen,textofecha,textocamara,textodireccion,cy,cv,cx,cu,cw,ch):
