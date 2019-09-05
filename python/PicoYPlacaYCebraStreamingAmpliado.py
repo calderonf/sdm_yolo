@@ -17,6 +17,89 @@ from grabarVideo import grabadorVideos
 from math import floor
 from math import ceil
 
+CONFIGURARPORDEFECTO=True
+
+
+def compareCharacters(cra,crb,delta=2.0):
+    cxa=cra[2][0]
+    cxb=crb[2][0]
+    distancia=abs(cxa-cxb)
+    if distancia<delta:
+        return True
+    return False
+def promedioAnchos(OCR):
+    promedio=0
+    for char in OCR:
+        promedio+=char[2][2]
+    return promedio/len(OCR)
+def minorConfidence(cra,crb,i,j):
+    if cra[1]>crb[1]:
+        return j
+    return i
+def eliminarRepetidos(OCR,pceliminacion=0.2):
+    """
+    funcion que elimina los caracteres repetidos en las detecciones de OCR, si estas detecciones son muy cercanas 
+    se eliminan la cercania esta dada por que tan juntas estan en su coordenada x
+    se puede aumentar esta diferencia aumentando el PCeliminacion por ahora esta en 20%
+    """
+    if len(OCR)<=6:# Si tiene menos de 6 o 6 letras retorne la misma cadena de detecciones
+        return OCR
+    paraeliminar=[]
+    promedio=promedioAnchos(OCR)
+    for i in range(len(OCR)):
+        for j in range(i + 1, len(OCR)):
+            if compareCharacters(OCR[i], OCR[j],delta=promedio*pceliminacion):
+                paraeliminar.append(minorConfidence(OCR[i], OCR[j],i,j))
+    paraeliminar=list(set(paraeliminar))# quitar elementos repetidos
+    for i in sorted(paraeliminar, reverse=True):
+        if len(OCR)<=6:
+            break
+        del OCR[i]
+    return OCR
+
+def graficarPlacas(img,placa,resOCR,offset=(0,0),imwrite=False):
+    #tomar las 6 mejores detecciones:
+    #resOCR=resOCR[0:6]
+    colour=(int(random.uniform(100,150)),int(random.uniform(180,255)),int(0))
+    colour2=(int(random.uniform(180,255)),int(random.uniform(100,150)),int(0))
+    x=placa[0]+offset[0]
+    y=placa[1]+offset[1]
+    w=placa[2]
+    h=placa[3]
+    u=x+w
+    v=y+h
+    resOCR.sort(key=lambda tup: tup[2][0])#organiza de izquierda a derecha las detecciones del OCR
+    
+    resOCR=eliminarRepetidos(resOCR)    
+    
+    #pintar deteccion de placa
+    #cv2.rectangle(img, (x,y), (u,v),colour, thickness=2, lineType=8, shift=0)
+    cstr=""
+    for j in (range(len(resOCR))):
+        cw=int(resOCR[j][2][2])
+        ch=int(resOCR[j][2][3])
+        cx=int(resOCR[j][2][0])-(cw/2)
+        cy=int(resOCR[j][2][1])-(ch/2)
+        cstr+=resOCR[j][0]
+        
+        xc=x+cx
+        yc=y+cy
+        uc=xc+cw
+        vc=yc+ch
+        #cv2.rectangle(imgFile2, (xc,yc), (uc,vc),colour2, thickness=1, lineType=8, shift=0)
+        cv2.putText(img,str(resOCR[j][0]), (xc,vc+20), cv2.FONT_HERSHEY_SIMPLEX,0.6, colour2)
+    
+    cv2.putText(img,str(cstr), (x,y-4), cv2.FONT_HERSHEY_SIMPLEX,1, colour)
+    cv2.imshow('VideoPLACA', img)
+    cv2.waitKey(1)
+    if imwrite:
+        cv2.imwrite("../../imagen_capturada_PLACA_"+cstr+"_"+str(random.randint(10,99))+'.JPG',img)
+    
+    #cv2.destroyAllWindows()
+    #cv2.waitKey(1)
+    return (cstr,(x,y-4))
+    #if k==ord('q'):    # Esc key=537919515 en linux WTF??? para parar y en mi otro PC 1048689
+    #    print ('interrupcion de usuario...')
 
 def recortarDeteccionConTexto(copiaimagen,textofecha,textocamara,textodireccion,cy,cv,cx,cu,cw,ch):
     font=cv2.cv.InitFont(cv2.cv.CV_FONT_HERSHEY_SIMPLEX, 0.2, 1.1 ,0 ,1 ,cv2.cv.CV_AA)
@@ -145,164 +228,107 @@ PANORAMICA="P"
 
 font=cv2.cv.InitFont(cv2.cv.CV_FONT_HERSHEY_SIMPLEX, 0.2, 1.1 ,0 ,1 ,cv2.cv.CV_AA)
 
-def compareCharacters(cra,crb,delta=2.0):
-    cxa=cra[2][0]
-    cxb=crb[2][0]
-    distancia=abs(cxa-cxb)
-    if distancia<delta:
-        return True
-    return False
-def promedioAnchos(OCR):
-    promedio=0
-    for char in OCR:
-        promedio+=char[2][2]
-    return promedio/len(OCR)
-def minorConfidence(cra,crb,i,j):
-    if cra[1]>crb[1]:
-        return j
-    return i
-def eliminarRepetidos(OCR,pceliminacion=0.2):
-    """
-    funcion que elimina los caracteres repetidos en las detecciones de OCR, si estas detecciones son muy cercanas 
-    se eliminan la cercania esta dada por que tan juntas estan en su coordenada x
-    se puede aumentar esta diferencia aumentando el PCeliminacion por ahora esta en 20%
-    """
-    if len(OCR)<=6:# Si tiene menos de 6 o 6 letras retorne la misma cadena de detecciones
-        return OCR
-    paraeliminar=[]
-    promedio=promedioAnchos(OCR)
-    for i in range(len(OCR)):
-        for j in range(i + 1, len(OCR)):
-            if compareCharacters(OCR[i], OCR[j],delta=promedio*pceliminacion):
-                paraeliminar.append(minorConfidence(OCR[i], OCR[j],i,j))
-    paraeliminar=list(set(paraeliminar))# quitar elementos repetidos
-    for i in sorted(paraeliminar, reverse=True):
-        if len(OCR)<=6:
-            break
-        del OCR[i]
-    return OCR
-
-def graficarPlacas(img,placa,resOCR,offset=(0,0),imwrite=False):
-    #tomar las 6 mejores detecciones:
-    #resOCR=resOCR[0:6]
-    colour=(int(random.uniform(100,150)),int(random.uniform(180,255)),int(0))
-    colour2=(int(random.uniform(180,255)),int(random.uniform(100,150)),int(0))
-    x=placa[0]+offset[0]
-    y=placa[1]+offset[1]
-    w=placa[2]
-    h=placa[3]
-    u=x+w
-    v=y+h
-    resOCR.sort(key=lambda tup: tup[2][0])#organiza de izquierda a derecha las detecciones del OCR
+if not CONFIGURARPORDEFECTO:
     
-    resOCR=eliminarRepetidos(resOCR)    
+    folder=easygui.diropenbox(title="Seleccione la carpeta para guardar evidencias",default="/home/francisco/Dropbox/2019-3/SDM/Evidencias_FDS")
+    if not os.path.exists(folder+"/"+TEXTOPICOYPLACA):
+        os.mkdir(folder+"/"+TEXTOPICOYPLACA)
     
-    #pintar deteccion de placa
-    #cv2.rectangle(img, (x,y), (u,v),colour, thickness=2, lineType=8, shift=0)
-    cstr=""
-    for j in (range(len(resOCR))):
-        cw=int(resOCR[j][2][2])
-        ch=int(resOCR[j][2][3])
-        cx=int(resOCR[j][2][0])-(cw/2)
-        cy=int(resOCR[j][2][1])-(ch/2)
-        cstr+=resOCR[j][0]
+    if not os.path.exists(folder+"/"+TEXTOCEBRA):
+        os.mkdir(folder+"/"+TEXTOCEBRA)
         
-        xc=x+cx
-        yc=y+cy
-        uc=xc+cw
-        vc=yc+ch
-        #cv2.rectangle(imgFile2, (xc,yc), (uc,vc),colour2, thickness=1, lineType=8, shift=0)
-        cv2.putText(img,str(resOCR[j][0]), (xc,vc+20), cv2.FONT_HERSHEY_SIMPLEX,0.6, colour2)
+    # TODO revisar existencia de folder en caso de que se seleccione cancelar. 
+    title  ="Cuantas lineas de deteccion?"
+    msg = "Seleccione el numero de lineas de deteccion que quiere poner, se recomiendan maximo 2 lineas"
+    choices = ["1", "2"]
+    choice = easygui.choicebox(msg, title, choices)
+    lineasDeConteo=int(choice)
+    print "Usted ha seleccionado ",lineasDeConteo," lineas de conteo"
     
-    cv2.putText(img,str(cstr), (x,y-4), cv2.FONT_HERSHEY_SIMPLEX,1, colour)
-    cv2.imshow('VideoPLACA', img)
-    cv2.waitKey(1)
-    if imwrite:
-        cv2.imwrite("../../imagen_capturada_PLACA_"+cstr+"_"+str(random.randint(10,99))+'.JPG',img)
+    regionesZebra=1
     
-    #cv2.destroyAllWindows()
-    #cv2.waitKey(1)
-    return (cstr,(x,y-4))
-    #if k==ord('q'):    # Esc key=537919515 en linux WTF??? para parar y en mi otro PC 1048689
-    #    print ('interrupcion de usuario...')
-
-
-
-folder=easygui.diropenbox(title="Seleccione la carpeta para guardar evidencias",default="/home/francisco/Dropbox/2019-3/SDM/Evidencias_FDS")
-
-
-if not os.path.exists(folder+"/"+TEXTOPICOYPLACA):
-    os.mkdir(folder+"/"+TEXTOPICOYPLACA)
-
-if not os.path.exists(folder+"/"+TEXTOCEBRA):
-    os.mkdir(folder+"/"+TEXTOCEBRA)
-
-
-# TODO revisar existencia de folder en caso de que se seleccione cancelar. 
-
-title  ="Cuantas lineas de deteccion?"
-msg = "Seleccione el numero de lineas de deteccion que quiere poner, se recomiendan maximo 2 lineas"
-choices = ["1", "2"]
-choice = easygui.choicebox(msg, title, choices)
-lineasDeConteo=int(choice)
-print "Usted ha seleccionado ",lineasDeConteo," lineas de conteo"
-
-regionesZebra=1
-
-title  ="Cuantas regiones de deteccion?"
-msg = "Seleccione el numero de regiones de deteccion que quiere poner, se recomiendan maximo 1 regiones"
-choices = ["1"]
-choice = easygui.choicebox(msg, title, choices)
-regionesZebra=int(choice)
-print "Usted ha seleccionado ",regionesZebra," regiones de ceteccion de Cebra"
-
-
-title  ="Que Streaming o video quiere?"
-msg = "Seleccione el streaming"
-fn='rtsp://movil:egccol@186.29.90.163:8891/EGC'
-fn1='rtsp://movil:egccol@186.29.90.163:8891/CamFull2'
-fn2='rtsp://multiview:egccol@186.29.90.163:8891/Multiview'
-fn3='/home/francisco/videos/Video24Horas_4.mp4'
-choices = [fn,fn1,fn2,fn3]
-choice = easygui.choicebox(msg, title, choices)
-filen=choice
-print "Usted ha seleccionado ",filen," como Video de entrada"
-
-title  ="Que Direccion de Camara esta usando?"
-msg = "Seleccione el direccion"
-fn='CR7-CL45'
-fn1='CR19-CL100'
-fn2='PONGAQUIDIRECCION'
-choices = [fn,fn1,fn2,fn3]
-choice = easygui.choicebox(msg, title, choices)
-TEXTODIRECCION=choice
-print "Usted ha seleccionado ",TEXTODIRECCION," como Video de entrada"
-
-
-title  ="Que Dlocalidad tiene la camara que esta usando?"
-msg = "Seleccione localidad"
-fn='CHAPINERO'
-fn1='USAQUEN'
-fn2='PONGAQUILOCALIDAD'
-choices = [fn,fn1,fn2,fn3]
-choice = easygui.choicebox(msg, title, choices)
-TEXTOLOCALIDAD=choice
-print "Usted ha seleccionado ",TEXTOLOCALIDAD," como Video de entrada"
-
-print "Se va a tomar el primercuadro del primer video encontrado para seleccionar las lineas de conteo puede que se demore un poco estabilizando el streaming"
-
-cam = cv2.VideoCapture(filen)
-
-for nn in range(100):# se itera un segundo para estabilizar la conexion
-    ret_val, imgFile2 = cam.read()
-    if not ret_val:
-        print ('ERROR:  no se pudo abrir la camara, saliendo')
-        exit()
-    cv2.imshow('Streaming',imgFile2)
-    cv2.waitKey(3)
-cv2.destroyAllWindows()
-cv2.waitKey(2)
-
+    title  ="Cuantas regiones de deteccion?"
+    msg = "Seleccione el numero de regiones de deteccion que quiere poner, se recomiendan maximo 1 regiones"
+    choices = ["1"]
+    choice = easygui.choicebox(msg, title, choices)
+    regionesZebra=int(choice)
+    print "Usted ha seleccionado ",regionesZebra," regiones de ceteccion de Cebra"
+    
+    title  ="Que Streaming o video quiere?"
+    msg = "Seleccione el streaming"
+    fn='rtsp://movil:egccol@186.29.90.163:8891/EGC'
+    fn1='rtsp://movil:egccol@186.29.90.163:8891/CamFull2'
+    fn2='rtsp://multiview:egccol@186.29.90.163:8891/Multiview'
+    fn3='/home/francisco/videos/Video24Horas_4.mp4'
+    choices = [fn,fn1,fn2,fn3]
+    choice = easygui.choicebox(msg, title, choices)
+    filen=choice
+    print "Usted ha seleccionado ",filen," como Video de entrada"
+    
+    title  ="Que Direccion de Camara esta usando?"
+    msg = "Seleccione el direccion"
+    fn='CR7-CL45'
+    fn1='CR19-CL100'
+    fn2='PONGAQUIDIRECCION'
+    choices = [fn,fn1,fn2,fn3]
+    choice = easygui.choicebox(msg, title, choices)
+    TEXTODIRECCION=choice
+    print "Usted ha seleccionado ",TEXTODIRECCION," como Video de entrada"
+    
+    title  ="Que Dlocalidad tiene la camara que esta usando?"
+    msg = "Seleccione localidad"
+    fn='CHAPINERO'
+    fn1='USAQUEN'
+    fn2='PONGAQUILOCALIDAD'
+    choices = [fn,fn1,fn2,fn3]
+    choice = easygui.choicebox(msg, title, choices)
+    TEXTOLOCALIDAD=choice
+    print "Usted ha seleccionado ",TEXTOLOCALIDAD," como Video de entrada"
+    
+    print "Se va a tomar el primercuadro del primer video encontrado para seleccionar las lineas de conteo puede que se demore un poco estabilizando el streaming"
+    
+    cam = cv2.VideoCapture(filen)
+    
+    for nn in range(100):# se itera 5 segundos para estabilizar la conexion
+        ret_val, imgFile2 = cam.read()
+        if not ret_val:
+            print ('ERROR:  no se pudo abrir la camara, saliendo')
+            exit()
+        cv2.imshow('Streaming',imgFile2)
+        cv2.waitKey(3)
+    cv2.destroyAllWindows()
+    cv2.waitKey(20)
+    
+else:# Opciones Por defecto Para 45 con 7 TODO va en un archivo de configuración aparte
+    folder="/home/francisco/Dropbox/2019-3/SDM/Evidencias_FDS/20190905"
+    if not os.path.exists(folder+"/"+TEXTOPICOYPLACA):
+        os.mkdir(folder+"/"+TEXTOPICOYPLACA)
+    
+    if not os.path.exists(folder+"/"+TEXTOCEBRA):
+        os.mkdir(folder+"/"+TEXTOCEBRA)
+    lineasDeConteo=1
+    regionesZebra=1
+    filen='rtsp://movil:egccol@186.29.90.163:8891/EGC'
+    TEXTODIRECCION='CR7-CL45'
+    TEXTOLOCALIDAD='CHAPINERO'
+    ppt1=(4, 464)
+    ppt2=(1917, 290)
+    cpt1=(3, 555) 
+    cpt2=(1914, 507)
+    cpt3=(5, 1078)
+    cpt4=(1917, 1078)
+    print "Se va a tomar el primercuadro del primer video encontrado para seleccionar las lineas de conteo puede que se demore un poco estabilizando el streaming"
+    
+    cam = cv2.VideoCapture(filen)
+    for nn in range(100):# se itera 5 segundos para estabilizar la conexion
+        ret_val, imgFile2 = cam.read()
+        if not ret_val:
+            print ('ERROR:  no se pudo abrir la camara, saliendo')
+            exit()
+        cv2.imshow('Streaming',imgFile2)
+        cv2.waitKey(3)
+    cv2.destroyAllWindows()
+    cv2.waitKey(20)
 imgFile3 = cv2.cvtColor(imgFile2, cv2.COLOR_BGR2RGB)
 #imgFile2 = cv2.imread("../data/eagle.jpg")
 tama=imgFile2.shape
@@ -314,14 +340,30 @@ rgbgr_image(imgImported)
 
 lineaDeConteo=[]
 for cc in range(lineasDeConteo):
-    lineaDeConteo.append(lc.selectLine(imgFile2,ownString='Selecciona la linea de deteccion #' +str(cc+1),filename=folder+"/deteccion.jpg",linecount=cc+1))
+    if not CONFIGURARPORDEFECTO:
+        lineaDeConteo.append(lc.selectLine(imgFile2,ownString='Selecciona la linea de deteccion #' +str(cc+1),filename=folder+"/deteccion.jpg",linecount=cc+1))
+    else:
+        print("Seleccionando linea por defecto")
+        lineaDeConteo.append(lc.selectLine(imgFile2,ownString='Selecciona la linea de deteccion #' +str(cc+1),filename=folder+"/deteccion.jpg",linecount=cc+1,DefaultPoints=True,pt1=ppt1,pt2=ppt2))
     sleep(1)
-
-
+"""
+ipdb> lineaDeConteo[0].pt1
+(4, 464)
+ipdb> lineaDeConteo[0].pt2
+(1917, 290)
+"""
 regionCebra=[]
 for rc in range(regionesZebra):
-    regionCebra.append(lc.selectRect(imgFile2,ownString='Selecciona la region de deteccion #' +str(cc+1),filename=folder+"/deteccion.jpg",linecount=cc+1))
+    if not CONFIGURARPORDEFECTO:
+        regionCebra.append(lc.selectRect(imgFile2,ownString='Selecciona la region de deteccion #' +str(cc+1),filename=folder+"/deteccion.jpg",linecount=cc+1))
+    else:
+        print("Seleccionando rectangulo de cebra por defecto")
+        regionCebra.append(lc.selectRect(imgFile2,ownString='Selecciona la region de deteccion #' +str(cc+1),filename=folder+"/deteccion.jpg",linecount=cc+1,DefaultPoints=True,pt1=cpt1,pt2=cpt2,pt3=cpt3,pt4=cpt4))
     sleep(1)
+"""
+('Primeros 2 puntos listos, gracias continuando con 3 y 4', (3, 555), (1914, 507))
+('Ultimos 2 puntos listos, gracias', (5, 1078), (1917, 1078))
+"""
 
 pp=picoypla()
 grabar=grabadorVideos()
@@ -334,7 +376,7 @@ cv2.namedWindow( "Video",cv2.WINDOW_NORMAL)
 
 while (True):
     
-    cam = cv2.VideoCapture(filen)
+    #cam = cv2.VideoCapture(filen)
     
     archsal=folder+'/reporte_streaming.csv'     
     frames=0
