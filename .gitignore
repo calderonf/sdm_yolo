@@ -36,6 +36,7 @@ darknet
 *.a
 *.so
 *.1
+python/pyptaxi.data
 python/sompic.jpg
 python/ultimofotogramaprocesado.jpg
 python/ultimofotogramaprocesadoPLACAS.jpg
