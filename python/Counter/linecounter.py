@@ -46,155 +46,213 @@ def callbackMouse(event,x,y,flags,param):
         
 class selectLine:
     
-    def __init__(self,imag,ownString='Seleccione un par de puntos para crear una linea ',filename='Linea_de_conteo.jpg',linecount=1):
-        global ix,iy,uux,iiy,ox,oy,drawing,both
-        self.pt1=(-1,-1)
-        self.pt2=(-1,-1)
-        self.error=True
-        print ("Por favor sobre la ventana llamada:")
-        print ("Seleccione Puntos")
-        print(ownString)
-        print (20*"_")
-        print ("Instrucciones:")
-        print ("1. seleccione un punto de inicio con el click derecho")
-        print ("2. mantenga sostenido el click y suelte donde quiera el otro punto")
-        print ("3. oprima q, Q, s, S o Esc para salir en cualquier momento y retornar la no seleccion de puntos")
-        
-        cv2.namedWindow('Seleccione Puntos')
-        cv2.setMouseCallback('Seleccione Puntos',callbackMouse)
-        
-        while(1):
+    def __init__(self,imag,ownString='Seleccione un par de puntos para crear una linea ',filename='Linea_de_conteo.jpg',linecount=1,DefaultPoints=False,pt1=(-1,-1),pt2=(-1,-1)):
+
+        if DefaultPoints:
+            global ix,iy,uux,iiy,ox,oy,drawing,both
             img=imag.copy()
-            if drawing:
-                cv2.circle(img,(ix,iy),3,(0,0,255),-1)
-                cv2.line(img,(ix,iy),(ox,oy),(255,122,110),2)
-                cv2.circle(img,(ox,oy),3,(255,0,255),-1)
-            cv2.imshow('Seleccione Puntos',img)
-            k = cv2.waitKey(1) & 0xFF
-            if both:
-                self.pt1=(ix,iy)
-                self.pt2=(iix,iiy)
-                self.error=False
-                break
-                
-            if k == 27 or k==ord('q') or k==ord('Q') or k==ord('s') or k==ord('S'):
-                self.pt1=(-1,-1)
-                self.pt2=(-1,-1)
-                self.error=True
-                break
-        filenameraw, file_extension = os.path.splitext(filename)
-        self.archivosalidajpg=filenameraw+'_linea_'+str(linecount)+'.jpg'
-        cv2.imwrite(self.archivosalidajpg,img)
-        ix,iy=-1,-1
-        uux,iiy=-1,-1
-        ox,oy=-1,-1
-        drawing,both=False,False
-        print ("puntos listos, gracias",self.pt1,self.pt2)
-        cv2.destroyWindow('Seleccione Puntos')
+            
+            cv2.circle(img,pt1,3,(0,0,255),-1)
+            cv2.line(img,pt1,pt2,(255,122,110),2)
+            cv2.circle(img,pt2,3,(255,0,255),-1)
+            
+            cv2.imshow('Seleccion de Puntos',img)
+            k = cv2.waitKey(2000) & 0xFF
+            self.pt1=pt1
+            self.pt2=pt2
+            self.error=False
+            #TODO comprobar que los puntos sean menores al tamanio de la imagen
+            filenameraw, file_extension = os.path.splitext(filename)
+            self.archivosalidajpg=filenameraw+'_linea_'+str(linecount)+'.jpg'
+            print ("puntos listos, configurados por defecto en: ",self.pt1,self.pt2)
+            cv2.destroyWindow('Seleccion de Puntos')
+        else:
+            global ix,iy,uux,iiy,ox,oy,drawing,both
+            self.pt1=(-1,-1)
+            self.pt2=(-1,-1)
+            self.error=True
+            
+            print ("Por favor sobre la ventana llamada:")
+            print ("Seleccione Puntos")
+            print(ownString)
+            print (20*"_")
+            print ("Instrucciones:")
+            print ("1. seleccione un punto de inicio con el click derecho")
+            print ("2. mantenga sostenido el click y suelte donde quiera el otro punto")
+            print ("3. oprima q, Q, s, S o Esc para salir en cualquier momento y retornar la no seleccion de puntos")
+            
+            cv2.namedWindow('Seleccione Puntos')
+            cv2.setMouseCallback('Seleccione Puntos',callbackMouse)
+            
+            while(1):
+                img=imag.copy()
+                if drawing:
+                    cv2.circle(img,(ix,iy),3,(0,0,255),-1)
+                    cv2.line(img,(ix,iy),(ox,oy),(255,122,110),2)
+                    cv2.circle(img,(ox,oy),3,(255,0,255),-1)
+                cv2.imshow('Seleccione Puntos',img)
+                k = cv2.waitKey(1) & 0xFF
+                if both:
+                    self.pt1=(ix,iy)
+                    self.pt2=(iix,iiy)
+                    self.error=False
+                    break
+                    
+                if k == 27 or k==ord('q') or k==ord('Q') or k==ord('s') or k==ord('S'):
+                    self.pt1=(-1,-1)
+                    self.pt2=(-1,-1)
+                    self.error=True
+                    break
+            filenameraw, file_extension = os.path.splitext(filename)
+            self.archivosalidajpg=filenameraw+'_linea_'+str(linecount)+'.jpg'
+            cv2.imwrite(self.archivosalidajpg,img)
+            ix,iy=-1,-1
+            uux,iiy=-1,-1
+            ox,oy=-1,-1
+            drawing,both=False,False
+            print ("puntos listos, gracias",self.pt1,self.pt2)
+            cv2.destroyWindow('Seleccione Puntos')
 
 class selectRect:
     
-    def __init__(self,imag,ownString='Seleccione Dos lineas que limitan la region a supervisar ',filename='Region.jpg',linecount=1):
-        global ix,iy,uux,iiy,ox,oy,drawing,both
+    def __init__(self,imag,ownString='Seleccione Dos lineas que limitan la region a supervisar ',filename='Region.jpg',linecount=1,DefaultPoints=False,pt1=(-1,-1),pt2=(-1,-1),pt3=(-1,-1),pt4=(-1,-1)):
         
-        self.pt1=(-1,-1)
-        self.pt2=(-1,-1)
-        self.pt3=(-1,-1)
-        self.pt4=(-1,-1)
-        
-        
-        self.error=True
-        print ("Por favor sobre la ventana llamada:")
-        print ("Seleccione Rectangulo")
-        print(ownString)
-        print (20*"_")
-        print ("Instrucciones:")
-        print ("1. seleccione un punto de inicio con el click derecho")
-        print ("2. mantenga sostenido el click y suelte donde quiera el otro punto")
-        print ("3. oprima q, Q, s, S o Esc para salir en cualquier momento y retornar la no seleccion de puntos")
-        
-        cv2.namedWindow('Seleccione Rectangulo 1')
-        cv2.setMouseCallback('Seleccione Rectangulo 1',callbackMouse)
-        
-        while(1):
+        if DefaultPoints:
+            global ix,iy,uux,iiy,ox,oy,drawing,both
+            
             img=imag.copy()
-            if drawing:
-                cv2.circle(img,(ix,iy),3,(0,0,255),-1)
-                cv2.line(img,(ix,iy),(ox,oy),(255,122,110),2)
-                cv2.circle(img,(ox,oy),3,(255,0,255),-1)
-            cv2.imshow('Seleccione Rectangulo 1',img)
-            k = cv2.waitKey(1) & 0xFF
-            if both:
-                self.pt1=(ix,iy)
-                self.pt2=(iix,iiy)
-                self.error=False
-                break
-                
-            if k == 27 or k==ord('q') or k==ord('Q') or k==ord('s') or k==ord('S'):
-                self.pt1=(-1,-1)
-                self.pt2=(-1,-1)
-                self.error=True
-                break
-        #filenameraw, file_extension = os.path.splitext(filename)
-        #self.archivosalidajpg=filenameraw+'_Region_'+str(linecount)+'.jpg'
-        #cv2.imwrite(self.archivosalidajpg,img)
-        ix,iy=-1,-1
-        uux,iiy=-1,-1
-        ox,oy=-1,-1
-        drawing,both=False,False
-        print ("Primeros 2 puntos listos, gracias continuando con 3 y 4",self.pt1,self.pt2)
-        cv2.destroyWindow('Seleccione Rectangulo 1')
+            self.pt1=pt1
+            self.pt2=pt2
+            self.pt3=pt3
+            self.pt4=pt4
+            polygon=[self.pt1,self.pt2,self.pt4,self.pt3]
+            self.error=False
+            
+            tambase=img.shape
+            mask = np.zeros((tambase[0],tambase[1],1), np.uint8)
+            maskrgb = np.zeros(tambase, np.uint8)
+            
+            pts = np.array(polygon, np.int32)
+            pts = pts.reshape((-1,1,2))
+            cv2.fillConvexPoly(mask,pts,(255))
+            cv2.fillConvexPoly(maskrgb,pts,(255,255,255))
+            alpha =0.5
+            cv2.addWeighted(maskrgb, alpha, img, 1,0, img)        
+            
+            filenameraw, file_extension = os.path.splitext(filename)
+            self.archivosalidajpg=filenameraw+'Rect'+str(linecount)+'.jpg'
+            
+            cv2.imwrite(self.archivosalidajpg,img)
+            print ("Ultimos 2 puntos listos, gracias",self.pt3,self.pt4)
+            cv2.imshow('Seleccion de Puntos',img)
+            k = cv2.waitKey(2000) & 0xFF
+            print ("puntos listos, configurados por defecto en: ",self.pt1,self.pt2)
+            print ("y en                                        ",self.pt3,self.pt4)
+            cv2.destroyWindow('Seleccion de Puntos')
+            
+        else:
         
-        cv2.namedWindow('Seleccione Rectangulo 2')
-        cv2.setMouseCallback('Seleccione Rectangulo 2',callbackMouse)
-        
-        while(1):
-            img=imag.copy()
-            cv2.circle(img,self.pt1,3,(0,0,255),-1)
-            cv2.line(img,self.pt1,self.pt2,(110,122,255),2)
-            cv2.circle(img,self.pt2,3,(255,0,255),-1)
-            if drawing:
-                cv2.circle(img,(ix,iy),3,(0,0,255),-1)
-                cv2.line(img,(ix,iy),(ox,oy),(255,122,110),2)
-                cv2.circle(img,(ox,oy),3,(255,0,255),-1)
-            cv2.imshow('Seleccione Rectangulo 2',img)
-            k = cv2.waitKey(1) & 0xFF
-            if both:
-                self.pt3=(ix,iy)
-                self.pt4=(iix,iiy)
-                self.error=False
-                break
-            if k == 27 or k==ord('q') or k==ord('Q') or k==ord('s') or k==ord('S'):
-                self.pt3=(-1,-1)
-                self.pt4=(-1,-1)
-                self.error=True
-                break
-        filenameraw, file_extension = os.path.splitext(filename)
-        self.archivosalidajpg=filenameraw+'Rect'+str(linecount)+'.jpg'
-        
-
-        polygon=[self.pt1,self.pt2,self.pt4,self.pt3]
-        
-        tambase=img.shape
-        mask = np.zeros((tambase[0],tambase[1],1), np.uint8)
-        maskrgb = np.zeros(tambase, np.uint8)
-        
-        pts = np.array(polygon, np.int32)
-        pts = pts.reshape((-1,1,2))
-        cv2.fillConvexPoly(mask,pts,(255))
-        cv2.fillConvexPoly(maskrgb,pts,(255,255,255))
-        
-        alpha =0.5
-        cv2.addWeighted(maskrgb, alpha, img, 1,0, img)        
-        
-        cv2.imwrite(self.archivosalidajpg,img)
-        ix,iy=-1,-1
-        uux,iiy=-1,-1
-        ox,oy=-1,-1
-        drawing,both=False,False
-        print ("Ultimos 2 puntos listos, gracias",self.pt3,self.pt4)
-        cv2.destroyWindow('Seleccione Rectangulo 2')
-        print("Organizando puntos a ser pintados.") 
+            global ix,iy,uux,iiy,ox,oy,drawing,both
+            
+            self.pt1=(-1,-1)
+            self.pt2=(-1,-1)
+            self.pt3=(-1,-1)
+            self.pt4=(-1,-1)
+            
+            filenameraw, file_extension = os.path.splitext(filename)
+            self.archivosalidajpg=filenameraw+'Rect'+str(linecount)+'.jpg'
+            
+            self.error=True
+            print ("Por favor sobre la ventana llamada:")
+            print ("Seleccione Rectangulo")
+            print(ownString)
+            print (20*"_")
+            print ("Instrucciones:")
+            print ("1. seleccione un punto de inicio con el click derecho")
+            print ("2. mantenga sostenido el click y suelte donde quiera el otro punto")
+            print ("3. oprima q, Q, s, S o Esc para salir en cualquier momento y retornar la no seleccion de puntos")
+            
+            cv2.namedWindow('Seleccione Rectangulo 1')
+            cv2.setMouseCallback('Seleccione Rectangulo 1',callbackMouse)
+            
+            while(1):
+                img=imag.copy()
+                if drawing:
+                    cv2.circle(img,(ix,iy),3,(0,0,255),-1)
+                    cv2.line(img,(ix,iy),(ox,oy),(255,122,110),2)
+                    cv2.circle(img,(ox,oy),3,(255,0,255),-1)
+                cv2.imshow('Seleccione Rectangulo 1',img)
+                k = cv2.waitKey(1) & 0xFF
+                if both:
+                    self.pt1=(ix,iy)
+                    self.pt2=(iix,iiy)
+                    self.error=False
+                    break
+                    
+                if k == 27 or k==ord('q') or k==ord('Q') or k==ord('s') or k==ord('S'):
+                    self.pt1=(-1,-1)
+                    self.pt2=(-1,-1)
+                    self.error=True
+                    break
+            #filenameraw, file_extension = os.path.splitext(filename)
+            #self.archivosalidajpg=filenameraw+'_Region_'+str(linecount)+'.jpg'
+            #cv2.imwrite(self.archivosalidajpg,img)
+            ix,iy=-1,-1
+            uux,iiy=-1,-1
+            ox,oy=-1,-1
+            drawing,both=False,False
+            print ("Primeros 2 puntos listos, gracias continuando con 3 y 4",self.pt1,self.pt2)
+            cv2.destroyWindow('Seleccione Rectangulo 1')
+            
+            cv2.namedWindow('Seleccione Rectangulo 2')
+            cv2.setMouseCallback('Seleccione Rectangulo 2',callbackMouse)
+            
+            while(1):
+                img=imag.copy()
+                cv2.circle(img,self.pt1,3,(0,0,255),-1)
+                cv2.line(img,self.pt1,self.pt2,(110,122,255),2)
+                cv2.circle(img,self.pt2,3,(255,0,255),-1)
+                if drawing:
+                    cv2.circle(img,(ix,iy),3,(0,0,255),-1)
+                    cv2.line(img,(ix,iy),(ox,oy),(255,122,110),2)
+                    cv2.circle(img,(ox,oy),3,(255,0,255),-1)
+                cv2.imshow('Seleccione Rectangulo 2',img)
+                k = cv2.waitKey(1) & 0xFF
+                if both:
+                    self.pt3=(ix,iy)
+                    self.pt4=(iix,iiy)
+                    self.error=False
+                    break
+                if k == 27 or k==ord('q') or k==ord('Q') or k==ord('s') or k==ord('S'):
+                    self.pt3=(-1,-1)
+                    self.pt4=(-1,-1)
+                    self.error=True
+                    break
+            filenameraw, file_extension = os.path.splitext(filename)
+            self.archivosalidajpg=filenameraw+'Rect'+str(linecount)+'.jpg'
+            
+    
+            polygon=[self.pt1,self.pt2,self.pt4,self.pt3]
+            
+            tambase=img.shape
+            mask = np.zeros((tambase[0],tambase[1],1), np.uint8)
+            maskrgb = np.zeros(tambase, np.uint8)
+            
+            pts = np.array(polygon, np.int32)
+            pts = pts.reshape((-1,1,2))
+            cv2.fillConvexPoly(mask,pts,(255))
+            cv2.fillConvexPoly(maskrgb,pts,(255,255,255))
+            
+            alpha =0.5
+            cv2.addWeighted(maskrgb, alpha, img, 1,0, img)        
+            
+            cv2.imwrite(self.archivosalidajpg,img)
+            ix,iy=-1,-1
+            uux,iiy=-1,-1
+            ox,oy=-1,-1
+            drawing,both=False,False
+            print ("Ultimos 2 puntos listos, gracias",self.pt3,self.pt4)
+            cv2.destroyWindow('Seleccione Rectangulo 2')
         
         
         

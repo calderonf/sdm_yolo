@@ -50,8 +50,8 @@ folder=easygui.diropenbox(title="Seleccione la carpeta destino",default="/Videos
 
 title  ="Que Streaming quiere?"
 msg = "Seleccione el streaming"
-fn='rtsp://movil:egccol@186.29.90.163:8891/EGC'
-fn1='rtsp://movil:egccol@186.29.90.163:8891/CamFull2'
+fn1='rtsp://movil:egccol@186.29.90.163:8891/EGC'
+fn='rtsp://movil:egccol@186.29.90.163:8891/CamFull2'
 fn2='rtsp://multiview:egccol@186.29.90.163:8891/Multiview'
 fn3='/home/francisco/videos/Video24Horas_4.mp4'
 choices = [fn1,fn,fn2,fn3]
