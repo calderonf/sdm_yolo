@@ -54,7 +54,7 @@ fn1='rtsp://movil:egccol@186.29.90.163:8891/EGC'
 fn='rtsp://movil:egccol@186.29.90.163:8891/CamFull2'
 fn2='rtsp://multiview:egccol@186.29.90.163:8891/Multiview'
 fn3='/home/francisco/videos/Video24Horas_4.mp4'
-choices = [fn,fn1,fn2,fn3]
+choices = [fn1,fn,fn2,fn3]
 choice = easygui.choicebox(msg, title, choices)
 filen=choice
 print ("Usted ha seleccionado ",filen," como Video de entrada")
