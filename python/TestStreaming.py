@@ -12,12 +12,15 @@ import datetime
 fn='rtsp://movil:egccol@186.29.90.163:8891/EGC'
 fn2='rtsp://multiview:egccol@186.29.90.163:8891/Multiview'
 fn3='rtsp://movil:egccol@186.29.90.163:8891/CamFull2'
-cam = cv2.VideoCapture(fn3)
+fn4='rtsp://186.29.90.163:8891/EGC'
+cam = cv2.VideoCapture(fn)
 
 Tamx=720#1920
 timedelta=0
+frames=100
 
-while True:# se itera 5 segundo para estabilizar la conexion
+while frames:# se itera 5 segundo para estabilizar la conexion
+    frames-=1
     ret_val, imgFile2 = cam.read()
     if not ret_val:
         print ('ERROR:  no se pudo abrir la camara, saliendo')

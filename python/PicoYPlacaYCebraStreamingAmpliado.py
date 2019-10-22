@@ -300,10 +300,13 @@ if not CONFIGURARPORDEFECTO:
     cv2.waitKey(20)
     
 else:# Opciones Por defecto Para 45 con 7 TODO va en un archivo de configuración aparte
-    folder="/home/francisco/Dropbox/2019-3/SDM/Evidencias_FDS/20190905"
+    ahora1=datetime.datetime.now()
+    carpeta=ahora1.strftime("%Y%m%d")
+    folder="/home/francisco/Dropbox/2019-3/SDM/Evidencias_FDS/"+carpeta
+    if not os.path.exists(folder):
+        os.mkdir(folder)
     if not os.path.exists(folder+"/"+TEXTOPICOYPLACA):
         os.mkdir(folder+"/"+TEXTOPICOYPLACA)
-    
     if not os.path.exists(folder+"/"+TEXTOCEBRA):
         os.mkdir(folder+"/"+TEXTOCEBRA)
     lineasDeConteo=1
@@ -311,12 +314,13 @@ else:# Opciones Por defecto Para 45 con 7 TODO va en un archivo de configuració
     filen='rtsp://movil:egccol@186.29.90.163:8891/EGC'
     TEXTODIRECCION='CR7-CL45'
     TEXTOLOCALIDAD='CHAPINERO'
-    ppt1=(4, 464)
-    ppt2=(1917, 290)
-    cpt1=(3, 555) 
-    cpt2=(1914, 507)
-    cpt3=(5, 1078)
-    cpt4=(1917, 1078)
+    ppt1=(1, 554)
+    ppt2=(1917, 430)
+    
+    cpt1=(2, 587) 
+    cpt2=(1626, 510)
+    cpt3=(2, 1078)
+    cpt4=(1919, 1076)
     print "Se va a tomar el primercuadro del primer video encontrado para seleccionar las lineas de conteo puede que se demore un poco estabilizando el streaming"
     
     cam = cv2.VideoCapture(filen)
