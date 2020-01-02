@@ -31,11 +31,11 @@ for line in res.splitlines():
     linesplit=lined.split("&")
     if(linesplit[0]==""):
         linesplit.pop(0)
-    #print (linesplit)
+    print (linesplit)
     
     if len (linesplit)==ORDEN+1:
         #print ("entra")
-        if linesplit[ORDEN]=="Evidencias.sh":
+        if linesplit[ORDEN]=="Evidencias.sh" or linesplit[ORDEN]=="Evidencias+":
             print(lined)
             print(linesplit)
             pid=str(linesplit[PID])

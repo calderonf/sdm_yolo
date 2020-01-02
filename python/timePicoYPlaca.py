@@ -157,8 +157,13 @@ class pypHoyGetTaxi:
             webpage = urlopen(req).read()
             webpagedec = webpage.decode('utf-8')
             #print(webpagedec)
-            self.p1=int(webpagedec[webpagedec.find("plate is-public")+len("plate is-public")+2])
-            self.p2=int(webpagedec[webpagedec.find("plate is-public")+len("plate is-public")+4])
+            try:
+                self.p1=int(webpagedec[webpagedec.find("plate is-public")+len("plate is-public")+2])
+                self.p2=int(webpagedec[webpagedec.find("plate is-public")+len("plate is-public")+4])
+            except:
+                self.p1=int(webpagedec[webpagedec.find("plate public")+len("plate public")+2])
+                self.p2=int(webpagedec[webpagedec.find("plate public")+len("plate public")+4])
+            
             if self.verbose:
                 print("Hoy tienen pico y placa: ",self.p1," y ",self.p2)
                 
@@ -654,7 +659,7 @@ if __name__ == "__main__":
         ftemp=fechasytiempo[itera]
         placa=placas[itera]
         pp=PicoYPlaca(fecha,ftemp)
-        pp.tienePicoYPlaca(placa,tipo="particular")
+        pp.tienePicoYPlaca(placa,tipo="taxi")
         print ("probando tienePicoYPlaca, Placa ",placa ," Fecha: ", pp.fecha_actual," ",pp.ahora," Retorna ",pp.tienePicoYPlaca(placa,pp.taxi))
     
     

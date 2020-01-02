@@ -2278,3 +2278,4 @@ data/labels/123_7.png
 data/labels/124_7.png
 data/labels/125_7.png
 data/labels/126_7.png
+../weights/yolo-UMV_42000.weights
