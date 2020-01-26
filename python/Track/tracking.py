@@ -159,7 +159,7 @@ class singlepath:
     """
     Clase con un trayecto, que contiene una estructura de seguimiento completa. \n
     """
-    def __init__(self, idx,x,y,w,h,framesttl,featurestring,lineasconteo=10):
+    def __init__(self, idx,x,y,w,h,framesttl,featurestring,lineasconteo=10,lineasconteocondicional=10):
         
         #adicion seleccion de clase por estimacion modal
         self.counterclases=np.zeros(len(clases))
@@ -176,6 +176,8 @@ class singlepath:
         self.colour=(int(random.uniform(0,255)),int(random.uniform(0,255)),int(random.uniform(0,255)))
         self.contado=False
         self.contadores=np.zeros(lineasconteo)
+        self.contadocondicional=False
+        self.lineasconteocondicional=np.zeros(lineasconteo)
         
         #adicion cebra
         self.puntosFrontera=[(x,y),(x-w/2,y-h/2),(x-w/2+w,y-h/2+h),(x-w/2,y-h/2+h),(x-w/2+w,y-h/2)]
