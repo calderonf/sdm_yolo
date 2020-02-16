@@ -4,6 +4,9 @@ import numpy as np
 import collections
 import os
 
+
+CLASSES="version_2"
+
 """
 events = [i for i in dir(cv2) if 'EVENT' in i]
 print events
@@ -21,9 +24,28 @@ ox,oy=-1,-1
 # Clases Version 1 
 #num2clases=['peaton', 'particular', 'taxi', 'motociclista', 'bus', 'camion', 'minivan', 'ciclista', 'tractomula']
 # Clases Version 2
-num2clases=['peaton', 'particular', 'taxi', 'motociclista', 'bus', 'camion', 'minivan', 'ciclista', 'tractomula', 'scooter', 'bicitaxi']
+#num2clases=['peaton', 'particular', 'taxi', 'motociclista', 'bus', 'camion', 'minivan', 'ciclista', 'tractomula', 'scooter', 'bicitaxi']
 # Clases Version UMV 
-#num2clases=['peaton', 'particular', 'taxi', 'motociclista', 'bus', 'camion', 'minivan', 'ciclista', 'tractomula']
+#num2clases=['Camion_C1', 'Camion_C2', 'Camion_C3', 'Camion_C4', 'Camion_C5', 'Camion_C6', 'Auto', 'Colectivo', 'Bus']
+#clases={'Camion_C1': 0, 'Camion_C2': 1, 'Camion_C3': 2, 'Camion_C4': 3, 'Camion_C5': 4, 'Camion_C6': 5, 'Auto': 6, 'Colectivo': 7, 'Bus': 8}
+
+
+if CLASSES=="version_1":
+    # Clases Version 1
+    num2clases=['peaton', 'particular', 'taxi', 'motociclista', 'bus', 'camion', 'minivan', 'ciclista', 'tractomula']
+    clases={'peaton': 0, 'particular': 1, 'taxi': 2, 'motociclista': 3, 'bus': 4, 'camion': 5, 'minivan': 6, 'ciclista': 7, 'tractomula': 8}
+
+elif CLASSES=="version_2":
+    # Clases Version 2
+    num2clases=['peaton', 'particular', 'taxi', 'motociclista', 'bus', 'camion', 'minivan', 'ciclista', 'tractomula', 'scooter', 'bicitaxi']
+    clases={'peaton': 0, 'particular': 1, 'taxi': 2, 'motociclista': 3, 'bus': 4, 'camion': 5, 'minivan': 6, 'ciclista': 7, 'tractomula': 8, 'scooter':9, 'bicitaxi':10}
+
+elif CLASSES=="Version_UMV":
+    # Clases Version UMV 
+    num2clases=['Camion_C1', 'Camion_C2', 'Camion_C3', 'Camion_C4', 'Camion_C5', 'Camion_C6', 'Auto', 'Colectivo', 'Bus']
+    clases={'Camion_C1': 0, 'Camion_C2': 1, 'Camion_C3': 2, 'Camion_C4': 3, 'Camion_C5': 4, 'Camion_C6': 5, 'Auto': 6, 'Colectivo': 7, 'Bus': 8}
+
+
 
 def callbackMouse(event,x,y,flags,param):
     global ix,iy,iix,iiy,ox,oy,drawing,both
@@ -394,14 +416,27 @@ class zone_detector:
         self.p2=self.calcOwnParams2()
         
         self.FPS=fps
+        
+        if CLASSES=="version_1":
+            # Clases Version 1
+            self.clases={'peaton': 0, 'particular': 1, 'taxi': 2, 'motociclista': 3, 'bus': 4, 'camion': 5, 'minivan': 6, 'ciclista': 7, 'tractomula': 8}
+        elif CLASSES=="version_2":
+            # Clases Version 2
+            self.clases={'peaton': 0, 'particular': 1, 'taxi': 2, 'motociclista': 3, 'bus': 4, 'camion': 5, 'minivan': 6, 'ciclista': 7, 'tractomula': 8, 'scooter':9, 'bicitaxi':10}
+        elif CLASSES=="Version_UMV":
+            # Clases Version UMV 
+            self.clases={'Camion_C1': 0, 'Camion_C2': 1, 'Camion_C3': 2, 'Camion_C4': 3, 'Camion_C5': 4, 'Camion_C6': 5, 'Auto': 6, 'Colectivo': 7, 'Bus': 8}
+        
+
         # Clases Version 1 
         #self.clases={'peaton': 0, 'particular': 1, 'taxi': 2, 'motociclista': 3, 'bus': 4, 'camion': 5, 'minivan': 6, 'ciclista': 7, 'tractomula': 8}
         
         # Clases Version 2
-        self.clases={'peaton': 0, 'particular': 1, 'taxi': 2, 'motociclista': 3, 'bus': 4, 'camion': 5, 'minivan': 6, 'ciclista': 7, 'tractomula': 8, 'scooter':9, 'bicitaxi':10}
+        #self.clases={'peaton': 0, 'particular': 1, 'taxi': 2, 'motociclista': 3, 'bus': 4, 'camion': 5, 'minivan': 6, 'ciclista': 7, 'tractomula': 8, 'scooter':9, 'bicitaxi':10}
         
         # Clases Version UMV 
-        #self.clases={'peaton': 0, 'particular': 1, 'taxi': 2, 'motociclista': 3, 'bus': 4, 'camion': 5, 'minivan': 6, 'ciclista': 7, 'tractomula': 8}
+        #self.clases={'Camion_C1': 0, 'Camion_C2': 1, 'Camion_C3': 2, 'Camion_C4': 3, 'Camion_C5': 4, 'Camion_C6': 5, 'Auto': 6, 'Colectivo': 7, 'Bus': 8}
+        
         
     def calcOwnParams1(self): #line's equation Params computation
         return self.calcParams(self.point1,self.point2)
@@ -512,14 +547,25 @@ class counter:
         self.FILE = open(self.filename_output,'w')
         self.FILE.write("etiqueta;acumulado;frame;tiempo;\n")
         self.FPS=fps
+        if CLASSES=="version_1":
+            # Clases Version 1
+            self.clases={'peaton': 0, 'particular': 1, 'taxi': 2, 'motociclista': 3, 'bus': 4, 'camion': 5, 'minivan': 6, 'ciclista': 7, 'tractomula': 8}
+        elif CLASSES=="version_2":
+            # Clases Version 2
+            self.clases={'peaton': 0, 'particular': 1, 'taxi': 2, 'motociclista': 3, 'bus': 4, 'camion': 5, 'minivan': 6, 'ciclista': 7, 'tractomula': 8, 'scooter':9, 'bicitaxi':10}
+        elif CLASSES=="Version_UMV":
+            # Clases Version UMV 
+            self.clases={'Camion_C1': 0, 'Camion_C2': 1, 'Camion_C3': 2, 'Camion_C4': 3, 'Camion_C5': 4, 'Camion_C6': 5, 'Auto': 6, 'Colectivo': 7, 'Bus': 8}
+        
         # Clases Version 1 
         #self.clases={'peaton': 0, 'particular': 1, 'taxi': 2, 'motociclista': 3, 'bus': 4, 'camion': 5, 'minivan': 6, 'ciclista': 7, 'tractomula': 8}
         
         # Clases Version 2
-        self.clases={'peaton': 0, 'particular': 1, 'taxi': 2, 'motociclista': 3, 'bus': 4, 'camion': 5, 'minivan': 6, 'ciclista': 7, 'tractomula': 8, 'scooter':9, 'bicitaxi':10}
+        #self.clases={'peaton': 0, 'particular': 1, 'taxi': 2, 'motociclista': 3, 'bus': 4, 'camion': 5, 'minivan': 6, 'ciclista': 7, 'tractomula': 8, 'scooter':9, 'bicitaxi':10}
         
         # Clases Version UMV 
-        #self.clases={'peaton': 0, 'particular': 1, 'taxi': 2, 'motociclista': 3, 'bus': 4, 'camion': 5, 'minivan': 6, 'ciclista': 7, 'tractomula': 8}
+        #self.clases={'Camion_C1': 0, 'Camion_C2': 1, 'Camion_C3': 2, 'Camion_C4': 3, 'Camion_C5': 4, 'Camion_C6': 5, 'Auto': 6, 'Colectivo': 7, 'Bus': 8}
+        
         self.counterclases=np.zeros(len(self.clases))
         self.counterclases0=np.zeros(len(self.clases))
         self.counterclases1=np.zeros(len(self.clases))

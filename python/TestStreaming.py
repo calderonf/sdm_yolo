@@ -15,7 +15,7 @@ fn3='rtsp://movil:egccol@186.29.90.163:8891/CamFull2'
 cam = cv2.VideoCapture(fn3)
 
 Tamx=720#1920
-timedelta=0
+timedelta=4
 
 while True:# se itera 5 segundo para estabilizar la conexion
     ret_val, imgFile2 = cam.read()

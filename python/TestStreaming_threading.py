@@ -40,7 +40,7 @@ fn3='rtsp://movil:egccol@186.29.90.163:8891/CamFull2'
 cam = cv2.VideoCapture(fn3)
 
 Tamx=720#1920
-timedelta=0
+timedelta=4
 Estado=1
 while True:# se itera 5 segundo para estabilizar la conexion
     ret_val, imgFile2 = cam.read()
@@ -70,24 +70,24 @@ while True:# se itera 5 segundo para estabilizar la conexion
     if k==ord('m') or k==ord('M'):    # Esc key=537919515 en linux WTF??? para parar y en mi otro PC 1048689
         timedelta-=1
         print ('timedelta en ',timedelta)
-    if k==ord ("p" )or k==ord("P"):
-        bucle=1
-        while(bucle):
-            if Estado==1:
-                Estado=2
-                bucle=0
-                thread1 = threading.Thread(PredictThread(net0,meta0,imgFile2, my_queue)) 
-                thread1.start()
-            elif Estado==2:
-                Estado=3
-                bucle=0
-                thread2 = threading.Thread(PredictThread(net1,meta1,imgFile2, my_queue)) 
-                thread2.start()
-            elif Estado==3:
-                Estado=1
-                bucle=1
-                thread1.join()
-                thread2.join()
+    #if k==ord ("p" )or k==ord("P"):
+    bucle=1
+    while(bucle):
+        if Estado==1:
+            Estado=2
+            bucle=0
+            thread1 = threading.Thread(PredictThread(net0,meta0,imgFile2, my_queue)) 
+            thread1.start()
+        elif Estado==2:
+            Estado=3
+            bucle=0
+            thread2 = threading.Thread(PredictThread(net1,meta1,imgFile2, my_queue)) 
+            thread2.start()
+        elif Estado==3:
+            Estado=1
+            bucle=1
+            thread1.join()
+            thread2.join()
         
 cv2.destroyWindow('streaming')
 cv2.destroyAllWindows()

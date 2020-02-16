@@ -16,11 +16,22 @@ import random
 net = load_net("../cfg/yolo-voc.cfg", "../../darknet/yolo-voc.weights", 0)
 meta = load_meta("../cfg/voc_py.data")
 """
-
+"""
 #NUESTRO YOLO ENTRENADO 80000 iteraciones
 net = load_net("../yolo-obj.cfg", "../../weights/yolo-obj_final.weights", 0)
 meta = load_meta("../data/obj.data")
+"""
 
+"""
+#Yolo entrenado con scooters
+net = load_net("../yolo-SCOOTERS.cfg", "../../weights/yolo-SCOOTERS_42000.weights", 0)
+meta = load_meta("../data/SCOOTERS.data")
+"""
+
+
+#Yolo entrenado con scooters
+net = load_net("../yolo-UMV.cfg", "../../weights/yolo-UMV_64000.weights", 0)
+meta = load_meta("../data/UMV.data")
 
 """
 #YOLO COCO
@@ -37,16 +48,16 @@ contimagen=1
 
 framesttl=5
 deCamara=False
-MAXW=550 ## 200 pixeles maximo de ancho permitido
+MAXW=900 ## 200 pixeles maximo de ancho permitido
 mindist=10
 
 
-folder=easygui.diropenbox(title="Seleccione la carpeta con los videos a aforar",default="/home/administrador/Videos")
+folder=easygui.diropenbox(title="Seleccione la carpeta con los videos a aforar",default="/VideosSDM/ReportesAforosSDM/CARGA2019")
 
 filelist=glob.glob(folder+"/*.avi")
 if len(filelist) == 0:
-    print("ERROR LA CARPETA NO CONTIENE ARCHIVOS .AVI buscando .mp4")
-    filelist=glob.glob(folder+"/*.mp4")
+    print("ERROR LA CARPETA NO CONTIENE ARCHIVOS .AVI buscando .MP4")
+    filelist=glob.glob(folder+"/*.MP4")
     
 filelist.sort()
 if len(filelist) == 0:
@@ -63,7 +74,7 @@ else:
     print "Se va a tomar el primercuadro del primer video encontrado para seleccionar las lineas de conteo"
     fn=filelist[0]
     cam = cv2.VideoCapture(fn)
-    MAXW=700
+    MAXW=900
     mindist=200  
     ret_val, imgFile2 = cam.read()
     if not ret_val:
