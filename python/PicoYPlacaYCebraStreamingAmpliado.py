@@ -18,6 +18,7 @@ from math import floor
 from math import ceil
 
 CONFIGURARPORDEFECTO=True
+NOPARTICULARFINDEANO=False #A final de anio dejar en falso para no generar detecciones de pico y placa
 
 
 def compareCharacters(cra,crb,delta=2.0):
@@ -300,10 +301,13 @@ if not CONFIGURARPORDEFECTO:
     cv2.waitKey(20)
     
 else:# Opciones Por defecto Para 45 con 7 TODO va en un archivo de configuración aparte
-    folder="/home/francisco/Dropbox/2019-3/SDM/Evidencias_FDS/20190905"
+    ahora1=datetime.datetime.now()
+    carpeta=ahora1.strftime("%Y%m%d")
+    folder="/home/francisco/Dropbox/2019-3/SDM/Evidencias_FDS/"+carpeta
+    if not os.path.exists(folder):
+        os.mkdir(folder)
     if not os.path.exists(folder+"/"+TEXTOPICOYPLACA):
         os.mkdir(folder+"/"+TEXTOPICOYPLACA)
-    
     if not os.path.exists(folder+"/"+TEXTOCEBRA):
         os.mkdir(folder+"/"+TEXTOCEBRA)
     lineasDeConteo=1
@@ -311,12 +315,13 @@ else:# Opciones Por defecto Para 45 con 7 TODO va en un archivo de configuració
     filen='rtsp://movil:egccol@186.29.90.163:8891/EGC'
     TEXTODIRECCION='CR7-CL45'
     TEXTOLOCALIDAD='CHAPINERO'
-    ppt1=(4, 464)
-    ppt2=(1917, 290)
-    cpt1=(3, 555) 
-    cpt2=(1914, 507)
-    cpt3=(5, 1078)
-    cpt4=(1917, 1078)
+    ppt1=(1, 554)
+    ppt2=(1917, 430)
+    
+    cpt1=(0, 541) 
+    cpt2=(1630, 465)
+    cpt3=(3, 1038)
+    cpt4=(1919, 1040)
     print "Se va a tomar el primercuadro del primer video encontrado para seleccionar las lineas de conteo puede que se demore un poco estabilizando el streaming"
     
     cam = cv2.VideoCapture(filen)
@@ -568,9 +573,15 @@ while (True):
                     except:
                         print("Error en placa busqueda en imagen interna detectado. ")
                     
-                    if (placa_actual == "PLACA_NO_DETECTADA"):
+                    #if (placa_actual == "PLACA_NO_DETECTADA"):
+                    #    print ("*"*30)
+                    #    print (" "*13+"PLACA_NO_DETECTADA"+" "*13)
+                    #    print (" "*10+"Error depurado en zona"+" "*10)
+                    #el
+                    if (not pp.esPlaca(placa_actual)[0]):
                         print ("*"*30)
-                        print (" "*13+"PLACA_NO_DETECTADA"+" "*13)
+                        print ("-"*13+placa_actual+"-"*13)
+                        print (" "*13+"NO ES UNA PLACA VALIDA"+" "*13)
                         print (" "*10+"Error depurado en zona"+" "*10)
                     else:
                         print ("*"*30)
@@ -604,7 +615,7 @@ while (True):
                 for contar in contadores:
                     if (contar.testLine(p2,p1) and not track.p.p[idx].contadores[contar.linecount]):# si pasa la linea de conteo.
                         
-                        if (str(track.p.p[idx].str) == 'particular'): #or (str(track.p.p[idx].str) == 'taxi')):
+                        if (str(track.p.p[idx].str) == 'particular' and NOPARTICULARFINDEANO): #or (str(track.p.p[idx].str) == 'taxi')):
                             try:
                                 direct=contar.crossSign(p2,p1)
                                 cv2.circle(imgFile2,contar.intersectPoint(p2,p1),4,(100,100,255), -1) #intersecting point
