@@ -18,7 +18,7 @@ from math import floor
 from math import ceil
 
 CONFIGURARPORDEFECTO=True
-NOPARTICULARFINDEANO=False #A final de anio dejar en falso para no generar detecciones de pico y placa
+NOPARTICULARFINDEANO=True #A final de anio dejar en falso para no generar detecciones de pico y placa
 
 
 def compareCharacters(cra,crb,delta=2.0):

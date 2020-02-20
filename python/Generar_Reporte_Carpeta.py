@@ -99,13 +99,45 @@ filelistjpg=glob.glob(folder+"/*.jpg")
 filereport=folder+'/'+'merge_video_sources_report.csv'
 basewidth = 600
 p=[]
+#poner el el otro generador de reportes.
+if not os.path.isfile(filereport):
+    print("ERROR: LA CARPETA NO CONTIENE ARCHIVO DE REPORTE DE VIDEOS INTENTANDO GENERAR")
+    import glob
+    os.chdir(folder)
+    listaarchivos=glob.glob("*.csv")
+    FILE_report_w  = open(filereport, 'w') 
+    FILE_report_w.write("File_Name;Year;Month;Day;Start_Time;Duration;End_Time\n")
+    listaarchivos.sort()  
+    
+    listalinea1=[]
+    cont=1
+    for filea in listaarchivos:
+        if filea[-5]=="1":
+            listalinea1.append(filea)
+          
+    listalinea1.sort()
+    
+    for archivo in listalinea1:
+        ar_split=archivo.split("_")
+        archivo_video=ar_split[0]+"_"+ar_split[1]+"_"+ar_split[2]+".avi"
+        ano=ar_split[1][0:4]
+        mes=ar_split[1][4:6]
+        dia=ar_split[1][6:8]
+        start_time=ar_split[1][8:10]+":"+ar_split[1][10:12]+":"+ar_split[1][12:14]
+        Duration="05"# para videos de contrato monitoreo la duracion es cada 5 minutos. 
+        end_time=ar_split[1][8:10]+":"+ar_split[1][10:12]+":"+ar_split[1][12:14]     
+        towrite=archivo_video+";"+ano+";"+mes+";"+dia+";"+start_time+";"+Duration+";"+end_time+"\n"
+        FILE_report_w.write(towrite)
+        cont+=1
+    FILE_report_w.close()
 
 if len(filelistcsv) == 0:
     print("ERROR: LA CARPETA NO CONTIENE ARCHIVOS .csv DE REPORTE SALIENDO")
 elif len(filelistjpg) == 0:
     print("ERROR: LA CARPETA NO CONTIENE ARCHIVOS DE LINEA .jpg CON LINEAS DE CONTEO SALIENDO")
 elif not os.path.isfile(filereport):
-    print("ERROR: LA CARPETA NO CONTIENE ARCHIVO DE REPORTE DE VIDEOS SALIENDO")
+    print("ERROR: LA CARPETA NO CONTIENE ARCHIVO DE REPORTE DE VIDEOS saliendo...")
+    
 else:
     filelistcsv.sort()
     filelistjpg.sort()
@@ -544,7 +576,7 @@ else:
             """  
         elif seleccion == "Caso Predefinido":
             msg = "Que caso es:"   
-            choices = ["Peatonal AK7 AC12","cicloruta AK11 AC100","cicloruta+calzada AK11 AC100","cicloruta AK19 AC100"]
+            choices = ["CL17X115-E-W","Peatonal AK7 AC12","cicloruta AK11 AC100","cicloruta+calzada AK11 AC100","cicloruta AK19 AC100"]
             casoparticular = easygui.buttonbox(msg,image=image, choices=choices)  
             
             if casoparticular=="Peatonal AK7 AC12":
@@ -569,6 +601,11 @@ else:
                 Acceso="Norte"
                 Salida="Sur"
                 fieldValues=['100', '19']
+                descripcion_via="cicloruta"
+            elif casoparticular=="CL17X115-E-W":
+                Acceso="Oriente"
+                Salida="Occidente"
+                fieldValues=['17', '115']
                 descripcion_via="cicloruta"
                 
                 
