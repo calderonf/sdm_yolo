@@ -16,8 +16,12 @@ fn4='rtsp://186.29.90.163:8891/EGC'
 cam = cv2.VideoCapture(fn)
 
 Tamx=720#1920
+<<<<<<< HEAD
+timedelta=4
+=======
 timedelta=0
 frames=100
+>>>>>>> 07968bf1a67d8dcf61edbcc6c0113b5e4c649356
 
 while frames:# se itera 5 segundo para estabilizar la conexion
     frames-=1

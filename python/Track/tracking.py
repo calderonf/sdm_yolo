@@ -32,17 +32,30 @@ OPENCVSUPPORT=True
 if OPENCVSUPPORT:
     import cv2
 
-# Clases Version 1 
-#num2clases=['peaton', 'particular', 'taxi', 'motociclista', 'bus', 'camion', 'minivan', 'ciclista', 'tractomula']
-#clases={'peaton': 0, 'particular': 1, 'taxi': 2, 'motociclista': 3, 'bus': 4, 'camion': 5, 'minivan': 6, 'ciclista': 7, 'tractomula': 8}
+CLASSES="version_2"
 
-# Clases Version 2
-num2clases=['peaton', 'particular', 'taxi', 'motociclista', 'bus', 'camion', 'minivan', 'ciclista', 'tractomula', 'scooter', 'bicitaxi']
-clases={'peaton': 0, 'particular': 1, 'taxi': 2, 'motociclista': 3, 'bus': 4, 'camion': 5, 'minivan': 6, 'ciclista': 7, 'tractomula': 8, 'scooter':9, 'bicitaxi':10}
+if CLASSES=="version_1":
+    # Clases Version 1
+    num2clases=['peaton', 'particular', 'taxi', 'motociclista', 'bus', 'camion', 'minivan', 'ciclista', 'tractomula']
+    clases={'peaton': 0, 'particular': 1, 'taxi': 2, 'motociclista': 3, 'bus': 4, 'camion': 5, 'minivan': 6, 'ciclista': 7, 'tractomula': 8}
 
-# Clases Version UMV 
-#num2clases=['peaton', 'particular', 'taxi', 'motociclista', 'bus', 'camion', 'minivan', 'ciclista', 'tractomula']
-#clases={'peaton': 0, 'particular': 1, 'taxi': 2, 'motociclista': 3, 'bus': 4, 'camion': 5, 'minivan': 6, 'ciclista': 7, 'tractomula': 8}
+elif CLASSES=="version_2":
+    # Clases Version 2
+    num2clases=['peaton', 'particular', 'taxi', 'motociclista', 'bus', 'camion', 'minivan', 'ciclista', 'tractomula', 'scooter', 'bicitaxi']
+    clases={'peaton': 0, 'particular': 1, 'taxi': 2, 'motociclista': 3, 'bus': 4, 'camion': 5, 'minivan': 6, 'ciclista': 7, 'tractomula': 8, 'scooter':9, 'bicitaxi':10}
+
+elif CLASSES=="Version_UMV":
+    # Clases Version UMV 
+    num2clases=['Camion_C1', 'Camion_C2', 'Camion_C3', 'Camion_C4', 'Camion_C5', 'Camion_C6', 'Auto', 'Colectivo', 'Bus']
+    clases={'Camion_C1': 0, 'Camion_C2': 1, 'Camion_C3': 2, 'Camion_C4': 3, 'Camion_C5': 4, 'Camion_C6': 5, 'Auto': 6, 'Colectivo': 7, 'Bus': 8}
+
+
+
+
+
+
+
+
 
 #DefaultTTL=10 #Tiempo de vida por default de cada estructura de seguimiento 
 #definiciones
@@ -159,7 +172,7 @@ class singlepath:
     """
     Clase con un trayecto, que contiene una estructura de seguimiento completa. \n
     """
-    def __init__(self, idx,x,y,w,h,framesttl,featurestring,lineasconteo=10):
+    def __init__(self, idx,x,y,w,h,framesttl,featurestring,lineasconteo=10,lineasconteocondicional=10):
         
         #adicion seleccion de clase por estimacion modal
         self.counterclases=np.zeros(len(clases))
@@ -176,6 +189,8 @@ class singlepath:
         self.colour=(int(random.uniform(0,255)),int(random.uniform(0,255)),int(random.uniform(0,255)))
         self.contado=False
         self.contadores=np.zeros(lineasconteo)
+        self.contadocondicional=False
+        self.lineasconteocondicional=np.zeros(lineasconteo)
         
         #adicion cebra
         self.puntosFrontera=[(x,y),(x-w/2,y-h/2),(x-w/2+w,y-h/2+h),(x-w/2,y-h/2+h),(x-w/2+w,y-h/2)]

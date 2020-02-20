@@ -295,7 +295,7 @@ def get_videos_path():
     root.withdraw()
 
     # Open GUI to select folder
-    folder_selected = filedialog.askdirectory(initialdir="/Videos", title = "Select a folder")
+    folder_selected = filedialog.askdirectory(initialdir="/VideosSDM/ReportesAforosSDM/CARGA2019/", title = "Select a folder")
 
     # Return user selection
     if folder_selected == "":
