@@ -110,7 +110,8 @@ class selecttwoLines:
         ox,oy=-1,-1
         drawing,both=False,False
         print ("puntos 1 de 2 listos, gracias",self.pt1,self.pt2)
-        cv2.destroyWindow('Seleccione Linea 2 de 2')
+        cv2.destroyWindow('Seleccione Linea 1 de 2')
+        k = cv2.waitKey(1)
         
         print ("Por favor sobre la ventana:")
         print(ownString+" 2 de 2")
@@ -133,18 +134,25 @@ class selecttwoLines:
             cv2.imshow('Seleccione Linea 2 de 2',img)
             k = cv2.waitKey(1) & 0xFF
             if both:
-                self.pt1=(ix,iy)
-                self.pt2=(iix,iiy)
+                self.pt3=(ix,iy)
+                self.pt4=(iix,iiy)
                 self.error=False
                 break
                 
             if k == 27 or k==ord('q') or k==ord('Q') or k==ord('s') or k==ord('S'):
                 self.pt1=(-1,-1)
                 self.pt2=(-1,-1)
+                self.pt3=(-1,-1)
+                self.pt4=(-1,-1)
                 self.error=True
                 break
         filenameraw, file_extension = os.path.splitext(filename)
         self.archivosalidajpg=filenameraw+'_lineaCondicional_'+str(linecount)+'.jpg'
+        
+        cv2.circle(img,self.pt1,3,(50,50,255),-1)
+        cv2.line(img,self.pt1,self.pt2,(255,122,200),2)
+        cv2.circle(img,self.pt2,3,(255,50,255),-1)
+
         cv2.imwrite(self.archivosalidajpg,img)
         ix,iy=-1,-1
         uux,iiy=-1,-1
@@ -152,6 +160,7 @@ class selecttwoLines:
         drawing,both=False,False
         print ("puntos 2 de 2 listos, gracias",self.pt1,self.pt2)
         cv2.destroyWindow('Seleccione Linea 2 de 2')
+        k = cv2.waitKey(1)
         
         
 class selectLine:
@@ -221,7 +230,9 @@ class selectLine:
             ox,oy=-1,-1
             drawing,both=False,False
             print ("puntos listos, gracias",self.pt1,self.pt2)
+            k = cv2.waitKey(1)
             cv2.destroyWindow('Seleccione Puntos')
+            k = cv2.waitKey(1)
 
 class selectRect:
     
@@ -619,15 +630,15 @@ class conditionalCounter():
         EJEMPLOS:\n
          
         """
-        self.Params1 = collections.namedtuple('Params', ['a','b','c']) #para guardar la ecuacion de una linea
+        self.Params = collections.namedtuple('Params', ['a','b','c']) #para guardar la ecuacion de una linea
+        
         self.point1 = pt1
         self.point2 = pt2
-        self.Params2 = collections.namedtuple('Params', ['a','b','c']) #para guardar la ecuacion de una linea
         self.point3 = pt3
         self.point4 = pt4
         
-        self.p1=self.calcL1Params()
-        self.p2=self.calcL2Params()
+        self.param1=self.calcL1Params()
+        self.param2=self.calcL2Params()
         
         self.conteo=0
 
@@ -651,6 +662,8 @@ class conditionalCounter():
         self.counterclases0=np.zeros(len(self.clases))
         self.counterclases1=np.zeros(len(self.clases))
         self.linecount=linecount
+        self.linecount1=linecount
+        self.linecount2=linecount+10
         self.sav=saveAndLoadParser(self.filename_output_line)
 
         
@@ -699,23 +712,23 @@ class conditionalCounter():
 
     def testLines(self,pt1,pt2):
         line_params=self.calcParams(pt1,pt2)
-        t1=self.__areLinesIntersecting(self.p1,line_params,pt1,pt2)
-        t2=self.__areLinesIntersecting(self.p2,line_params,pt1,pt2)
+        t1=self.areLinesIntersecting(self.param1,self.point1,self.point2,line_params,pt1,pt2)
+        t2=self.areLinesIntersecting(self.param2,self.point3,self.point4,line_params,pt1,pt2)
         if t1 or t2:
+            print("t1=",t1,"t2=",t2)
             return True
         return False
     
     def testLine1(self,pt1,pt2):
         line_params=self.calcParams(pt1,pt2)
-        return self.__areLinesIntersecting(self.p1,line_params,pt1,pt2)
+        return self.areLinesIntersecting(self.param1,self.point1,self.point2,line_params,pt1,pt2)
     
     def testLine2(self,pt1,pt2):
-        line_params=self.calcParams(pt1,pt2)
-        return self.__areLinesIntersecting(self.p2,line_params,pt1,pt2)
+        return self.areLinesIntersecting(self.param2,self.point3,self.point4,self.calcParams(pt1,pt2),pt1,pt2)
         
     
 
-    def __areLinesIntersecting(self,params1, params2, point1, point2):
+    def areLinesIntersecting(self, params1,pl1,pl2, params2, point1, point2):
         det = float(params1.a) * float(params2.b) - float(params2.a) * float(params1.b)
         if det == 0:
             return False #lines are parallel
@@ -723,7 +736,7 @@ class conditionalCounter():
             x = float(params2.b * -params1.c - params1.b * -params2.c)/float(det)
             y = float(params1.a * -params2.c - params2.a * -params1.c)/float(det)
             #x y y son el punto de interseccion ahora toca ver si esta dentro o fuera de los dos puntos.
-            if x <= max(point1[0],point2[0]) and x >= min(point1[0],point2[0]) and y <= max(point1[1],point2[1]) and y >= min(point1[1],point2[1]) and x <= max(self.point1[0],self.point2[0]) and x >= min(self.point1[0],self.point2[0]) and y <= max(self.point1[1],self.point2[1]) and y >= min(self.point1[1],self.point2[1]):
+            if x <= max(point1[0],point2[0]) and x >= min(point1[0],point2[0]) and y <= max(point1[1],point2[1]) and y >= min(point1[1],point2[1]) and x <= max(pl1[0],pl2[0]) and x >= min(pl1[0],pl2[0]) and y <= max(pl1[1],pl2[1]) and y >= min(pl1[1],pl2[1]):
                 return True #lines are intersecting inside the line segment
             else:
                 return False #lines are intersecting but outside of the line segment
@@ -748,6 +761,24 @@ class conditionalCounter():
             c = (-a * point1[0]) - b * point1[1]
             #print ('parametros trayecto',a,b,c)
             return self.Params(a,b,c)
+            
+            
+    def intersectPoint1(self,pt1,pt2):
+        line_params=self.calcParams(pt1,pt2)
+        return self.returnIntersectPoint(self.param1,line_params,pt1,pt2)
+        
+    def intersectPoint2(self,pt1,pt2):
+        line_params=self.calcParams(pt1,pt2)
+        return self.returnIntersectPoint(self.param2,line_params,pt1,pt2)
+
+    def returnIntersectPoint(self,params1, params2, point1, point2):
+        det = float(params1.a) * float(params2.b) - float(params2.a) * float(params1.b)
+        if det == 0:
+            return False #lines are parallel
+        else:
+            x = float(params2.b * -params1.c - params1.b * -params2.c)/float(det)
+            y = float(params1.a * -params2.c - params2.a * -params1.c)/float(det)
+            return (int(x),int(y))
 
 class counter:
     

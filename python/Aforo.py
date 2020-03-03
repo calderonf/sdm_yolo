@@ -61,7 +61,7 @@ track=tr.tracking(verbose=charlador,mindist=mindist,framesttl=framesttl)#verbose
 
 title  ="Cuantas lineas de conteo?"
 msg = "Seleccione el numero de lineas de conteo que quiere poner, se recomiendan maximo 6 lineas de conteo"
-choices = ["1", "2", "3", "4", "5", "6"]
+choices = ["0","1", "2", "3", "4", "5", "6"]
 choice = easygui.choicebox(msg, title, choices)
 type(choice)
 lineasDeConteo=int(choice)
@@ -70,9 +70,10 @@ print "usted ha seleccionado ",lineasDeConteo," lineas de conteo"
 contadores=[]
 for cc in range(lineasDeConteo):
     sleep(1)
-    lineaDeConteo=lc.selectLine(imgFile2,ownString='Selecciona la linea de conteo #' +str(cc+1),filename=archsal,linecount=cc+1)
+    lineaDeConteo=lc.selectLine(imgFile2,ownString='Selecciona la linea de conteo' +str(cc+1),filename=archsal,linecount=cc+1)
     sleep(1)
     contadores.append(lc.counter(lineaDeConteo.pt1,lineaDeConteo.pt2,filename=archsal,linecount=cc+1,fps=20))
+
 
 #CONTEOCONDICIONAL
 title  ="Cuantas lineas de conteo condicional?"
@@ -194,21 +195,23 @@ while True:
                     contar.addToLineCounter(str(track.p.p[idx].str),frames,tiempoactual,direct)
                 
             #CONTEOCONDICIONAL    
-            for contar in contadoresCondicionales:
-                if (contar.testLines(p2,p1) and not (track.p.p[idx].contadoresCondicionales[contar.linecount1]or track.p.p[idx].contadoresCondicionales[contar.linecount2])):
-                    es1=contar.testLine1(p2,p1)
-                    es2=contar.testLine2(p2,p1)
+            for contard in contadoresCondicionales:
+                if (contard.testLines(p2,p1) ):#and not (track.p.p[idx].contadoresCondicionales[contard.linecount1] or track.p.p[idx].contadoresCondicionales[contard.linecount2])
+                    es1=contard.testLine1(p2,p1)
+                    es2=contard.testLine2(p2,p1)
                     if es1:
-                        track.p.p[idx].contadoresCondicionales[contar.linecount1]=1
-                        cv2.circle(imgFile2,contar.intersectPoint1(p2,p1),4,(100,100,255), -1) #intersecting point
+                        track.p.p[idx].contadoresCondicionales[contard.linecount1]+=1
+                        cv2.circle(imgFile2,contard.intersectPoint1(p2,p1),4,(100,100,255), -1) #intersecting point
+                        print("Entra 1")
                     if es2:
-                        track.p.p[idx].contadoresCondicionales[contar.linecount2]=1
-                        cv2.circle(imgFile2,contar.intersectPoint2(p2,p1),4,(100,255,100), -1) #intersecting point
+                        track.p.p[idx].contadoresCondicionales[contard.linecount2]+=1
+                        cv2.circle(imgFile2,contard.intersectPoint2(p2,p1),4,(100,255,100), -1) #intersecting point
+                        print("Entra 2")
                         
-                if track.p.p[idx].contadoresCondicionales[contar.linecount1]>=1 and track.p.p[idx].contadoresCondicionales[contar.linecount2]>=1:
+                if track.p.p[idx].contadoresCondicionales[contard.linecount1]>=1 and track.p.p[idx].contadoresCondicionales[contard.linecount2]>=1:
                     if not track.p.p[idx].contadocondicional:
                         track.p.p[idx].contadocondicional=True
-                        contar.addToLineCounter(str(track.p.p[idx].str),frames,tiempoactual)
+                        contard.addToLineCounter(str(track.p.p[idx].str),frames,tiempoactual)
             #CONTEOCONDICIONAL
     
     if pintarTrayectos:
