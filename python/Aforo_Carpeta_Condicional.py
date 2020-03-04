@@ -35,13 +35,13 @@ SALVARCONTADO=False
 contimagen=1
 
 
-framesttl=10
+framesttl=15
 deCamara=False
-MAXW=1200 ## 200 pixeles maximo de ancho permitido
+MAXW=1400 ## 200 pixeles maximo de ancho permitido
 mindist=150
 
 
-folder=easygui.diropenbox(title="Seleccione la carpeta con los videos a aforar",default="/home/administrador/Videos")
+folder=easygui.diropenbox(title="Seleccione la carpeta con los videos a aforar",default="/media/francisco/monitoreo")
 
 filelist=glob.glob(folder+"/*.avi")
 if len(filelist) == 0:
@@ -56,9 +56,18 @@ else:
     msg = "Seleccione el numero de lineas de conteo que quiere poner, se recomiendan maximo 6 lineas de conteo"
     choices = ["0","1", "2", "3", "4", "5", "6"]
     choice = easygui.choicebox(msg, title, choices)
-    type(choice)
     lineasDeConteo=int(choice)
     print "usted ha seleccionado ",lineasDeConteo," lineas de conteo"
+
+    #CONTEOCONDICIONAL
+    title  ="Cuantas lineas de conteo condicional?"
+    msg = "Seleccione el numero de lineas de conteo condicional que quiere poner, se recomiendan maximo 6 pares de lineas de conteo"
+    choices = ["0","1", "2", "3", "4", "5", "6"]
+    choice2 = easygui.choicebox(msg=msg, title=title, choices=choices)
+    lineasDeConteoCondicional=int(choice2)
+    print "usted ha seleccionado ",lineasDeConteoCondicional," lineas de conteo condiconal"
+    #FINCONTEOCONDICIONAL
+    
     
     print "Se va a tomar el primercuadro del primer video encontrado para seleccionar las lineas de conteo"
     fn=filelist[0]
@@ -85,13 +94,6 @@ else:
         
         
     #CONTEOCONDICIONAL
-    title  ="Cuantas lineas de conteo condicional?"
-    msg = "Seleccione el numero de lineas de conteo condicional que quiere poner, se recomiendan maximo 6 pares de lineas de conteo"
-    choices = ["0","1", "2", "3", "4", "5", "6"]
-    choice = easygui.choicebox(msg, title, choices)
-    type(choice)
-    lineasDeConteoCondicional=int(choice)
-    print "usted ha seleccionado ",lineasDeConteoCondicional," lineas de conteo condiconal"
     
     lineaDeConteoCondicional=[]  
     for cc in range(lineasDeConteoCondicional): 
