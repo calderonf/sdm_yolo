@@ -29,7 +29,7 @@ meta = load_meta("coco_es.data")
 """
 #primera vez
 charlador=False
-pintarTrayectos=True
+pintarTrayectos=False
 
 SALVARCONTADO=False
 contimagen=1
@@ -37,7 +37,7 @@ contimagen=1
 
 framesttl=10
 deCamara=False
-MAXW=1000 ## 1000 pixeles maximo de ancho permitido
+MAXW=1200 ## 200 pixeles maximo de ancho permitido
 mindist=150
 
 
@@ -54,7 +54,7 @@ if len(filelist) == 0:
 else:
     title  ="Cuantas lineas de conteo?"
     msg = "Seleccione el numero de lineas de conteo que quiere poner, se recomiendan maximo 6 lineas de conteo"
-    choices = ["1", "2", "3", "4", "5", "6"]
+    choices = ["0","1", "2", "3", "4", "5", "6"]
     choice = easygui.choicebox(msg, title, choices)
     type(choice)
     lineasDeConteo=int(choice)
@@ -63,8 +63,6 @@ else:
     print "Se va a tomar el primercuadro del primer video encontrado para seleccionar las lineas de conteo"
     fn=filelist[0]
     cam = cv2.VideoCapture(fn)
-    #MAXW=700
-    #mindist=200  
     ret_val, imgFile2 = cam.read()
     if not ret_val:
         print ('ERROR:  no se pudo abrir la camara, saliendo')
@@ -81,8 +79,30 @@ else:
     
     lineaDeConteo=[]
     for cc in range(lineasDeConteo):
+        sleep(1)
         lineaDeConteo.append(lc.selectLine(imgFile2,ownString='Selecciona la linea de conteo #' +str(cc+1),filename=fn,linecount=cc+1))
         sleep(1)
+        
+        
+    #CONTEOCONDICIONAL
+    title  ="Cuantas lineas de conteo condicional?"
+    msg = "Seleccione el numero de lineas de conteo condicional que quiere poner, se recomiendan maximo 6 pares de lineas de conteo"
+    choices = ["0","1", "2", "3", "4", "5", "6"]
+    choice = easygui.choicebox(msg, title, choices)
+    type(choice)
+    lineasDeConteoCondicional=int(choice)
+    print "usted ha seleccionado ",lineasDeConteoCondicional," lineas de conteo condiconal"
+    
+    lineaDeConteoCondicional=[]  
+    for cc in range(lineasDeConteoCondicional): 
+        sleep(1)
+        lineaDeConteoCondicional.append(lc.selecttwoLines(imgFile2,ownString='Selecciona la lineas de conteo condicional' +str(cc+1),filename=fn,linecount=cc+1))
+    
+    #FINCONTEOCONDICIONAL
+        
+        
+        
+        
     
     for fn in filelist:
         
@@ -116,6 +136,13 @@ else:
             contadores.append(lc.counter(linlin.pt1,linlin.pt2,filename=archsal,linecount=cc,fps=20))
             cc+=1
         
+        #CONTEOCONDICIONAL
+        contadoresCondicionales=[]
+        cc=1
+        for linlinc in lineaDeConteoCondicional:
+            contadoresCondicionales.append(lc.conditionalCounter(linlinc.pt1,linlinc.pt2,linlinc.pt3,linlinc.pt4,filename=archsal,linecount=cc,fps=20))
+            cc+=1
+        #FINCONTEOCONDICIONAL
         
         #lineaDeConteo=lc.selectLine(imgFile2,ownString='Selecciona la linea de conteo',filename=archsal,linecount=1)
         #lineaDeConteo2=lc.selectLine(imgFile2,ownString='Selecciona la linea de conteo',filename=archsal,linecount=2)
@@ -160,8 +187,8 @@ else:
             for i in range(len(r)):
                 if r[i][2][2]<MAXW:
                     track.insertNewObject(r[i][2][0],r[i][2][1],r[i][2][2],r[i][2][3],strFeature=r[i][0])
-                else:
-                    print ("        eliminado objeto por tamanio= ",r[i][2][2])
+                #else:
+                    #print ("        eliminado objeto por tamanio= ",r[i][2][2])
                 #w=int(r[i][2][2])
                 #h=int(r[i][2][3])
                 #x=int(r[i][2][0])-w/2
@@ -198,6 +225,18 @@ else:
                 cv2.line(imgFile2,contar.point1,contar.point2,(0,0,255),1)
                 cv2.circle(imgFile2,contar.point2,3,(255,0,255),-1)
                 
+                
+            #CONTEOCONDICIONAL
+            for contar in contadoresCondicionales:
+                cv2.circle(imgFile2,contar.point1,3,(0,0,255),-1)
+                cv2.line(imgFile2,contar.point1,contar.point2,(0,0,255),1)
+                cv2.circle(imgFile2,contar.point2,3,(255,0,255),-1)
+                cv2.circle(imgFile2,contar.point3,3,(255,255,255),-1)
+                cv2.line(imgFile2,contar.point3,contar.point4,(255,255,255),1)
+                cv2.circle(imgFile2,contar.point4,3,(255,255,255),-1)
+            #FINCONTEOCONDICIONAL                
+                
+                
             # contar los que trayectos que pasen las lineas de conteo
             
             for idx in range(len( track.p.p)):
@@ -224,6 +263,24 @@ else:
                                 ch=int(track.p.p[idx].tam.h)
                                 cv2.imwrite(imfilesave,copiaimagen[cy:cv,cx:cu])
                                 contimagen=contimagen+1
+                    #CONTEOCONDICIONAL    
+                    for contard in contadoresCondicionales:
+                        esl2=contard.testLine2(p2,p1)
+                        esl1=contard.testLine1(p2,p1)
+                        
+                        if esl2:
+                            track.p.p[idx].contadoresCondicionales[contard.linecount2]+=1
+                            cv2.circle(imgFile2,contard.intersectPoint2(p2,p1),4,(100,255,100), -1) #intersecting point
+                            
+                        if esl1:
+                            track.p.p[idx].contadoresCondicionales[contard.linecount1]+=1
+                            cv2.circle(imgFile2,contard.intersectPoint1(p2,p1),4,(100,100,255), -1) #intersecting point
+                            
+                        if track.p.p[idx].contadoresCondicionales[contard.linecount1]>=1 and track.p.p[idx].contadoresCondicionales[contard.linecount2]>=1:
+                            if not track.p.p[idx].contadocondicional:
+                                track.p.p[idx].contadocondicional=True
+                                contard.addToLineCounter(str(track.p.p[idx].str),frames,tiempoactual)
+                    #CONTEOCONDICIONAL
                         
             if pintarTrayectos:
                 track.drawPaths(imgFile2)
@@ -237,6 +294,11 @@ else:
         
         for contar in contadores:
             contar.saveFinalCounts(frames)
+            
+        #CONTEOCONDICIONAL 
+        for contard in contadoresCondicionales:
+            contard.saveFinalCounts(frames)
+        #FINCONTEOCONDICIONAL 
         cv2.imwrite('ultimofotogramaprocesado.jpg',imgFile3)
         print ('Saliendo...')
         cv2.destroyAllWindows()
