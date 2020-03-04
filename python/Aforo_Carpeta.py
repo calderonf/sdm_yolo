@@ -35,10 +35,10 @@ SALVARCONTADO=False
 contimagen=1
 
 
-framesttl=5
+framesttl=10
 deCamara=False
-MAXW=550 ## 200 pixeles maximo de ancho permitido
-mindist=10
+MAXW=1000 ## 1000 pixeles maximo de ancho permitido
+mindist=150
 
 
 folder=easygui.diropenbox(title="Seleccione la carpeta con los videos a aforar",default="/home/administrador/Videos")
@@ -63,8 +63,8 @@ else:
     print "Se va a tomar el primercuadro del primer video encontrado para seleccionar las lineas de conteo"
     fn=filelist[0]
     cam = cv2.VideoCapture(fn)
-    MAXW=700
-    mindist=200  
+    #MAXW=700
+    #mindist=200  
     ret_val, imgFile2 = cam.read()
     if not ret_val:
         print ('ERROR:  no se pudo abrir la camara, saliendo')
