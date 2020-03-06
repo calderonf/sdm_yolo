@@ -104,7 +104,7 @@ else:
         
         
         
-        
+    print("Aforando ",str(len(filelist))," Elementos")    
     
     for fn in filelist:
         
