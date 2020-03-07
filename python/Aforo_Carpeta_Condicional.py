@@ -6,27 +6,12 @@ from time import sleep
 import cv2
 import os
 import easygui
+import pickle
 
 
 import glob
 import random
  
-"""
-#YOLO VOC
-net = load_net("../cfg/yolo-voc.cfg", "../../darknet/yolo-voc.weights", 0)
-meta = load_meta("../cfg/voc_py.data")
-"""
-
-#NUESTRO YOLO ENTRENADO 80000 iteraciones
-net = load_net("../yolo-obj.cfg", "../../weights/yolo-obj_final.weights", 0)
-meta = load_meta("../data/obj.data")
-
-
-"""
-#YOLO COCO
-net = load_net("yolo.cfg", "../../darknet/yolo.weights", 0)
-meta = load_meta("coco_es.data")
-"""
 #primera vez
 charlador=False
 pintarTrayectos=False
@@ -52,62 +37,85 @@ filelist.sort()
 if len(filelist) == 0:
     print("ERROR LA CARPETA NO CONTIENE ARCHIVOS DE VIDEO SALIENDO")
 else:
-    title  ="Cuantas lineas de conteo?"
-    msg = "Seleccione el numero de lineas de conteo que quiere poner, se recomiendan maximo 6 lineas de conteo"
-    choices = ["0","1", "2", "3", "4", "5", "6"]
-    choice = easygui.choicebox(msg, title, choices)
-    lineasDeConteo=int(choice)
-    print "usted ha seleccionado ",lineasDeConteo," lineas de conteo"
-
-    #CONTEOCONDICIONAL
-    title  ="Cuantas lineas de conteo condicional?"
-    msg = "Seleccione el numero de lineas de conteo condicional que quiere poner, se recomiendan maximo 7 pares de lineas de conteo"
-    choices = ["0","1", "2", "3", "4", "5", "6","7"]
-    choice2 = easygui.choicebox(msg=msg, title=title, choices=choices)
-    lineasDeConteoCondicional=int(choice2)
-    print "usted ha seleccionado ",lineasDeConteoCondicional," lineas de conteo condiconal"
-    #FINCONTEOCONDICIONAL
+    if os.path.isfile(folder+"/"+"config.pkl"):
+        with open(folder+"/"+"config.pkl") as f:  # Python 3: open(..., 'rb')
+            lineasDeConteo, lineasDeConteoCondicional, lineaDeConteo,lineaDeConteoCondicional = pickle.load(f)
+        
+    else:
+        title  ="Cuantas lineas de conteo?"
+        msg = "Seleccione el numero de lineas de conteo que quiere poner, se recomiendan maximo 6 lineas de conteo"
+        choices = ["0","1", "2", "3", "4", "5", "6"]
+        choice = easygui.choicebox(msg, title, choices)
+        lineasDeConteo=int(choice)
+        print "usted ha seleccionado ",lineasDeConteo," lineas de conteo"
     
-    
-    print "Se va a tomar el primercuadro del primer video encontrado para seleccionar las lineas de conteo"
-    fn=filelist[0]
-    cam = cv2.VideoCapture(fn)
-    ret_val, imgFile2 = cam.read()
-    if not ret_val:
-        print ('ERROR:  no se pudo abrir la camara, saliendo')
-        exit()
-    
-    imgFile3 = cv2.cvtColor(imgFile2, cv2.COLOR_BGR2RGB)
-    #imgFile2 = cv2.imread("../data/eagle.jpg")
-    tama=imgFile2.shape
-    imgImported=make_image(tama[1],tama[0],tama[2])
-    
-    imgFileptr,cv_img=get_iplimage_ptr(imgFile3)    
-    ipl_in2_image(imgFileptr,imgImported)
-    rgbgr_image(imgImported)
-    
-    lineaDeConteo=[]
-    for cc in range(lineasDeConteo):
-        sleep(1)
-        lineaDeConteo.append(lc.selectLine(imgFile2,ownString='Selecciona la linea de conteo #' +str(cc+1),filename=fn,linecount=cc+1))
-        sleep(1)
+        #CONTEOCONDICIONAL
+        title  ="Cuantas lineas de conteo condicional?"
+        msg = "Seleccione el numero de lineas de conteo condicional que quiere poner, se recomiendan maximo 6 pares de lineas de conteo"
+        choices = ["0","1", "2", "3", "4", "5", "6","7"]
+        choice2 = easygui.choicebox(msg=msg, title=title, choices=choices)
+        lineasDeConteoCondicional=int(choice2)
+        print "usted ha seleccionado ",lineasDeConteoCondicional," lineas de conteo condiconal"
+        #FINCONTEOCONDICIONAL
         
         
-    #CONTEOCONDICIONAL
+        print "Se va a tomar el primercuadro del primer video encontrado para seleccionar las lineas de conteo"
+        fn=filelist[0]
+        cam = cv2.VideoCapture(fn)
+        ret_val, imgFile2 = cam.read()
+        if not ret_val:
+            print ('ERROR:  no se pudo abrir la camara, saliendo')
+            exit()
+        
+        imgFile3 = cv2.cvtColor(imgFile2, cv2.COLOR_BGR2RGB)
+        #imgFile2 = cv2.imread("../data/eagle.jpg")
+        tama=imgFile2.shape
+        imgImported=make_image(tama[1],tama[0],tama[2])
+        
+        imgFileptr,cv_img=get_iplimage_ptr(imgFile3)    
+        ipl_in2_image(imgFileptr,imgImported)
+        rgbgr_image(imgImported)
+        
+        lineaDeConteo=[]
+        for cc in range(lineasDeConteo):
+            sleep(1)
+            lineaDeConteo.append(lc.selectLine(imgFile2,ownString='Selecciona la linea de conteo #' +str(cc+1),filename=fn,linecount=cc+1))
+            sleep(1)
+            
+            
+        #CONTEOCONDICIONAL
+        lineaDeConteoCondicional=[]  
+        for cc in range(lineasDeConteoCondicional): 
+            sleep(1)
+            lineaDeConteoCondicional.append(lc.selecttwoLines(imgFile2,ownString='Selecciona la lineas de conteo condicional' +str(cc+1),filename=fn,linecount=cc+1))
+        #FINCONTEOCONDICIONAL
+            
+        with open(folder+"/"+"config.pkl","w") as f:  # Python 3: open(..., 'rb')
+            pickle.dump([lineasDeConteo, lineasDeConteoCondicional, lineaDeConteo,lineaDeConteoCondicional],f)
     
-    lineaDeConteoCondicional=[]  
-    for cc in range(lineasDeConteoCondicional): 
-        sleep(1)
-        lineaDeConteoCondicional.append(lc.selecttwoLines(imgFile2,ownString='Selecciona la lineas de conteo condicional' +str(cc+1),filename=fn,linecount=cc+1))
+    """
+    #YOLO VOC
+    net = load_net("../cfg/yolo-voc.cfg", "../../darknet/yolo-voc.weights", 0)
+    meta = load_meta("../cfg/voc_py.data")
+    """
     
-    #FINCONTEOCONDICIONAL
+    #NUESTRO YOLO ENTRENADO 80000 iteraciones
+    net = load_net("../yolo-obj.cfg", "../../weights/yolo-obj_final.weights", 0)
+    meta = load_meta("../data/obj.data")
+    
+    
+    """
+    #YOLO COCO
+    net = load_net("yolo.cfg", "../../darknet/yolo.weights", 0)
+    meta = load_meta("coco_es.data")
+    """
         
         
-        
-    print("Aforando ",str(len(filelist))," Elementos")    
-    
+    print("Aforando ",str(len(filelist)),"Elementos")    
+    counterarchivos=1
     for fn in filelist:
         
+        print("procesando archivo ",counterarchivos, " de ",str(len(filelist))) 
         
         #fn = easygui.fileopenbox(default="/media/francisco/SiliconPowerArmor/SDM/",filetypes = ['*.avi','*.mp4'])
         cam = cv2.VideoCapture(fn)
@@ -117,8 +125,10 @@ else:
         ret_val, imgFile2 = cam.read()
         frames+=1
         if not ret_val:
-            print ('ERROR: no se pudo abrir la camara, saliendo')
-            exit()
+            print ('ERROR: no se pudo abrir el archivo de video guardando registro, intentando siguiente')
+            with open(folder+"/"+"Error.txt","a") as f:  # Python 3: open(..., 'rb')
+                f.write("Error en archivo: "+fn+"\n")
+            #exit()
         
         imgFile3 = cv2.cvtColor(imgFile2, cv2.COLOR_BGR2RGB)
         #imgFile2 = cv2.imread("../data/eagle.jpg")
@@ -150,7 +160,8 @@ else:
         #lineaDeConteo2=lc.selectLine(imgFile2,ownString='Selecciona la linea de conteo',filename=archsal,linecount=2)
         #contar=lc.counter(lineaDeConteo.pt1,lineaDeConteo.pt2,filename=archsal,linecount=1,fps=20) 
         #contar2=lc.counter(lineaDeConteo2.pt1,lineaDeConteo2.pt2,filename=archsal,linecount=2,fps=20)    
-        
+
+
         
         
         
@@ -304,5 +315,7 @@ else:
         cv2.imwrite('ultimofotogramaprocesado.jpg',imgFile3)
         print ('Saliendo...')
         cv2.destroyAllWindows()
+        cv2.waitKey(20)
+        cv2.waitKey(2)
         cam.release()
 #exit()
