@@ -61,8 +61,8 @@ else:
 
     #CONTEOCONDICIONAL
     title  ="Cuantas lineas de conteo condicional?"
-    msg = "Seleccione el numero de lineas de conteo condicional que quiere poner, se recomiendan maximo 6 pares de lineas de conteo"
-    choices = ["0","1", "2", "3", "4", "5", "6"]
+    msg = "Seleccione el numero de lineas de conteo condicional que quiere poner, se recomiendan maximo 7 pares de lineas de conteo"
+    choices = ["0","1", "2", "3", "4", "5", "6","7"]
     choice2 = easygui.choicebox(msg=msg, title=title, choices=choices)
     lineasDeConteoCondicional=int(choice2)
     print "usted ha seleccionado ",lineasDeConteoCondicional," lineas de conteo condiconal"
