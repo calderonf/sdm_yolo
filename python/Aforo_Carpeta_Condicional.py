@@ -99,25 +99,20 @@ else:
     net = load_net("../cfg/yolo-voc.cfg", "../../darknet/yolo-voc.weights", 0)
     meta = load_meta("../cfg/voc_py.data")
     """
-    
     #NUESTRO YOLO ENTRENADO 80000 iteraciones
     net = load_net("../yolo-obj.cfg", "../../weights/yolo-obj_final.weights", 0)
     meta = load_meta("../data/obj.data")
-    
-    
     """
     #YOLO COCO
     net = load_net("yolo.cfg", "../../darknet/yolo.weights", 0)
     meta = load_meta("coco_es.data")
-    """
-        
+    """ 
         
     print("Aforando ",str(len(filelist)),"Elementos")    
     counterarchivos=1
     for fn in filelist:
-        
         print("procesando archivo ",counterarchivos, " de ",str(len(filelist))) 
-        
+        counterarchivos+=1
         #fn = easygui.fileopenbox(default="/media/francisco/SiliconPowerArmor/SDM/",filetypes = ['*.avi','*.mp4'])
         cam = cv2.VideoCapture(fn)
         ruta,ext=os.path.splitext(fn)
