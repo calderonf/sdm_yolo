@@ -37,7 +37,6 @@ filelist.sort()
 if len(filelist) == 0:
     print("ERROR LA CARPETA NO CONTIENE ARCHIVOS DE VIDEO SALIENDO")
 else:
-    
     if os.path.isfile(folder+"/"+"config.pkl"):
         with open(folder+"/"+"config.pkl") as f:  # Python 3: open(..., 'rb')
             lineasDeConteo, lineasDeConteoCondicional, lineaDeConteo,lineaDeConteoCondicional = pickle.load(f)
@@ -53,7 +52,7 @@ else:
         #CONTEOCONDICIONAL
         title  ="Cuantas lineas de conteo condicional?"
         msg = "Seleccione el numero de lineas de conteo condicional que quiere poner, se recomiendan maximo 6 pares de lineas de conteo"
-        choices = ["0","1", "2", "3", "4", "5", "6"]
+        choices = ["0","1", "2", "3", "4", "5", "6","7"]
         choice2 = easygui.choicebox(msg=msg, title=title, choices=choices)
         lineasDeConteoCondicional=int(choice2)
         print "usted ha seleccionado ",lineasDeConteoCondicional," lineas de conteo condiconal"
