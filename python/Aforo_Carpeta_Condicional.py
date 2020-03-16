@@ -20,7 +20,7 @@ SALVARCONTADO=False
 contimagen=1
 
 
-framesttl=15
+framesttl=10
 deCamara=False
 MAXW=1400 ## 200 pixeles maximo de ancho permitido
 mindist=150
