@@ -123,6 +123,7 @@ else:
             print ('ERROR: no se pudo abrir el archivo de video guardando registro, intentando siguiente')
             with open(folder+"/"+"Error.txt","a") as f:  # Python 3: open(..., 'rb')
                 f.write("Error en archivo: "+fn+"\n")
+            continue
             #exit()
         
         imgFile3 = cv2.cvtColor(imgFile2, cv2.COLOR_BGR2RGB)
