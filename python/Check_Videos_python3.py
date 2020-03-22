@@ -49,7 +49,17 @@ for fn in filelist:
     
 res1 = cv2.convertScaleAbs(accumulator)
 cv2.imwrite(folder+"/promedio.jpeg",res1)
-plt.imshow(cv2.cvtColor(res1, cv2.COLOR_BGR2RGB))
+
+
+res=True
+#easygui.boolbox(msg='Requiere de seleccion de ROI', title='ROI', choices=('[S]i', '[N]o'), image=folder+"/promedio.jpeg", default_choice='No', cancel_choice='No')
+
+if res:
+    img=cv2.imread(folder+"/promedio.jpeg")
+    roi=cv2.selectROI("win",img)
+    print (roi)
+
+#plt.imshow(cv2.cvtColor(res1, cv2.COLOR_BGR2RGB))
     
 print ('Saliendo...')
 #exit()
