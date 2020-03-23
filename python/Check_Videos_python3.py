@@ -2,14 +2,132 @@
 import cv2
 import easygui
 import glob
-import matplotlib.pyplot as plt
 import numpy as np
 import os
+from math import floor
+from math import ceil
 
-folder=easygui.diropenbox(title="Seleccione la carpeta con los videos a revisar",default="/media/francisco/monitoreo/27022020/27022020/27022020_KR50XCL5CSD100_0000/")
+def ajustarRecorte(roi):
+    
+    cx=roi[0]
+    cy=roi[1]
+
+    cw=roi[2]
+    ch=roi[3]
+    
+    cu=cx+cw
+    cv=cy+ch
+    
+    minimoy=0
+    maximoy=1080
+    
+    mintamx=854
+    mintamy=480
+    
+    maxtamx=1920
+    
+    print ("antes0", cx,", ",cu,", ",cy,", ",cv,", ",cw,", ",ch)
+    
+    incremento=20
+    cx-=incremento
+    cy-=incremento
+    
+    cu+=incremento
+    cv+=incremento
+    
+    cw=abs(cu-cx)
+    ch=abs(cv-cy)
+    
+    print ("antes1", cx,", ",cu,", ",cy,", ",cv,", ",cw,", ",ch)
+    #si es mas pequeño que la minima imagen aumente el tamaño total de la imagen
+    if cw<mintamx:
+        diffx=mintamx-cw
+        cx=cx-int(floor(diffx/2.0))
+        cu=cu+int(ceil(diffx/2.0))
+        
+    if ch<mintamy:
+        diffy=mintamy-ch
+        cy=cy-int(floor(diffy/2.0))
+        cv=cv+int(ceil(diffy/2.0))                
+    cw=abs(cu-cx)
+    ch=abs(cv-cy)
+    
+    if cw/ch>(1920/1080):
+        print ("ajusto por y")
+        diffy=(cw*1080/1920)-ch
+        cy=cy-int(floor(diffy/2.0))
+        cv=cv+int(ceil(diffy/2.0))
+        
+    if cw/ch<(1920/1080):
+        print ("ajusto por w")
+        diffx=(ch*1920/1080)-cw
+        cx=cx-int(floor(diffx/2.0))
+        cu=cu+int(ceil(diffx/2.0))
+    print(cw/ch)
+        
+    cw=abs(cu-cx)
+    ch=abs(cv-cy)
+    
+    print(cw/ch)
+    
+    print ("durante", cx,", ",cu,", ",cy,", ",cv,", ",cw,", ",ch)
+    #si se pasa por arriba baje toda la imagen
+    if cy<minimoy:
+        diffy=minimoy-cy
+        cy=cy+diffy
+        cv=cv+diffy
+    #si se pasa por abajo suba toda la imagen
+    if cv>maximoy:
+        diffy=cv-maximoy
+        cy=cy-diffy
+        cv=cv-diffy
+        
+    #si se pasa por izquierda corra a derecha toda la imagen
+    if cx<0:
+        diffx=-cx
+        cx=cx+diffx
+        cu=cu+diffx
+    #si se pasa por derecha corra a izquierda toda la imagen
+    if cu>maxtamx:
+        diffx=cu-maxtamx
+        cx=cx-diffx
+        cu=cu-diffx
+    # Ultimas 4 verificaciones por si acaso se pasa
+    if cx<0:
+        diffx=-cx
+        cx=cx+diffx
+    if cu>maxtamx:
+        diffx=cu-maxtamx
+        cu=cu-diffx
+    if cy<minimoy:
+        diffy=minimoy-cy
+        cy=cy+diffy
+    if cv>maximoy:
+        diffy=cv-maximoy
+        cv=cv-diffy
+    cw=abs(cu-cx)
+    ch=abs(cv-cy)
+    print ("despues", cx,", ",cu,", ",cy,", ",cv,", ",cw,", ",ch)
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    return (cx,cy,cw,ch)
+
+
+folder=easygui.diropenbox(title="Seleccione la carpeta con los videos a revisar",default="/media/francisco/monitoreo/pruebas/")
 
 filelist=glob.glob(folder+"/*.mp4")
 firstime=True
+ErrorEnVideo=False
 print("Aforando ",str(len(filelist)),"Elementos")    
 counterarchivos=1
 for fn in filelist:
@@ -24,6 +142,8 @@ for fn in filelist:
         print ('ERROR: no se pudo abrir el archivo de video guardando registro, intentando siguiente')
         with open(folder+"/"+"Error.txt","a") as f: 
             f.write("Error en archivo: "+fn+"\n")
+            print("Error en video")
+            ErrorEnVideo=True
         continue
     FPS=cam.get(cv2.CAP_PROP_FPS)
     TOTFRAMES=cam.get(cv2.CAP_PROP_FRAME_COUNT)
@@ -44,21 +164,37 @@ for fn in filelist:
       
     if not error:
         with open(folder+"/"+"Validos.txt","a") as f:  
-            f.write(ext+",FPS:"+str(int(FPS))+",Total_Frames:"+str(int(TOTFRAMES))+",Duration in seg:"+str(int(TOTFRAMES/FPS))+",Duration in min:"+str(int(round((TOTFRAMES/FPS)/60)))+"\n")
+            f.write(ext+",FPS:"+str(int(FPS))+",Total_Frames:"+str(int(TOTFRAMES))+",Duracion en seg:"+str(int(TOTFRAMES/FPS))+",Duracion en in min:"+str(int(round((TOTFRAMES/FPS)/60)))+"\n")
     cam.release()
     
 res1 = cv2.convertScaleAbs(accumulator)
 cv2.imwrite(folder+"/promedio.jpeg",res1)
-
-
+if ErrorEnVideo:
+    print("ERROR EN UNO DE LOS VIDEOS REVISAR......")
+resmini=cv2.resize(res1,(854,480))
+cv2.imshow("Requiere_ROI?",resmini)
+cv2.waitKey(200)
 res=True
-#easygui.boolbox(msg='Requiere de seleccion de ROI', title='ROI', choices=('[S]i', '[N]o'), image=folder+"/promedio.jpeg", default_choice='No', cancel_choice='No')
-
+easygui.boolbox(msg='Requiere de seleccion de ROI', title='ROI', choices=('[S]i', '[N]o'), default_choice='No', cancel_choice='No')
+cv2.destroyWindow("Requiere_ROI?")
+cv2.waitKey(2)
 if res:
-    img=cv2.imread(folder+"/promedio.jpeg")
-    roi=cv2.selectROI("win",img)
-    print (roi)
-
+    repetir=True
+    while repetir:
+        img=cv2.imread(folder+"/promedio.jpeg")
+        roi=cv2.selectROI("Oprima Enter cuando este listo",img)
+        cv2.destroyAllWindows()
+        img2=img.copy()
+        print (roi)
+        roi2=ajustarRecorte(roi)
+        cv2.rectangle(img, (roi2[0],roi2[1]), (roi2[0]+roi2[2],roi2[1]+roi2[3]),(255,255,255), 3,0)
+        cv2.rectangle(img, (roi[0],roi[1]), (roi[0]+roi[2],roi[1]+roi[3]),(255,0,0), 3,0)
+        cv2.imshow("oprima y si esta lista la roi",img)
+        key=cv2.waitKey(0)&0xFF
+        if key ==ord("y"):
+            repetir=False
+    
+cv2.destroyWindow("oprima y si esta lista la roi")
 #plt.imshow(cv2.cvtColor(res1, cv2.COLOR_BGR2RGB))
     
 print ('Saliendo...')
