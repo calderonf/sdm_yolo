@@ -40,7 +40,7 @@ def getimage(capture,withroi=False,roi=None):
             if roi==None:
                 print("ERROR: por favor si activa seleccion de ROI entre una ROI")
             else:
-                imgFile2=imgFile[roi[0]:roi[0]+roi[2],roi[1]:roi[1]+roi[3]]
+                imgFile2=imgFile[roi[1]:roi[1]+roi[3],roi[0]:roi[0]+roi[2]]
         else:
             imgFile2=imgFile
     else:
@@ -74,6 +74,9 @@ filelist.sort()
 if len(filelist) == 0:
     print("ERROR LA CARPETA NO CONTIENE ARCHIVOS DE VIDEO SALIENDO")
 else:
+    cv2.namedWindow('Video',cv2.WINDOW_NORMAL)
+    cv2.moveWindow('Video',0,0)    
+    
     if os.path.isfile(folder+"/"+"config.pkl"):
         with open(folder+"/"+"config.pkl") as f:  # Python 3: open(..., 'rb')
             lineasDeConteo, lineasDeConteoCondicional, lineaDeConteo,lineaDeConteoCondicional = pickle.load(f)
