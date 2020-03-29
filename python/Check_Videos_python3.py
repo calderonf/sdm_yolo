@@ -7,7 +7,7 @@ import os
 from math import floor
 from math import ceil
 
-def ajustarRecorte(roi):
+def ajustarRecorte(roi,imagesizex=1920,imagesizey=1080):
     
     cx=roi[0]
     cy=roi[1]
@@ -19,14 +19,14 @@ def ajustarRecorte(roi):
     cv=cy+ch
     
     minimoy=0
-    maximoy=1080
+    maximoy=imagesizey
     
-    mintamx=854
+    mintamx=854#854x480 is the minimun 16/9 relation of image standard
     mintamy=480
     
-    maxtamx=1920
+    maxtamx=imagesizex
     
-    print ("antes0", cx,", ",cu,", ",cy,", ",cv,", ",cw,", ",ch)
+    #print ("antes0", cx,", ",cu,", ",cy,", ",cv,", ",cw,", ",ch)
     
     incremento=20
     cx-=incremento
@@ -38,8 +38,7 @@ def ajustarRecorte(roi):
     cw=abs(cu-cx)
     ch=abs(cv-cy)
     
-    print ("antes1", cx,", ",cu,", ",cy,", ",cv,", ",cw,", ",ch)
-    #si es mas pequeño que la minima imagen aumente el tamaño total de la imagen
+    #print ("antes1", cx,", ",cu,", ",cy,", ",cv,", ",cw,", ",ch)
     if cw<mintamx:
         diffx=mintamx-cw
         cx=cx-int(floor(diffx/2.0))
@@ -53,24 +52,24 @@ def ajustarRecorte(roi):
     ch=abs(cv-cy)
     
     if cw/ch>(1920/1080):
-        print ("ajusto por y")
+        #print ("ajusto por y")
         diffy=(cw*1080/1920)-ch
         cy=cy-int(floor(diffy/2.0))
         cv=cv+int(ceil(diffy/2.0))
         
     if cw/ch<(1920/1080):
-        print ("ajusto por w")
+        #print ("ajusto por w")
         diffx=(ch*1920/1080)-cw
         cx=cx-int(floor(diffx/2.0))
         cu=cu+int(ceil(diffx/2.0))
-    print(cw/ch)
+    #print(cw/ch)
         
     cw=abs(cu-cx)
     ch=abs(cv-cy)
     
-    print(cw/ch)
+    #print(cw/ch)
     
-    print ("durante", cx,", ",cu,", ",cy,", ",cv,", ",cw,", ",ch)
+    #print ("durante", cx,", ",cu,", ",cy,", ",cv,", ",cw,", ",ch)
     #si se pasa por arriba baje toda la imagen
     if cy<minimoy:
         diffy=minimoy-cy
@@ -105,21 +104,18 @@ def ajustarRecorte(roi):
     if cv>maximoy:
         diffy=cv-maximoy
         cv=cv-diffy
+        
+    if cx<0:
+        cx=0
+    if cy<0:
+        cy=0
+    if cu>=imagesizex:
+        cu=imagesizex-1
+    if cv>=imagesizey:
+        cv=imagesizey-1
     cw=abs(cu-cx)
     ch=abs(cv-cy)
-    print ("despues", cx,", ",cu,", ",cy,", ",cv,", ",cw,", ",ch)
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    #print ("despues", cx,", ",cu,", ",cy,", ",cv,", ",cw,", ",ch)
     return (cx,cy,cw,ch)
 
 
@@ -128,7 +124,7 @@ folder=easygui.diropenbox(title="Seleccione la carpeta con los videos a revisar"
 filelist=glob.glob(folder+"/*.mp4")
 firstime=True
 ErrorEnVideo=False
-print("Aforando ",str(len(filelist)),"Elementos")    
+print("Listando ",str(len(filelist)),"Elementos")    
 counterarchivos=1
 for fn in filelist:
     ext=os.path.basename(fn)
@@ -174,28 +170,41 @@ if ErrorEnVideo:
 resmini=cv2.resize(res1,(854,480))
 cv2.imshow("Requiere_ROI?",resmini)
 cv2.waitKey(200)
-res=True
-easygui.boolbox(msg='Requiere de seleccion de ROI', title='ROI', choices=('[S]i', '[N]o'), default_choice='No', cancel_choice='No')
+res=easygui.boolbox(msg='Requiere de seleccion de ROI', title='ROI', choices=('[S]i', '[N]o'), default_choice='No', cancel_choice='No')
 cv2.destroyWindow("Requiere_ROI?")
 cv2.waitKey(2)
 if res:
+    print("Por Favor seleccione la ROI y oprima enter cuando este lista,\nse le mostrara de nuevo la roi seleccionada con los ajustes de relacion 16:9\nOprima Y para confirmar o cualquier otra para repetir...")
     repetir=True
     while repetir:
         img=cv2.imread(folder+"/promedio.jpeg")
+        cv2.namedWindow("Oprima Enter cuando este listo")
+        cv2.moveWindow("Oprima Enter cuando este listo",0,0)
+
         roi=cv2.selectROI("Oprima Enter cuando este listo",img)
         cv2.destroyAllWindows()
         img2=img.copy()
-        print (roi)
+        #print (roi)
         roi2=ajustarRecorte(roi)
         cv2.rectangle(img, (roi2[0],roi2[1]), (roi2[0]+roi2[2],roi2[1]+roi2[3]),(255,255,255), 3,0)
         cv2.rectangle(img, (roi[0],roi[1]), (roi[0]+roi[2],roi[1]+roi[3]),(255,0,0), 3,0)
+        cv2.namedWindow("oprima y si esta lista la roi")
+        cv2.moveWindow("oprima y si esta lista la roi",0,0)
         cv2.imshow("oprima y si esta lista la roi",img)
         key=cv2.waitKey(0)&0xFF
-        if key ==ord("y"):
+        if key ==ord("y") or key == ord("Y"):
             repetir=False
+    print ("ROI definitiva:",roi2)
+    with open(folder+"/ROI.txt", "w") as f:
+        f.write(str(roi2))
+    """
+    with open(folder+"/ROI.txt", "r") as f:
+        data = f.readline()
+    roi3=eval(data)
+    print ("Data almacenada en str= ", data, "en tupla =", roi3)
+    """
     
-cv2.destroyWindow("oprima y si esta lista la roi")
-#plt.imshow(cv2.cvtColor(res1, cv2.COLOR_BGR2RGB))
+    cv2.destroyWindow("oprima y si esta lista la roi")
     
 print ('Saliendo...')
 #exit()

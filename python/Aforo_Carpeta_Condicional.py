@@ -26,7 +26,44 @@ MAXW=1400 ## 200 pixeles maximo de ancho permitido
 mindist=150
 
 
+def getimage(capture,withroi=False,roi=None):
+    """
+    para uso normal cambiar:
+    ret_val, imgFile2 = cam.read()
+    por
+    
+    ret_val, imgFile2 = getimage(cam,withroi=WITHROI,roi=roi)
+    """
+    if withroi:
+        ret_val, imgFile = capture.read()
+        if ret_val:
+            if roi==None:
+                print("ERROR: por favor si activa seleccion de ROI entre una ROI")
+            else:
+                imgFile2=imgFile[roi[0]:roi[0]+roi[2],roi[1]:roi[1]+roi[3]]
+        else:
+            imgFile2=imgFile
+    else:
+        ret_val, imgFile2 = capture.read()
+    
+    return  ret_val, imgFile2
+
+
+
+
 folder=easygui.diropenbox(title="Seleccione la carpeta con los videos a aforar",default="/media/francisco/monitoreo")
+
+#ROI Selection in Frame consist in an archive called ROI.txt with a tuple in the first and only line in file, that is the ROI. 
+#In notation (X,Y,width,heigth), X and y are the upper left coordinate of the Region Of Interest ROI
+WITHROI=os.path.isfile(folder+"/ROI.txt")
+roi=None
+if WITHROI:
+    with open(folder+"/ROI.txt", "r") as f:
+        data = f.readline()
+    roi=eval(data)
+    print ("Cargando ROI ",roi)
+    
+
 
 filelist=glob.glob(folder+"/*.avi")
 if len(filelist) == 0:
@@ -62,7 +99,8 @@ else:
         print "Se va a tomar el primercuadro del primer video encontrado para seleccionar las lineas de conteo"
         fn=filelist[0]
         cam = cv2.VideoCapture(fn)
-        ret_val, imgFile2 = cam.read()
+        #ret_val, imgFile2 = cam.read()
+        ret_val, imgFile2 = getimage(cam,withroi=WITHROI,roi=roi)
         if not ret_val:
             print ('ERROR:  no se pudo abrir la camara, saliendo')
             exit()
@@ -117,7 +155,8 @@ else:
         ruta,ext=os.path.splitext(fn)
         archsal=ruta+'.csv'     
         frames=0
-        ret_val, imgFile2 = cam.read()
+        #ret_val, imgFile2 = cam.read()
+        ret_val, imgFile2 = getimage(cam,withroi=WITHROI,roi=roi)
         frames+=1
         if not ret_val:
             print ('ERROR: no se pudo abrir el archivo de video guardando registro, intentando siguiente')
@@ -162,7 +201,8 @@ else:
         
         
         while True:
-            ret_val, imgFile2 = cam.read()
+            #ret_val, imgFile2 = cam.read()
+            ret_val, imgFile2 = getimage(cam,withroi=WITHROI,roi=roi)
             frames+=1
             if not ret_val:
                 print ("Fin del video o salida en camara, saliendo")
