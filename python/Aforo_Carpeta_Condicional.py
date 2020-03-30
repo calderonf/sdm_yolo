@@ -73,10 +73,7 @@ if len(filelist) == 0:
 filelist.sort()
 if len(filelist) == 0:
     print("ERROR LA CARPETA NO CONTIENE ARCHIVOS DE VIDEO SALIENDO")
-else:
-    cv2.namedWindow('Video',cv2.WINDOW_NORMAL)
-    cv2.moveWindow('Video',0,0)    
-    
+else:  
     if os.path.isfile(folder+"/"+"config.pkl"):
         with open(folder+"/"+"config.pkl") as f:  # Python 3: open(..., 'rb')
             lineasDeConteo, lineasDeConteoCondicional, lineaDeConteo,lineaDeConteoCondicional = pickle.load(f)
@@ -150,6 +147,10 @@ else:
         
     print("Aforando ",str(len(filelist)),"Elementos")    
     counterarchivos=1
+    
+    cv2.namedWindow('Video',cv2.WINDOW_NORMAL)
+    cv2.moveWindow('Video',0,0)  
+    
     for fn in filelist:
         print("procesando archivo ",counterarchivos, " de ",str(len(filelist))) 
         counterarchivos+=1
