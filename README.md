@@ -15,7 +15,8 @@ This is a project of the "Secretaría distrital de movilidad de Bogotá, Colombi
 ## Download
 
 The dataset is available after in this link : 
-***it will be available again the after march 24 of 2020, sorry the COVID-19 pandemic is in my country right now and i'm having some other priorities.***
+
+https://www.dropbox.com/sh/5h52fldg5yjjs1c/AAC8_AGw7x7F3AVyUr0ksdWia?dl=0
 
 
 
@@ -44,10 +45,12 @@ URL: [http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=8730234&isnumber=8
 
 To use it:
 The datasets to train this are available in 
-www.urban-dataset.com
+www.urban-dataset.com relinked to this site (
+https://www.dropbox.com/sh/5h52fldg5yjjs1c/AAC8_AGw7x7F3AVyUr0ksdWia?dl=0)
 Video tutorial:
 https://www.youtube.com/watch?v=E05a3SzVjho
 
+# Forked from:
 
 ![Darknet Logo](http://pjreddie.com/media/files/darknet-black-small.png)
 
