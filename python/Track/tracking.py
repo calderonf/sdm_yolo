@@ -192,6 +192,7 @@ class singlepath:
         self.contadocondicional=False
         
         self.contadoresCondicionales=np.zeros(lineasconteocondicional)
+        self.direccionCondicional=0
         #contadoresCondicionales
         #adicion cebra
         self.puntosFrontera=[(x,y),(x-w/2,y-h/2),(x-w/2+w,y-h/2+h),(x-w/2,y-h/2+h),(x-w/2+w,y-h/2)]
