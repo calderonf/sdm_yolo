@@ -6,7 +6,7 @@ Created on Sun Jun 16 18:13:28 2019
 @author: administrador
 """
 import cv2
-import secrets as sr
+from Secretos.secrets import fn,fn1,fn2,fn3
 import numpy as np
 from math import floor, ceil
 import datetime

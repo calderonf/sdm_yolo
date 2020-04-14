@@ -8,11 +8,7 @@ Created on Sun Jun 16 18:13:28 2019
 import cv2
 import datetime
 
-
-fn='rtsp://movil:egccol@186.29.90.163:8891/EGC'
-fn2='rtsp://multiview:egccol@186.29.90.163:8891/Multiview'
-fn3='rtsp://movil:egccol@186.29.90.163:8891/CamFull2'
-fn4='rtsp://186.29.90.163:8891/EGC'
+from Secretos.secrets import fn,fn1,fn2,fn3
 cam = cv2.VideoCapture(fn)
 
 Tamx=720#1920

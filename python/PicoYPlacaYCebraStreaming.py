@@ -167,10 +167,7 @@ print "Usted ha seleccionado ",regionesZebra," regiones de ceteccion de Cebra"
 
 title  ="Que Streaming o video quiere?"
 msg = "Seleccione el streaming"
-fn='rtsp://movil:egccol@186.29.90.163:8891/EGC'
-fn1='rtsp://movil:egccol@186.29.90.163:8891/CamFull2'
-fn2='rtsp://multiview:egccol@186.29.90.163:8891/Multiview'
-fn3='/home/francisco/videos/Video24Horas_4.mp4'
+from Secretos.secrets import fn,fn1,fn2,fn3
 choices = [fn,fn1,fn2,fn3]
 choice = easygui.choicebox(msg, title, choices)
 filen=choice

@@ -134,12 +134,11 @@ choices = ["1", "2"]
 choice = easygui.choicebox(msg, title, choices)
 type(choice)
 lineasDeConteo=int(choice)
-print "Usted ha seleccionado ",lineasDeConteo," lineas de conteo"
+print ("Usted ha seleccionado ",lineasDeConteo," lineas de conteo")
 
-print "Se va a tomar el primercuadro del primer video encontrado para seleccionar las lineas de conteo puede que se demore un poco estabilizando el streaming"
-fn='rtsp://movil:egccol@186.29.90.163:8891/EGC'
-fn="/home/francisco/videos/Video24Horas_4.mp4"
-cam = cv2.VideoCapture(fn)
+print ("Se va a tomar el primercuadro del primer video encontrado para seleccionar las lineas de conteo puede que se demore un poco estabilizando el streaming")
+from Secretos.secrets import fn,fn1,fn2,fn3
+cam = cv2.VideoCapture(fn3)
 MAXW=700
 mindist=200
 

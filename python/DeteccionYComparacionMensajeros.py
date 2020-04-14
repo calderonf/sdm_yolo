@@ -13,12 +13,13 @@ import datetime
 
 from  timePicoYPlaca import PicoYPlaca as picoypla
 
+from Secretos.listadoRappis import esRappi
+
 from grabarVideo import grabadorVideos
 from math import floor
 from math import ceil
 
 CONFIGURARPORDEFECTO=False
-NOPARTICULARFINDEANO=True #A final de anio dejar en falso para no generar detecciones de pico y placa
 
 
 def compareCharacters(cra,crb,delta=2.0):
@@ -244,7 +245,7 @@ if not CONFIGURARPORDEFECTO:
     choices = ["1", "2"]
     choice = easygui.choicebox(msg, title, choices)
     lineasDeConteo=int(choice)
-    print "Usted ha seleccionado ",lineasDeConteo," lineas de conteo"
+    print ("Usted ha seleccionado ",lineasDeConteo," lineas de conteo")
     
     regionesZebra=1
     
@@ -253,18 +254,16 @@ if not CONFIGURARPORDEFECTO:
     choices = ["0","1"]
     choice = easygui.choicebox(msg, title, choices)
     regionesZebra=int(choice)
-    print "Usted ha seleccionado ",regionesZebra," regiones de ceteccion de Cebra"
+    print ("Usted ha seleccionado ",regionesZebra," regiones de ceteccion de Cebra")
     
     title  ="Que Streaming o video quiere?"
     msg = "Seleccione el streaming"
-    fn='rtsp://movil:egccol@186.29.90.163:8891/EGC'
-    fn1='rtsp://movil:egccol@186.29.90.163:8891/CamFull2'
-    fn2='rtsp://multiview:egccol@186.29.90.163:8891/Multiview'
-    fn3='/home/francisco/videos/Video24Horas_4.mp4'
+    from Secretos.secrets import fn,fn1,fn2,fn3
+    
     choices = [fn,fn1,fn2,fn3]
     choice = easygui.choicebox(msg, title, choices)
     filen=choice
-    print "Usted ha seleccionado ",filen," como Video de entrada"
+    print ("Usted ha seleccionado ",filen," como Video de entrada")
     
     title  ="Que Direccion de Camara esta usando?"
     msg = "Seleccione el direccion"
@@ -274,19 +273,19 @@ if not CONFIGURARPORDEFECTO:
     choices = [fn,fn1,fn2]
     choice = easygui.choicebox(msg, title, choices)
     TEXTODIRECCION=choice
-    print "Usted ha seleccionado ",TEXTODIRECCION," como direccion"
+    print ("Usted ha seleccionado ",TEXTODIRECCION," como direccion")
     
     title  ="Que Dlocalidad tiene la camara que esta usando?"
     msg = "Seleccione localidad"
     fn='CHAPINERO'
     fn1='USAQUEN'
     fn2='PONGAQUILOCALIDAD'
-    choices = [fn,fn1,fn2,fn3]
+    choices = [fn,fn1,fn2]
     choice = easygui.choicebox(msg, title, choices)
     TEXTOLOCALIDAD=choice
-    print "Usted ha seleccionado ",TEXTOLOCALIDAD," como localidad"
+    print ("Usted ha seleccionado ",TEXTOLOCALIDAD," como localidad")
     
-    print "Se va a tomar el primercuadro del primer video encontrado para seleccionar las lineas de conteo puede que se demore un poco estabilizando el streaming"
+    print ("Se va a tomar el primercuadro del primer video encontrado para seleccionar las lineas de conteo puede que se demore un poco estabilizando el streaming")
     
     cam = cv2.VideoCapture(filen)
     
@@ -312,7 +311,7 @@ else:# Opciones Por defecto Para 45 con 7 TODO va en un archivo de configuració
         os.mkdir(folder+"/"+TEXTOCEBRA)
     lineasDeConteo=1
     regionesZebra=1
-    filen='rtsp://movil:egccol@186.29.90.163:8891/EGC'
+    from Secretos.secrets import filen
     TEXTODIRECCION='CR7-CL45'
     TEXTOLOCALIDAD='CHAPINERO'
     ppt1=(1, 554)
@@ -322,7 +321,7 @@ else:# Opciones Por defecto Para 45 con 7 TODO va en un archivo de configuració
     cpt2=(1630, 465)
     cpt3=(3, 1038)
     cpt4=(1919, 1040)
-    print "Se va a tomar el primercuadro del primer video encontrado para seleccionar las lineas de conteo puede que se demore un poco estabilizando el streaming"
+    print ("Se va a tomar el primercuadro del primer video encontrado para seleccionar las lineas de conteo puede que se demore un poco estabilizando el streaming")
     
     cam = cv2.VideoCapture(filen)
     for nn in range(100):# se itera 5 segundos para estabilizar la conexion
@@ -506,6 +505,8 @@ while (True):
         for idx in range(len( track.p.p)):
             if len(track.p.p[idx].path)>=2: # si la longitud del path es mayor o igual a dos
                 #buscar si el path esta dentro de la region de cebra
+                
+                """
                 for cebra in regiones:
                     if cebra.listPointsInside(track.p.p[idx].puntosFrontera) and cebra.esComparendiable(track.p.p[idx].str):
                         track.p.p[idx].contadorCebra+=1#acumular uno al conteo del path
@@ -594,7 +595,7 @@ while (True):
                         imfilesavef2=folder+"/"+TEXTOCEBRA+"/"+placa_actual+'-'+TEXTOCEBRA+'-'+PANORAMICA+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+'.JPG'
                         grabar.nuevoVideo(imfilesavev,imfilesavef2)
                     
-                    
+                """
                 
                 
                 # toma los dos registros mas recientes y los prueba si pasaron la linea de conteo para encontrar pico y placa
@@ -653,7 +654,14 @@ while (True):
                                     placa_actual=strypos[0]
                                     
                                     
-                                    if not esRappi(placa_actual):
+                                    if esRappi(placa_actual):
+                                        print ("Encuentro una placa rappi, toca guardar un rappi")
+                                        
+                                        
+                                        
+                                        
+                                    else:
+                                        print ("Encuentro una placa NO rappi, toca guardar un rappi")
                                         track.p.p[idx].contado=True
                                         track.p.p[idx].contadores[contar.linecount]=1
                                         contar.addToLineCounter(str(track.p.p[idx].str),frames,tiempoactual,direct)
@@ -669,13 +677,13 @@ while (True):
                                         textofecha=antecitos.strftime("20%y-%m-%d %H:%M:%S")
             
                                         fechaformatotexto=antecitos.strftime("%d-%m-20%y %H_%M_%S")
-                                        imfilesave=folder+"/"+TEXTOPICOYPLACA+"/"+placa_actual+'-'+TEXTOPICOYPLACA+'-'+AMPLIADA+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+' revParticular.JPG'
+                                        imfilesave=folder+"/"+TEXTOPICOYPLACA+"/"+placa_actual+'-'+TEXTOPICOYPLACA+'-'+AMPLIADA+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+'.JPG'
                                         
                                         copiaimagen2=recortarDeteccionConTexto(copiaimagen,textofecha,textocamara,textodireccion,cy,cv,cx,cu,cw,ch)
                                         
                                         cv2.imwrite(imfilesave,copiaimagen2)
                                         
-                                        imfilesave=folder+"/"+TEXTOPICOYPLACA+"/"+placa_actual+'-'+TEXTOPICOYPLACA+'-'+PANORAMICA+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+' revParticular.JPG'
+                                        imfilesave=folder+"/"+TEXTOPICOYPLACA+"/"+placa_actual+'-'+TEXTOPICOYPLACA+'-'+PANORAMICA+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+'.JPG'
                                         cv2.imwrite(imfilesave,copiaimagen)
                                         #imfilesave=folder+"/"+TEXTOPICOYPLACA+"/"+placa_actual+'-'+TEXTOPICOYPLACA+'-'+"V"+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+' revParticular.avi'
                                         #grabar.nuevoVideo(imfilesave,TTL=20)

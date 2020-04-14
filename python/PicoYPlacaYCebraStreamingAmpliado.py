@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+!/usr/bin/python2
 # -*- coding: utf-8 -*-
 from darknet import *
 from Counter import linecounter as lc
@@ -257,6 +257,7 @@ if not CONFIGURARPORDEFECTO:
     
     title  ="Que Streaming o video quiere?"
     msg = "Seleccione el streaming"
+    from Secretos.secrets import fn,fn1,fn2,fn3
     fn='rtsp://movil:egccol@186.29.90.163:8891/EGC'
     fn1='rtsp://movil:egccol@186.29.90.163:8891/CamFull2'
     fn2='rtsp://multiview:egccol@186.29.90.163:8891/Multiview'
@@ -312,7 +313,9 @@ else:# Opciones Por defecto Para 45 con 7 TODO va en un archivo de configuració
         os.mkdir(folder+"/"+TEXTOCEBRA)
     lineasDeConteo=1
     regionesZebra=1
-    filen='rtsp://movil:egccol@186.29.90.163:8891/EGC'
+    
+    from Secretos.secrets import filen
+    
     TEXTODIRECCION='CR7-CL45'
     TEXTOLOCALIDAD='CHAPINERO'
     ppt1=(1, 554)

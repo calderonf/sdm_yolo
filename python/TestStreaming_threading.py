@@ -28,15 +28,13 @@ def PredictThread(net,meta,img,out_queue):
     imgImported=dn.make_image(tama[1],tama[0],tama[2])
     dn.ipl_in2_image(imgFileptr,imgImported)
     erre=dn.detect_img(net, meta, imgImported) 
-    print erre
+    print (erre)
     out_queue.put(erre)
 
 
 
 my_queue = Queue.Queue()
-fn='rtsp://movil:egccol@186.29.90.163:8891/EGC'
-fn2='rtsp://multiview:egccol@186.29.90.163:8891/Multiview'
-fn3='rtsp://movil:egccol@186.29.90.163:8891/CamFull2'
+from Secretos.secrets import fn,fn1,fn2,fn3
 cam = cv2.VideoCapture(fn3)
 
 Tamx=720#1920
