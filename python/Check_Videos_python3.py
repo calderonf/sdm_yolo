@@ -122,10 +122,32 @@ def ajustarRecorte(roi,imagesizex=1920,imagesizey=1080):
 folder=easygui.diropenbox(title="Seleccione la carpeta con los videos a revisar",default="/media/francisco/monitoreo/pruebas/")
 
 filelist=glob.glob(folder+"/*.mp4")
+if len(filelist)==0:
+    print("no hay archivos .mp4 intentando AVI")
+    filelist=glob.glob(folder+"/*.avi")
+
+if len(filelist)==0:
+    print("no hya archivos de video, saliendo")
+    exit()
+filelist.sort()
+print (filelist)
 firstime=True
 ErrorEnVideo=False
 print("Listando ",str(len(filelist)),"Elementos")    
 counterarchivos=1
+numvideos=len(filelist)
+
+if numvideos>100:
+    alphaacum=0.001
+    maxframes=20
+if numvideos<=100:
+    alphaacum=0.005
+    maxframes=30
+if numvideos<=10:
+    alphaacum=0.01
+    maxframes=30
+
+
 for fn in filelist:
     ext=os.path.basename(fn)
 
@@ -143,7 +165,7 @@ for fn in filelist:
         continue
     FPS=cam.get(cv2.CAP_PROP_FPS)
     TOTFRAMES=cam.get(cv2.CAP_PROP_FRAME_COUNT)
-    while frames<30:
+    while frames<maxframes:
         error=False
         frames+=1
         ret_val, imgFile2 = cam.read()
@@ -156,7 +178,7 @@ for fn in filelist:
         if firstime:
             firstime=False
             accumulator = np.float32(imgFile2)
-        cv2.accumulateWeighted(imgFile2,accumulator,0.001)#Filtro FIR alpha 1-alpha a 0.001 ya que trabaja con 30 imagenes y lo normal son 144 archivos total 4320 lo que crea un paso bajos a pi/4 mas o menos
+        cv2.accumulateWeighted(imgFile2,accumulator,alphaacum)#Filtro FIR alpha 1-alpha a 0.001 ya que trabaja con 30 imagenes y lo normal son 144 archivos total 4320 lo que crea un paso bajos a pi/4 mas o menos
       
     if not error:
         with open(folder+"/"+"Validos.txt","a") as f:  

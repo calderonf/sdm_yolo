@@ -480,12 +480,12 @@ def read_sources(selected_folder):
         if image_file.endswith("avi"): 
 
             print("\t",i,image_file)
-            partial_info = image_file.split('_')
+            partial_info = image_file.replace("'","_").split('_')
 
             # If file name is not supported, print some information and continue
             if len(partial_info) ==6:
                 # Split video's file name with a delimiter to get partial information 
-                partial_information = image_file.split('_')
+                partial_information = image_file.replace("'","_").split('_')
                 
                 # Get duration of video source
                 duration=FFMPEG_get_Length_Video(os.path.join(selected_folder, image_file))
@@ -498,7 +498,6 @@ def read_sources(selected_folder):
                 
                 
                 filefirstdate=partial_information[0].split('(')
-                
                 HH=filefirstdate[1][11:13]             #HH
                 MM=partial_information[1]              #MM
                 SS=partial_information[2][0:2]        #SS
@@ -506,8 +505,8 @@ def read_sources(selected_folder):
                 YYYY=filefirstdate[1][0:4]
                 MT=filefirstdate[1][5:7]
                 DD=filefirstdate[1][8:10]
-                cameranum=str(int(filefirstdate[0][0:-1])-1)#se le resta uno al número de la camara
-                
+                cameranum=str(int(filefirstdate[0][0:-1])-1)#se le resta uno al numero de la camara
+                print("info_de_achivo: HHMMSS",HH,MM,SS,"_YYYYMTDD",YYYY,MT,DD,"CAMERANUM=",cameranum)
                 Start_HHMMSS    = time.strftime('%H:%M:%S', time.gmtime(int(SS)+int(MM)*60+int(HH)*3600))
                 Duration_HHMMSS = time.strftime('%H:%M:%S', time.gmtime(duration))
                 End_HHMMSS      = time.strftime('%H:%M:%S', time.gmtime(duration+int(SS)+int(MM)*60+int(HH)*3600))
@@ -516,6 +515,7 @@ def read_sources(selected_folder):
                 Duration_HHMMSS = time.strftime('%H:%M:%S', time.gmtime(duration))
                 End_HHMMSS      = time.strftime('%H:%M:%S', time.gmtime(duration+int(partial_information[1][12:14])+int(partial_information[1][10:12])*60+int(partial_information[1][8 :10])*3600))
                 """
+                print ("Start_HHMMSS_Start_HHMMSS_End_HHMMSS= ",Start_HHMMSS,"_Start_HHMMSS",Duration_HHMMSS,"_",End_HHMMSS)
                 # Add source to sources directory list
                 directory_list.append({ 'File_Name'      :image_file,                               # File Name
                                         'path'           :selected_folder,                          # Path to file
@@ -576,6 +576,20 @@ def read_sources(selected_folder):
     # Return video sources information at specified path
     return directory_list
 
+
+
+def renameBadStringsInFileNames(selected_folder):
+    # loop through all files in path
+    dirlist=os.listdir(selected_folder)
+    dirlist.sort()
+    for image_file in dirlist:
+
+        # take only file with .avi extension
+        # This form already return file by file in name order 
+        if image_file.endswith("avi"): 
+            os.rename(selected_folder+"/"+image_file,selected_folder+"/"+image_file.replace("'","_"))
+            
+
 #13*****************************************************************************************************************************OK
 # Main function - implementation example
 if __name__ == '__main__':
@@ -584,10 +598,14 @@ if __name__ == '__main__':
     Tolerance=100
     # Set a timer to count the total process time
     process_time_start = time.time() 
-
+    
+    
     # Open a GUI to select folder
     path= get_videos_path()
 
+    #Rename   all files with unknown characters in the filename
+    renameBadStringsInFileNames(path)
+    
     # Read .avi files at folder and return a list with each video information
     sources_directory_list = read_sources(path)
     
