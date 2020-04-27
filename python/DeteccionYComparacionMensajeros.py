@@ -19,7 +19,7 @@ from grabarVideo import grabadorVideos
 from math import floor
 from math import ceil
 
-CONFIGURARPORDEFECTO=False
+CONFIGURARPORDEFECTO=True
 
 
 def compareCharacters(cra,crb,delta=2.0):
@@ -224,7 +224,7 @@ MAXCONTEOCEBRA=FPS*SegundosCebra
 
 
 TEXTOPICOYPLACA="C14"
-TEXTOCEBRA="C31"
+TEXTOCEBRA="ENLISTA"
 AMPLIADA="A"
 PANORAMICA="P"
 
@@ -232,12 +232,9 @@ font=cv2.cv.InitFont(cv2.cv.CV_FONT_HERSHEY_SIMPLEX, 0.2, 1.1 ,0 ,1 ,cv2.cv.CV_A
 
 if not CONFIGURARPORDEFECTO:
     
-    folder=easygui.diropenbox(title="Seleccione la carpeta para guardar evidencias",default="/home/francisco/Dropbox/2019-3/SDM/Evidencias_FDS")
+    folder=easygui.diropenbox(title="Seleccione la carpeta para guardar evidencias",default="/home/francisco/Dropbox/RAPPISCUARENTENA")
     if not os.path.exists(folder+"/"+TEXTOPICOYPLACA):
         os.mkdir(folder+"/"+TEXTOPICOYPLACA)
-    
-    if not os.path.exists(folder+"/"+TEXTOCEBRA):
-        os.mkdir(folder+"/"+TEXTOCEBRA)
         
     # TODO revisar existencia de folder en caso de que se seleccione cancelar. 
     title  ="Cuantas lineas de deteccion?"
@@ -260,14 +257,14 @@ if not CONFIGURARPORDEFECTO:
     msg = "Seleccione el streaming"
     from Secretos.secrets import fn,fn1,fn2,fn3
     
-    choices = [fn,fn1,fn2,fn3]
+    choices = [fn,fn1,fn2,fn3,"/home/francisco/Dropbox/RAPPISCUARENTENA/ejemplo.mp4"]
     choice = easygui.choicebox(msg, title, choices)
     filen=choice
     print ("Usted ha seleccionado ",filen," como Video de entrada")
     
     title  ="Que Direccion de Camara esta usando?"
     msg = "Seleccione el direccion"
-    fn='CR7-CL65'
+    fn='CR7-CL63'
     fn1='CR7-CL94'
     fn2='PONGAQUIDIRECCION'
     choices = [fn,fn1,fn2]
@@ -302,20 +299,39 @@ if not CONFIGURARPORDEFECTO:
 else:# Opciones Por defecto Para 45 con 7 TODO va en un archivo de configuración aparte
     ahora1=datetime.datetime.now()
     carpeta=ahora1.strftime("%Y%m%d")
-    folder="/home/francisco/Dropbox/2019-3/SDM/Evidencias_FDS/"+carpeta
+    folder="/home/francisco/Dropbox/RAPPISCUARENTENA/"+carpeta
     if not os.path.exists(folder):
         os.mkdir(folder)
     if not os.path.exists(folder+"/"+TEXTOPICOYPLACA):
         os.mkdir(folder+"/"+TEXTOPICOYPLACA)
     if not os.path.exists(folder+"/"+TEXTOCEBRA):
         os.mkdir(folder+"/"+TEXTOCEBRA)
+        
+    # para entrenar mensajeros. 
+        
+    if not os.path.exists(folder+"/"+TEXTOPICOYPLACA+"/RAPPI"):
+        os.mkdir(folder+"/"+TEXTOPICOYPLACA+"/RAPPI")
+        
+    if not os.path.exists(folder+"/"+TEXTOPICOYPLACA+"/OTRAS"):
+        os.mkdir(folder+"/"+TEXTOPICOYPLACA+"/OTRAS")
+        
+    if not os.path.exists(folder+"/"+TEXTOPICOYPLACA+"/ILEGIBLE"):
+        os.mkdir(folder+"/"+TEXTOPICOYPLACA+"/ILEGIBLE")
+        
+        
+    if not os.path.exists(folder+"/"+TEXTOCEBRA+"/LOGO_RAPPI_EN_LISTA"):
+        os.mkdir(folder+"/"+TEXTOCEBRA+"/LOGO_RAPPI_EN_LISTA")
+        
+    if not os.path.exists(folder+"/"+TEXTOCEBRA+"/LOGO_RAPPI_NO_LISTA"):
+        os.mkdir(folder+"/"+TEXTOCEBRA+"/LOGO_RAPPI_NO_LISTA")
+        
     lineasDeConteo=1
     regionesZebra=1
     from Secretos.secrets import filen
-    TEXTODIRECCION='CR7-CL45'
+    TEXTODIRECCION='CR7-CL63'
     TEXTOLOCALIDAD='CHAPINERO'
-    ppt1=(1, 554)
-    ppt2=(1917, 430)
+    ppt1=(1, 540)
+    ppt2=(1918, 540)
     
     cpt1=(0, 541) 
     cpt2=(1630, 465)
@@ -437,6 +453,10 @@ while (True):
         if (TEXTODIRECCION=='CR7-CL45'):
             textocamara="CGT036 EXT2016 NVR2 CH11"
             textodireccion="AK 7 X CL 45"
+        elif(TEXTODIRECCION=='CR7-CL63'):
+            textocamara="CGT032 EXT2012 NVR2 CH07"
+            textodireccion="AK 7 X CL 63"
+            
         else:
             print ("*"*30)
             print (" "*13+"ERROR"+" "*13)
@@ -608,7 +628,7 @@ while (True):
                         
                         if (str(track.p.p[idx].str) == 'motociclista' ):
                             try:
-                                print ("Moto detectada, intentando hallar placa)
+                                print ("Moto detectada, intentando hallar placa")
                                 direct=contar.crossSign(p2,p1)
                                 cv2.circle(imgFile2,contar.intersectPoint(p2,p1),4,(100,100,255), -1) #intersecting point
                                 cx=int(track.p.p[idx].rect.x)
@@ -656,10 +676,29 @@ while (True):
                                     
                                     if esRappi(placa_actual):
                                         print ("Encuentro una placa rappi, toca guardar un rappi")
+                                        track.p.p[idx].contado=True
+                                        track.p.p[idx].contadores[contar.linecount]=1
+                                        contar.addToLineCounter(str(track.p.p[idx].str),frames,tiempoactual,direct)
+                                        cx=int(track.p.p[idx].rect.x)
+                                        cy=int(track.p.p[idx].rect.y)
+                                        cu=int(track.p.p[idx].rect.u)
+                                        cv=int(track.p.p[idx].rect.v)
+                                        cw=int(track.p.p[idx].tam.w)
+                                        ch=int(track.p.p[idx].tam.h)
                                         
+                                        ahora=datetime.datetime.now()
+                                        antecitos=ahora-datetime.timedelta(seconds=timedelta)
+                                        textofecha=antecitos.strftime("20%y-%m-%d %H:%M:%S")
+            
+                                        fechaformatotexto=antecitos.strftime("%d-%m-20%y %H_%M_%S")
+                                        imfilesave=folder+"/"+TEXTOCEBRA+"/"+placa_actual+'-'+TEXTOCEBRA+'-'+AMPLIADA+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+'.JPG'
                                         
+                                        copiaimagen2=recortarDeteccionConTexto(copiaimagen,textofecha,textocamara,textodireccion,cy,cv,cx,cu,cw,ch)
                                         
+                                        cv2.imwrite(imfilesave,copiaimagen2)
                                         
+                                        imfilesave=folder+"/"+TEXTOCEBRA+"/"+placa_actual+'-'+TEXTOCEBRA+'-'+PANORAMICA+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+'.JPG'
+                                        cv2.imwrite(imfilesave,copiaimagen)
                                     else:
                                         print ("Encuentro una placa NO rappi, toca guardar un rappi")
                                         track.p.p[idx].contado=True
@@ -685,8 +724,6 @@ while (True):
                                         
                                         imfilesave=folder+"/"+TEXTOPICOYPLACA+"/"+placa_actual+'-'+TEXTOPICOYPLACA+'-'+PANORAMICA+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+'.JPG'
                                         cv2.imwrite(imfilesave,copiaimagen)
-                                        #imfilesave=folder+"/"+TEXTOPICOYPLACA+"/"+placa_actual+'-'+TEXTOPICOYPLACA+'-'+"V"+'-'+TEXTODIRECCION+'-'+TEXTOLOCALIDAD+'-'+fechaformatotexto+' revParticular.avi'
-                                        #grabar.nuevoVideo(imfilesave,TTL=20)
                                         
                                         contimagen=contimagen+1
 

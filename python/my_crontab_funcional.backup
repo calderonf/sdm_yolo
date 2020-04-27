@@ -1,0 +1,14 @@
+#LD_LIBRARY_PATH=/usr/local/cuda-9.0/lib64:$LD_LIBRARY_PATH
+#PATH=/usr/local/cuda-9.0/bin:$PATH
+#SHELL=/bin/bash
+#Display=:0
+#00 12 */7 * * export DISPLAY=:0 ; /home/francisco/Descargas/jetpack/_installer/Poller #Components Manager Poller - {SkVUUEFDSyBMNFQ=}
+29 22 * * * env DISPLAY=:0.0 /home/francisco/Evidencias.sh
+*/2 6-18 * * * python3 /home/francisco/sdm_yolo/python/misc/Reiniciar_proceso.py >> /home/francisco/Salida_crontab_Reinicia_procesos.txt
+1 18 * * * python3 /home/francisco/sdm_yolo/python/misc/matar_procesos.py >> /home/francisco/Salida_crontab_mata_procesos.txt
+00 19 * * * bash matar.sh
+#* 19 * * *  python3 /home/francisco/sdm_yolo/python/misc/matar_procesos.py
+#ESTENO #45 21 * * * env DISPLAY=0.0 vlc
+#10 22 * * * /home/francisco/Evidencias.sh
+
+
