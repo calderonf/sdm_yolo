@@ -360,8 +360,8 @@ else:
         #FINCONTEOCONDICIONAL 
         cv2.imwrite('ultimofotogramaprocesado.jpg',imgFile3)
         print ('Saliendo...')
-        cv2.destroyAllWindows()
-        cv2.waitKey(20)
-        cv2.waitKey(2)
         cam.release()
+    cv2.destroyAllWindows()
+    cv2.waitKey(20)
+    cv2.waitKey(2)
 #exit()
