@@ -14,7 +14,7 @@ This is a project of the "Secretaría distrital de movilidad de Bogotá, Colombi
 
 ## Download
 
-The dataset is available after in this link : 
+The dataset is available here: 
 
 https://www.dropbox.com/sh/5h52fldg5yjjs1c/AAC8_AGw7x7F3AVyUr0ksdWia?dl=0
 
